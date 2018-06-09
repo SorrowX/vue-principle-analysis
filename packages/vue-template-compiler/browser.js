@@ -8,7 +8,7 @@ var splitRE = /\r?\n/g;
 var emptyRE = /^\s*$/;
 var needFixRE = /^(\r?\n)*[\t\s]/;
 
-var deIndent = function deindent (str) {
+var _deIndent_1_0_2_deIndent = function deindent (str) {
   if (!needFixRE.test(str)) {
     return str
   }
@@ -703,7 +703,7 @@ function parseComponent (
   function end (tag, start, end) {
     if (depth === 1 && currentBlock) {
       currentBlock.end = start;
-      var text = deIndent(content.slice(currentBlock.start, currentBlock.end));
+      var text = _deIndent_1_0_2_deIndent(content.slice(currentBlock.start, currentBlock.end));
       // pad content so that linters and pre-processors can output correct
       // line numbers in errors and warnings
       if (currentBlock.type !== 'template' && options.pad) {
