@@ -6,33 +6,33 @@ import { pushTarget, popTarget } from '../observer/dep'
 import { isUpdatingChildComponent } from './lifecycle'
 
 import {
-  set,
-  del,
-  observe,
-  defineReactive,
-  toggleObserving
+    set,
+    del,
+    observe,
+    defineReactive,
+    toggleObserving
 } from '../observer/index'
 
 import {
-  warn,
-  bind,
-  noop,
-  hasOwn,
-  hyphenate,
-  isReserved,
-  handleError,
-  nativeWatch,
-  validateProp,
-  isPlainObject,
-  isServerRendering,
-  isReservedAttribute
+    warn,
+    bind,
+    noop,
+    hasOwn,
+    hyphenate,
+    isReserved,
+    handleError,
+    nativeWatch,
+    validateProp,
+    isPlainObject,
+    isServerRendering,
+    isReservedAttribute
 } from '../util/index'
 
 const sharedPropertyDefinition = {
-  enumerable: true,
-  configurable: true,
-  get: noop,
-  set: noop
+    enumerable: true,
+    configurable: true,
+    get: noop,
+    set: noop
 }
 
 export function proxy (target: Object, sourceKey: string, key: string) {
@@ -308,48 +308,48 @@ function createWatcher (
 }
 
 export function stateMixin (Vue: Class<Component>) {
-  // flow somehow has problems with directly declared definition object
-  // when using Object.defineProperty, so we have to procedurally build up
-  // the object here.
-  const dataDef = {}
-  dataDef.get = function () { return this._data }
-  const propsDef = {}
-  propsDef.get = function () { return this._props }
-  if (process.env.NODE_ENV !== 'production') {
-    dataDef.set = function (newData: Object) {
-      warn(
-        'Avoid replacing instance root $data. ' +
-        'Use nested data properties instead.',
-        this
-      )
+    // flow somehow has problems with directly declared definition object
+    // when using Object.defineProperty, so we have to procedurally build up
+    // the object here.
+    const dataDef = {}
+    dataDef.get = function () { return this._data }
+    const propsDef = {}
+    propsDef.get = function () { return this._props }
+    if (process.env.NODE_ENV !== 'production') {
+        dataDef.set = function (newData: Object) {
+            warn(
+                'Avoid replacing instance root $data. ' +
+                'Use nested data properties instead.',
+                this
+            )
+        }
+        propsDef.set = function () {
+            warn(`$props is readonly.`, this)
+        }
     }
-    propsDef.set = function () {
-      warn(`$props is readonly.`, this)
-    }
-  }
-  Object.defineProperty(Vue.prototype, '$data', dataDef)
-  Object.defineProperty(Vue.prototype, '$props', propsDef)
+    Object.defineProperty(Vue.prototype, '$data', dataDef)
+    Object.defineProperty(Vue.prototype, '$props', propsDef)
 
-  Vue.prototype.$set = set
-  Vue.prototype.$delete = del
+    Vue.prototype.$set = set
+    Vue.prototype.$delete = del
 
-  Vue.prototype.$watch = function (
-    expOrFn: string | Function,
-    cb: any,
-    options?: Object
-  ): Function {
-    const vm: Component = this
-    if (isPlainObject(cb)) {
-      return createWatcher(vm, expOrFn, cb, options)
+    Vue.prototype.$watch = function (
+        expOrFn: string | Function,
+        cb: any,
+        options?: Object
+    ): Function {
+        const vm: Component = this
+        if (isPlainObject(cb)) {
+            return createWatcher(vm, expOrFn, cb, options)
+        }
+        options = options || {}
+        options.user = true
+        const watcher = new Watcher(vm, expOrFn, cb, options)
+        if (options.immediate) {
+            cb.call(vm, watcher.value)
+        }
+        return function unwatchFn () {
+            watcher.teardown()
+        }
     }
-    options = options || {}
-    options.user = true
-    const watcher = new Watcher(vm, expOrFn, cb, options)
-    if (options.immediate) {
-      cb.call(vm, watcher.value)
-    }
-    return function unwatchFn () {
-      watcher.teardown()
-    }
-  }
 }

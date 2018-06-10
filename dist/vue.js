@@ -359,91 +359,91 @@ var LIFECYCLE_HOOKS = [
 /*  */
 
 var config = ({
-  /**
-   * Option merge strategies (used in core/util/options)
-   */
-  // $flow-disable-line
-  optionMergeStrategies: Object.create(null),
+    /**
+     * Option merge strategies (used in core/util/options)
+     */
+    // $flow-disable-line
+    optionMergeStrategies: Object.create(null),
 
-  /**
-   * Whether to suppress warnings.
-   */
-  silent: false,
+    /**
+     * Whether to suppress warnings.
+     */
+    silent: false,
 
-  /**
-   * Show production mode tip message on boot?
-   */
-  productionTip: "development" !== 'production',
+    /**
+     * Show production mode tip message on boot?
+     */
+    productionTip: "development" !== 'production',
 
-  /**
-   * Whether to enable devtools
-   */
-  devtools: "development" !== 'production',
+    /**
+     * Whether to enable devtools
+     */
+    devtools: "development" !== 'production',
 
-  /**
-   * Whether to record perf
-   */
-  performance: false,
+    /**
+     * Whether to record perf
+     */
+    performance: false,
 
-  /**
-   * Error handler for watcher errors
-   */
-  errorHandler: null,
+    /**
+     * Error handler for watcher errors
+     */
+    errorHandler: null,
 
-  /**
-   * Warn handler for watcher warns
-   */
-  warnHandler: null,
+    /**
+     * Warn handler for watcher warns
+     */
+    warnHandler: null,
 
-  /**
-   * Ignore certain custom elements
-   */
-  ignoredElements: [],
+    /**
+     * Ignore certain custom elements
+     */
+    ignoredElements: [],
 
-  /**
-   * Custom user key aliases for v-on
-   */
-  // $flow-disable-line
-  keyCodes: Object.create(null),
+    /**
+     * Custom user key aliases for v-on
+     */
+    // $flow-disable-line
+    keyCodes: Object.create(null),
 
-  /**
-   * Check if a tag is reserved so that it cannot be registered as a
-   * component. This is platform-dependent and may be overwritten.
-   */
-  isReservedTag: no,
+    /**
+     * Check if a tag is reserved so that it cannot be registered as a
+     * component. This is platform-dependent and may be overwritten.
+     */
+    isReservedTag: no,
 
-  /**
-   * Check if an attribute is reserved so that it cannot be used as a component
-   * prop. This is platform-dependent and may be overwritten.
-   */
-  isReservedAttr: no,
+    /**
+     * Check if an attribute is reserved so that it cannot be used as a component
+     * prop. This is platform-dependent and may be overwritten.
+     */
+    isReservedAttr: no,
 
-  /**
-   * Check if a tag is an unknown element.
-   * Platform-dependent.
-   */
-  isUnknownElement: no,
+    /**
+     * Check if a tag is an unknown element.
+     * Platform-dependent.
+     */
+    isUnknownElement: no,
 
-  /**
-   * Get the namespace of an element
-   */
-  getTagNamespace: noop,
+    /**
+     * Get the namespace of an element
+     */
+    getTagNamespace: noop,
 
-  /**
-   * Parse the real tag name for the specific platform.
-   */
-  parsePlatformTagName: identity,
+    /**
+     * Parse the real tag name for the specific platform.
+     */
+    parsePlatformTagName: identity,
 
-  /**
-   * Check if an attribute must be bound using property, e.g. value
-   * Platform-dependent.
-   */
-  mustUseProp: no,
+    /**
+     * Check if an attribute must be bound using property, e.g. value
+     * Platform-dependent.
+     */
+    mustUseProp: no,
 
-  /**
-   * Exposed for legacy reasons
-   */
-  _lifecycleHooks: LIFECYCLE_HOOKS
+    /**
+     * Exposed for legacy reasons
+     */
+    _lifecycleHooks: LIFECYCLE_HOOKS
 })
 
 /*  */
@@ -704,9 +704,6 @@ Dep.prototype.notify = function notify () {
   }
 };
 
-// the current target watcher being evaluated.
-// this is globally unique because there could be only one
-// watcher being evaluated at any time.
 Dep.target = null;
 var targetStack = [];
 
@@ -1107,11 +1104,6 @@ function dependArray (value) {
 
 /*  */
 
-/**
- * Option overwriting strategies are functions that handle
- * how to merge a parent option value and a child option
- * value into the final value.
- */
 var strats = config.optionMergeStrategies;
 
 /**
@@ -2175,18 +2167,6 @@ function checkProp (
 
 /*  */
 
-// The template compiler attempts to minimize the need for normalization by
-// statically analyzing the template at compile time.
-//
-// For plain HTML markup, normalization can be completely skipped because the
-// generated render function is guaranteed to return Array<VNode>. There are
-// two cases where extra normalization is needed:
-
-// 1. When the children contains components - because a functional component
-// may return an Array instead of a single root. In this case, just a simple
-// normalization is needed - if any child is an Array, we flatten the whole
-// thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
-// because functional components already normalize their own children.
 function simpleNormalizeChildren (children) {
   for (var i = 0; i < children.length; i++) {
     if (Array.isArray(children[i])) {
@@ -2445,105 +2425,105 @@ function updateComponentListeners (
 }
 
 function eventsMixin (Vue) {
-  var hookRE = /^hook:/;
-  Vue.prototype.$on = function (event, fn) {
-    var this$1 = this;
+    var hookRE = /^hook:/;
+    Vue.prototype.$on = function (event, fn) {
+        var this$1 = this;
 
-    var vm = this;
-    if (Array.isArray(event)) {
-      for (var i = 0, l = event.length; i < l; i++) {
-        this$1.$on(event[i], fn);
-      }
-    } else {
-      (vm._events[event] || (vm._events[event] = [])).push(fn);
-      // optimize hook:event cost by using a boolean flag marked at registration
-      // instead of a hash lookup
-      if (hookRE.test(event)) {
-        vm._hasHookEvent = true;
-      }
-    }
-    return vm
-  };
-
-  Vue.prototype.$once = function (event, fn) {
-    var vm = this;
-    function on () {
-      vm.$off(event, on);
-      fn.apply(vm, arguments);
-    }
-    on.fn = fn;
-    vm.$on(event, on);
-    return vm
-  };
-
-  Vue.prototype.$off = function (event, fn) {
-    var this$1 = this;
-
-    var vm = this;
-    // all
-    if (!arguments.length) {
-      vm._events = Object.create(null);
-      return vm
-    }
-    // array of events
-    if (Array.isArray(event)) {
-      for (var i = 0, l = event.length; i < l; i++) {
-        this$1.$off(event[i], fn);
-      }
-      return vm
-    }
-    // specific event
-    var cbs = vm._events[event];
-    if (!cbs) {
-      return vm
-    }
-    if (!fn) {
-      vm._events[event] = null;
-      return vm
-    }
-    if (fn) {
-      // specific handler
-      var cb;
-      var i$1 = cbs.length;
-      while (i$1--) {
-        cb = cbs[i$1];
-        if (cb === fn || cb.fn === fn) {
-          cbs.splice(i$1, 1);
-          break
+        var vm = this;
+        if (Array.isArray(event)) {
+            for (var i = 0, l = event.length; i < l; i++) {
+                this$1.$on(event[i], fn);
+            }
+        } else {
+            (vm._events[event] || (vm._events[event] = [])).push(fn);
+            // optimize hook:event cost by using a boolean flag marked at registration
+            // instead of a hash lookup
+            if (hookRE.test(event)) {
+                vm._hasHookEvent = true;
+            }
         }
-      }
-    }
-    return vm
-  };
+        return vm
+    };
 
-  Vue.prototype.$emit = function (event) {
-    var vm = this;
-    {
-      var lowerCaseEvent = event.toLowerCase();
-      if (lowerCaseEvent !== event && vm._events[lowerCaseEvent]) {
-        tip(
-          "Event \"" + lowerCaseEvent + "\" is emitted in component " +
-          (formatComponentName(vm)) + " but the handler is registered for \"" + event + "\". " +
-          "Note that HTML attributes are case-insensitive and you cannot use " +
-          "v-on to listen to camelCase events when using in-DOM templates. " +
-          "You should probably use \"" + (hyphenate(event)) + "\" instead of \"" + event + "\"."
-        );
-      }
-    }
-    var cbs = vm._events[event];
-    if (cbs) {
-      cbs = cbs.length > 1 ? toArray(cbs) : cbs;
-      var args = toArray(arguments, 1);
-      for (var i = 0, l = cbs.length; i < l; i++) {
-        try {
-          cbs[i].apply(vm, args);
-        } catch (e) {
-          handleError(e, vm, ("event handler for \"" + event + "\""));
+    Vue.prototype.$once = function (event, fn) {
+        var vm = this;
+        function on () {
+            vm.$off(event, on);
+            fn.apply(vm, arguments);
         }
-      }
-    }
-    return vm
-  };
+        on.fn = fn;
+        vm.$on(event, on);
+        return vm
+    };
+
+    Vue.prototype.$off = function (event, fn) {
+        var this$1 = this;
+
+        var vm = this;
+        // all
+        if (!arguments.length) {
+            vm._events = Object.create(null);
+            return vm
+        }
+        // array of events
+        if (Array.isArray(event)) {
+            for (var i = 0, l = event.length; i < l; i++) {
+                this$1.$off(event[i], fn);
+            }
+            return vm
+        }
+        // specific event
+        var cbs = vm._events[event];
+        if (!cbs) {
+            return vm
+        }
+        if (!fn) {
+            vm._events[event] = null;
+            return vm
+        }
+        if (fn) {
+            // specific handler
+            var cb;
+            var i$1 = cbs.length;
+            while (i$1--) {
+                cb = cbs[i$1];
+                if (cb === fn || cb.fn === fn) {
+                    cbs.splice(i$1, 1);
+                    break
+                }
+            }
+        }
+        return vm
+    };
+
+    Vue.prototype.$emit = function (event) {
+        var vm = this;
+        {
+            var lowerCaseEvent = event.toLowerCase();
+            if (lowerCaseEvent !== event && vm._events[lowerCaseEvent]) {
+                tip(
+                    "Event \"" + lowerCaseEvent + "\" is emitted in component " +
+                    (formatComponentName(vm)) + " but the handler is registered for \"" + event + "\". " +
+                    "Note that HTML attributes are case-insensitive and you cannot use " +
+                    "v-on to listen to camelCase events when using in-DOM templates. " +
+                    "You should probably use \"" + (hyphenate(event)) + "\" instead of \"" + event + "\"."
+                );
+            }
+        }
+        var cbs = vm._events[event];
+        if (cbs) {
+            cbs = cbs.length > 1 ? toArray(cbs) : cbs;
+            var args = toArray(arguments, 1);
+            for (var i = 0, l = cbs.length; i < l; i++) {
+                try {
+                    cbs[i].apply(vm, args);
+                } catch (e) {
+                    handleError(e, vm, ("event handler for \"" + event + "\""));
+                }
+            }
+        }
+        return vm
+    };
 }
 
 /*  */
@@ -2618,113 +2598,113 @@ var activeInstance = null;
 var isUpdatingChildComponent = false;
 
 function initLifecycle (vm) {
-  var options = vm.$options;
+    var options = vm.$options;
 
-  // locate first non-abstract parent
-  var parent = options.parent;
-  if (parent && !options.abstract) {
-    while (parent.$options.abstract && parent.$parent) {
-      parent = parent.$parent;
+    // locate first non-abstract parent
+    var parent = options.parent;
+    if (parent && !options.abstract) {
+        while (parent.$options.abstract && parent.$parent) {
+            parent = parent.$parent;
+        }
+        parent.$children.push(vm);
     }
-    parent.$children.push(vm);
-  }
 
-  vm.$parent = parent;
-  vm.$root = parent ? parent.$root : vm;
+    vm.$parent = parent;
+    vm.$root = parent ? parent.$root : vm;
 
-  vm.$children = [];
-  vm.$refs = {};
+    vm.$children = [];
+    vm.$refs = {};
 
-  vm._watcher = null;
-  vm._inactive = null;
-  vm._directInactive = false;
-  vm._isMounted = false;
-  vm._isDestroyed = false;
-  vm._isBeingDestroyed = false;
+    vm._watcher = null;
+    vm._inactive = null;
+    vm._directInactive = false;
+    vm._isMounted = false;
+    vm._isDestroyed = false;
+    vm._isBeingDestroyed = false;
 }
 
 function lifecycleMixin (Vue) {
-  Vue.prototype._update = function (vnode, hydrating) {
-    var vm = this;
-    var prevEl = vm.$el;
-    var prevVnode = vm._vnode;
-    var prevActiveInstance = activeInstance;
-    activeInstance = vm;
-    vm._vnode = vnode;
-    // Vue.prototype.__patch__ is injected in entry points
-    // based on the rendering backend used.
-    if (!prevVnode) {
-      // initial render
-      vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
-    } else {
-      // updates
-      vm.$el = vm.__patch__(prevVnode, vnode);
-    }
-    activeInstance = prevActiveInstance;
-    // update __vue__ reference
-    if (prevEl) {
-      prevEl.__vue__ = null;
-    }
-    if (vm.$el) {
-      vm.$el.__vue__ = vm;
-    }
-    // if parent is an HOC, update its $el as well
-    if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
-      vm.$parent.$el = vm.$el;
-    }
-    // updated hook is called by the scheduler to ensure that children are
-    // updated in a parent's updated hook.
-  };
+    Vue.prototype._update = function (vnode, hydrating) {
+        var vm = this;
+        var prevEl = vm.$el;
+        var prevVnode = vm._vnode;
+        var prevActiveInstance = activeInstance;
+        activeInstance = vm;
+        vm._vnode = vnode;
+        // Vue.prototype.__patch__ is injected in entry points
+        // based on the rendering backend used.
+        if (!prevVnode) {
+            // initial render
+            vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
+        } else {
+            // updates
+            vm.$el = vm.__patch__(prevVnode, vnode);
+        }
+        activeInstance = prevActiveInstance;
+        // update __vue__ reference
+        if (prevEl) {
+            prevEl.__vue__ = null;
+        }
+        if (vm.$el) {
+            vm.$el.__vue__ = vm;
+        }
+        // if parent is an HOC, update its $el as well
+        if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
+            vm.$parent.$el = vm.$el;
+        }
+        // updated hook is called by the scheduler to ensure that children are
+        // updated in a parent's updated hook.
+    };
 
-  Vue.prototype.$forceUpdate = function () {
-    var vm = this;
-    if (vm._watcher) {
-      vm._watcher.update();
-    }
-  };
+    Vue.prototype.$forceUpdate = function () {
+        var vm = this;
+        if (vm._watcher) {
+            vm._watcher.update();
+        }
+    };
 
-  Vue.prototype.$destroy = function () {
-    var vm = this;
-    if (vm._isBeingDestroyed) {
-      return
-    }
-    callHook(vm, 'beforeDestroy');
-    vm._isBeingDestroyed = true;
-    // remove self from parent
-    var parent = vm.$parent;
-    if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
-      remove(parent.$children, vm);
-    }
-    // teardown watchers
-    if (vm._watcher) {
-      vm._watcher.teardown();
-    }
-    var i = vm._watchers.length;
-    while (i--) {
-      vm._watchers[i].teardown();
-    }
-    // remove reference from data ob
-    // frozen object may not have observer.
-    if (vm._data.__ob__) {
-      vm._data.__ob__.vmCount--;
-    }
-    // call the last hook...
-    vm._isDestroyed = true;
-    // invoke destroy hooks on current rendered tree
-    vm.__patch__(vm._vnode, null);
-    // fire destroyed hook
-    callHook(vm, 'destroyed');
-    // turn off all instance listeners.
-    vm.$off();
-    // remove __vue__ reference
-    if (vm.$el) {
-      vm.$el.__vue__ = null;
-    }
-    // release circular reference (#6759)
-    if (vm.$vnode) {
-      vm.$vnode.parent = null;
-    }
-  };
+    Vue.prototype.$destroy = function () {
+        var vm = this;
+        if (vm._isBeingDestroyed) {
+            return
+        }
+        callHook(vm, 'beforeDestroy');
+        vm._isBeingDestroyed = true;
+        // remove self from parent
+        var parent = vm.$parent;
+        if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
+            remove(parent.$children, vm);
+        }
+        // teardown watchers
+        if (vm._watcher) {
+            vm._watcher.teardown();
+        }
+        var i = vm._watchers.length;
+        while (i--) {
+            vm._watchers[i].teardown();
+        }
+        // remove reference from data ob
+        // frozen object may not have observer.
+        if (vm._data.__ob__) {
+            vm._data.__ob__.vmCount--;
+        }
+        // call the last hook...
+        vm._isDestroyed = true;
+        // invoke destroy hooks on current rendered tree
+        vm.__patch__(vm._vnode, null);
+        // fire destroyed hook
+        callHook(vm, 'destroyed');
+        // turn off all instance listeners.
+        vm.$off();
+        // remove __vue__ reference
+        if (vm.$el) {
+            vm.$el.__vue__ = null;
+        }
+        // release circular reference (#6759)
+        if (vm.$vnode) {
+            vm.$vnode.parent = null;
+        }
+    };
 }
 
 function mountComponent (
@@ -2732,73 +2712,79 @@ function mountComponent (
   el,
   hydrating
 ) {
-  vm.$el = el;
-  if (!vm.$options.render) {
-    vm.$options.render = createEmptyVNode;
-    {
-      /* istanbul ignore if */
-      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
-        vm.$options.el || el) {
-        warn(
-          'You are using the runtime-only build of Vue where the template ' +
-          'compiler is not available. Either pre-compile the templates into ' +
-          'render functions, or use the compiler-included build.',
-          vm
-        );
-      } else {
-        warn(
-          'Failed to mount component: template or render function not defined.',
-          vm
-        );
-      }
+    vm.$el = el;
+    if (!vm.$options.render) { // 到达这里render函数必要要有了,不然会提示的
+        vm.$options.render = createEmptyVNode; // 先给render属性赋值一个空的vnode节点
+        { // 非生产环境下
+            /* istanbul ignore if */
+            // 如果选项中有template属性且非X-Templates模板或者选项中有el属性或者el参数不为空
+            // 说明有模板但是未编译成render函数,会提示你正在使用runtime-only版的vue，它是不包含
+            // compile编译功能的。你要么需要把模板预编译成render函数要么使用带有compile版的vue
+            if (
+                (vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
+                vm.$options.el || 
+                el
+            ) {
+                warn(
+                    'You are using the runtime-only build of Vue where the template ' +
+                    'compiler is not available. Either pre-compile the templates into ' +
+                    'render functions, or use the compiler-included build.',
+                    vm
+                );
+            } else { // 上面条件不符合, 则vue猜测并提示安装组件失败, 模板或者渲染函数未定义
+                warn(
+                    'Failed to mount component: template or render function not defined.',
+                    vm
+                );
+            }
+        }
     }
-  }
-  callHook(vm, 'beforeMount');
+    callHook(vm, 'beforeMount'); // 安装之前调用 beforeMount 钩子
 
-  var updateComponent;
-  /* istanbul ignore if */
-  if ("development" !== 'production' && config.performance && mark) {
-    updateComponent = function () {
-      var name = vm._name;
-      var id = vm._uid;
-      var startTag = "vue-perf-start:" + id;
-      var endTag = "vue-perf-end:" + id;
+    var updateComponent; // 渲染watcher需要调用的函数
+    /* istanbul ignore if */
+    if ("development" !== 'production' && config.performance && mark) {
+        updateComponent = function () {
+            var name = vm._name;
+            var id = vm._uid;
+            var startTag = "vue-perf-start:" + id;
+            var endTag = "vue-perf-end:" + id;
 
-      mark(startTag);
-      var vnode = vm._render();
-      mark(endTag);
-      measure(("vue " + name + " render"), startTag, endTag);
+            mark(startTag);
+            var vnode = vm._render();
+            mark(endTag);
+            measure(("vue " + name + " render"), startTag, endTag);
 
-      mark(startTag);
-      vm._update(vnode, hydrating);
-      mark(endTag);
-      measure(("vue " + name + " patch"), startTag, endTag);
-    };
-  } else {
-    updateComponent = function () {
-      vm._update(vm._render(), hydrating);
-    };
-  }
-
-  // we set this to vm._watcher inside the watcher's constructor
-  // since the watcher's initial patch may call $forceUpdate (e.g. inside child
-  // component's mounted hook), which relies on vm._watcher being already defined
-  new Watcher(vm, updateComponent, noop, {
-    before: function before () {
-      if (vm._isMounted) {
-        callHook(vm, 'beforeUpdate');
-      }
+            mark(startTag);
+            vm._update(vnode, hydrating);
+            mark(endTag);
+            measure(("vue " + name + " patch"), startTag, endTag);
+        };
+    } else {
+        updateComponent = function () {
+            vm._update(vm._render(), hydrating);
+        };
     }
-  }, true /* isRenderWatcher */);
-  hydrating = false;
 
-  // manually mounted instance, call mounted on self
-  // mounted is called for render-created child components in its inserted hook
-  if (vm.$vnode == null) {
-    vm._isMounted = true;
-    callHook(vm, 'mounted');
-  }
-  return vm
+    // we set this to vm._watcher inside the watcher's constructor
+    // since the watcher's initial patch may call $forceUpdate (e.g. inside child
+    // component's mounted hook), which relies on vm._watcher being already defined
+    new Watcher(vm, updateComponent, noop, {
+        before: function before () {
+            if (vm._isMounted) {
+                callHook(vm, 'beforeUpdate');
+            }
+        }
+    }, true /* isRenderWatcher */);
+    hydrating = false;
+
+    // manually mounted instance, call mounted on self
+    // mounted is called for render-created child components in its inserted hook
+    if (vm.$vnode == null) {
+        vm._isMounted = true;
+        callHook(vm, 'mounted');
+    }
+    return vm
 }
 
 function updateChildComponent (
@@ -2909,22 +2895,22 @@ function deactivateChildComponent (vm, direct) {
 }
 
 function callHook (vm, hook) {
-  // #7573 disable dep collection when invoking lifecycle hooks
-  pushTarget();
-  var handlers = vm.$options[hook];
-  if (handlers) {
-    for (var i = 0, j = handlers.length; i < j; i++) {
-      try {
-        handlers[i].call(vm);
-      } catch (e) {
-        handleError(e, vm, (hook + " hook"));
-      }
+    // #7573 disable dep collection when invoking lifecycle hooks
+    pushTarget();
+    var handlers = vm.$options[hook];
+    if (handlers) {
+        for (var i = 0, j = handlers.length; i < j; i++) {
+            try {
+                handlers[i].call(vm);
+            } catch (e) {
+                handleError(e, vm, (hook + " hook"));
+            }
+        }
     }
-  }
-  if (vm._hasHookEvent) {
-    vm.$emit('hook:' + hook);
-  }
-  popTarget();
+    if (vm._hasHookEvent) {
+        vm.$emit('hook:' + hook);
+    }
+    popTarget();
 }
 
 /*  */
@@ -3311,10 +3297,10 @@ Watcher.prototype.teardown = function teardown () {
 /*  */
 
 var sharedPropertyDefinition = {
-  enumerable: true,
-  configurable: true,
-  get: noop,
-  set: noop
+    enumerable: true,
+    configurable: true,
+    get: noop,
+    set: noop
 };
 
 function proxy (target, sourceKey, key) {
@@ -3590,50 +3576,50 @@ function createWatcher (
 }
 
 function stateMixin (Vue) {
-  // flow somehow has problems with directly declared definition object
-  // when using Object.defineProperty, so we have to procedurally build up
-  // the object here.
-  var dataDef = {};
-  dataDef.get = function () { return this._data };
-  var propsDef = {};
-  propsDef.get = function () { return this._props };
-  {
-    dataDef.set = function (newData) {
-      warn(
-        'Avoid replacing instance root $data. ' +
-        'Use nested data properties instead.',
-        this
-      );
-    };
-    propsDef.set = function () {
-      warn("$props is readonly.", this);
-    };
-  }
-  Object.defineProperty(Vue.prototype, '$data', dataDef);
-  Object.defineProperty(Vue.prototype, '$props', propsDef);
+    // flow somehow has problems with directly declared definition object
+    // when using Object.defineProperty, so we have to procedurally build up
+    // the object here.
+    var dataDef = {};
+    dataDef.get = function () { return this._data };
+    var propsDef = {};
+    propsDef.get = function () { return this._props };
+    {
+        dataDef.set = function (newData) {
+            warn(
+                'Avoid replacing instance root $data. ' +
+                'Use nested data properties instead.',
+                this
+            );
+        };
+        propsDef.set = function () {
+            warn("$props is readonly.", this);
+        };
+    }
+    Object.defineProperty(Vue.prototype, '$data', dataDef);
+    Object.defineProperty(Vue.prototype, '$props', propsDef);
 
-  Vue.prototype.$set = set;
-  Vue.prototype.$delete = del;
+    Vue.prototype.$set = set;
+    Vue.prototype.$delete = del;
 
-  Vue.prototype.$watch = function (
-    expOrFn,
-    cb,
-    options
-  ) {
-    var vm = this;
-    if (isPlainObject(cb)) {
-      return createWatcher(vm, expOrFn, cb, options)
-    }
-    options = options || {};
-    options.user = true;
-    var watcher = new Watcher(vm, expOrFn, cb, options);
-    if (options.immediate) {
-      cb.call(vm, watcher.value);
-    }
-    return function unwatchFn () {
-      watcher.teardown();
-    }
-  };
+    Vue.prototype.$watch = function (
+        expOrFn,
+        cb,
+        options
+    ) {
+        var vm = this;
+        if (isPlainObject(cb)) {
+            return createWatcher(vm, expOrFn, cb, options)
+        }
+        options = options || {};
+        options.user = true;
+        var watcher = new Watcher(vm, expOrFn, cb, options);
+        if (options.immediate) {
+            cb.call(vm, watcher.value);
+        }
+        return function unwatchFn () {
+            watcher.teardown();
+        }
+    };
 }
 
 /*  */
@@ -3707,9 +3693,6 @@ function resolveInject (inject, vm) {
 
 /*  */
 
-/**
- * Runtime helper for rendering v-for lists.
- */
 function renderList (
   val,
   render
@@ -3741,9 +3724,6 @@ function renderList (
 
 /*  */
 
-/**
- * Runtime helper for rendering <slot>
- */
 function renderSlot (
   name,
   fallback,
@@ -3790,9 +3770,6 @@ function renderSlot (
 
 /*  */
 
-/**
- * Runtime helper for resolving filters
- */
 function resolveFilter (id) {
   return resolveAsset(this.$options, 'filters', id, true) || identity
 }
@@ -3831,9 +3808,6 @@ function checkKeyCodes (
 
 /*  */
 
-/**
- * Runtime helper for merging v-bind="object" into a VNode's data.
- */
 function bindObjectProps (
   data,
   tag,
@@ -3968,21 +3942,21 @@ function bindObjectListeners (data, value) {
 /*  */
 
 function installRenderHelpers (target) {
-  target._o = markOnce;
-  target._n = toNumber;
-  target._s = toString;
-  target._l = renderList;
-  target._t = renderSlot;
-  target._q = looseEqual;
-  target._i = looseIndexOf;
-  target._m = renderStatic;
-  target._f = resolveFilter;
-  target._k = checkKeyCodes;
-  target._b = bindObjectProps;
-  target._v = createTextVNode;
-  target._e = createEmptyVNode;
-  target._u = resolveScopedSlots;
-  target._g = bindObjectListeners;
+    target._o = markOnce;
+    target._n = toNumber;
+    target._s = toString;
+    target._l = renderList;
+    target._t = renderSlot;
+    target._q = looseEqual;
+    target._i = looseIndexOf;
+    target._m = renderStatic;
+    target._f = resolveFilter;
+    target._k = checkKeyCodes;
+    target._b = bindObjectProps;
+    target._v = createTextVNode;
+    target._e = createEmptyVNode;
+    target._u = resolveScopedSlots;
+    target._g = bindObjectListeners;
 }
 
 /*  */
@@ -4121,13 +4095,10 @@ function mergeProps (to, from) {
 
 // https://github.com/Hanks10100/weex-native-directive/tree/master/component
 
-// listening on native callback
-
 /*  */
 
 /*  */
 
-// inline hooks to be invoked on component VNodes during patch
 var componentVNodeHooks = {
   init: function init (vnode, hydrating) {
     if (
@@ -4526,71 +4497,71 @@ function initRender (vm) {
 }
 
 function renderMixin (Vue) {
-  // install runtime convenience helpers
-  installRenderHelpers(Vue.prototype);
+    // install runtime convenience helpers
+    installRenderHelpers(Vue.prototype);
 
-  Vue.prototype.$nextTick = function (fn) {
-    return nextTick(fn, this)
-  };
+    Vue.prototype.$nextTick = function (fn) {
+        return nextTick(fn, this)
+    };
 
-  Vue.prototype._render = function () {
-    var vm = this;
-    var ref = vm.$options;
-    var render = ref.render;
-    var _parentVnode = ref._parentVnode;
+    Vue.prototype._render = function () {
+        var vm = this;
+        var ref = vm.$options;
+        var render = ref.render;
+        var _parentVnode = ref._parentVnode;
 
-    // reset _rendered flag on slots for duplicate slot check
-    {
-      for (var key in vm.$slots) {
-        // $flow-disable-line
-        vm.$slots[key]._rendered = false;
-      }
-    }
-
-    if (_parentVnode) {
-      vm.$scopedSlots = _parentVnode.data.scopedSlots || emptyObject;
-    }
-
-    // set parent vnode. this allows render functions to have access
-    // to the data on the placeholder node.
-    vm.$vnode = _parentVnode;
-    // render self
-    var vnode;
-    try {
-      vnode = render.call(vm._renderProxy, vm.$createElement);
-    } catch (e) {
-      handleError(e, vm, "render");
-      // return error render result,
-      // or previous vnode to prevent render error causing blank component
-      /* istanbul ignore else */
-      {
-        if (vm.$options.renderError) {
-          try {
-            vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e);
-          } catch (e) {
-            handleError(e, vm, "renderError");
-            vnode = vm._vnode;
-          }
-        } else {
-          vnode = vm._vnode;
+        // reset _rendered flag on slots for duplicate slot check
+        {
+            for (var key in vm.$slots) {
+                // $flow-disable-line
+                vm.$slots[key]._rendered = false;
+            }
         }
-      }
-    }
-    // return empty vnode in case the render function errored out
-    if (!(vnode instanceof VNode)) {
-      if ("development" !== 'production' && Array.isArray(vnode)) {
-        warn(
-          'Multiple root nodes returned from render function. Render function ' +
-          'should return a single root node.',
-          vm
-        );
-      }
-      vnode = createEmptyVNode();
-    }
-    // set parent
-    vnode.parent = _parentVnode;
-    return vnode
-  };
+
+        if (_parentVnode) {
+            vm.$scopedSlots = _parentVnode.data.scopedSlots || emptyObject;
+        }
+
+        // set parent vnode. this allows render functions to have access
+        // to the data on the placeholder node.
+        vm.$vnode = _parentVnode;
+        // render self
+        var vnode;
+        try {
+            vnode = render.call(vm._renderProxy, vm.$createElement);
+        } catch (e) {
+            handleError(e, vm, "render");
+            // return error render result,
+            // or previous vnode to prevent render error causing blank component
+            /* istanbul ignore else */
+            {
+                if (vm.$options.renderError) {
+                    try {
+                        vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e);
+                    } catch (e) {
+                        handleError(e, vm, "renderError");
+                        vnode = vm._vnode;
+                    }
+                } else {
+                    vnode = vm._vnode;
+                }
+            }
+        }
+        // return empty vnode in case the render function errored out
+        if (!(vnode instanceof VNode)) {
+            if ("development" !== 'production' && Array.isArray(vnode)) {
+                warn(
+                    'Multiple root nodes returned from render function. Render function ' +
+                    'should return a single root node.',
+                    vm
+                );
+            }
+            vnode = createEmptyVNode();
+        }
+        // set parent
+        vnode.parent = _parentVnode;
+        return vnode
+    };
 }
 
 /*  */
@@ -4598,60 +4569,60 @@ function renderMixin (Vue) {
 var uid$3 = 0;
 
 function initMixin (Vue) {
-  Vue.prototype._init = function (options) {
-    var vm = this;
-    // a uid
-    vm._uid = uid$3++;
+    Vue.prototype._init = function (options) {
+        var vm = this;
+        // a uid
+        vm._uid = uid$3++;
 
-    var startTag, endTag;
-    /* istanbul ignore if */
-    if ("development" !== 'production' && config.performance && mark) {
-      startTag = "vue-perf-start:" + (vm._uid);
-      endTag = "vue-perf-end:" + (vm._uid);
-      mark(startTag);
-    }
+        var startTag, endTag;
+        /* istanbul ignore if */
+        if ("development" !== 'production' && config.performance && mark) {
+            startTag = "vue-perf-start:" + (vm._uid);
+            endTag = "vue-perf-end:" + (vm._uid);
+            mark(startTag);
+        }
 
-    // a flag to avoid this being observed
-    vm._isVue = true;
-    // merge options
-    if (options && options._isComponent) {
-      // optimize internal component instantiation
-      // since dynamic options merging is pretty slow, and none of the
-      // internal component options needs special treatment.
-      initInternalComponent(vm, options);
-    } else {
-      vm.$options = mergeOptions(
-        resolveConstructorOptions(vm.constructor),
-        options || {},
-        vm
-      );
-    }
-    /* istanbul ignore else */
-    {
-      initProxy(vm);
-    }
-    // expose real self
-    vm._self = vm;
-    initLifecycle(vm);
-    initEvents(vm);
-    initRender(vm);
-    callHook(vm, 'beforeCreate');
-    initInjections(vm); // resolve injections before data/props
-    initState(vm);
-    initProvide(vm); // resolve provide after data/props
-    callHook(vm, 'created');
+        // a flag to avoid this being observed
+        vm._isVue = true;
+        // merge options
+        if (options && options._isComponent) {
+            // optimize internal component instantiation
+            // since dynamic options merging is pretty slow, and none of the
+            // internal component options needs special treatment.
+            initInternalComponent(vm, options);
+        } else {
+            vm.$options = mergeOptions(
+                resolveConstructorOptions(vm.constructor),
+                options || {},
+                vm
+            );
+        }
+        /* istanbul ignore else */
+        {
+            initProxy(vm);
+        }
+        // expose real self
+        vm._self = vm;
+        initLifecycle(vm);
+        initEvents(vm);
+        initRender(vm);
+        callHook(vm, 'beforeCreate');
+        initInjections(vm); // resolve injections before data/props
+        initState(vm);
+        initProvide(vm); // resolve provide after data/props
+        callHook(vm, 'created');
 
-    /* istanbul ignore if */
-    if ("development" !== 'production' && config.performance && mark) {
-      vm._name = formatComponentName(vm, false);
-      mark(endTag);
-      measure(("vue " + (vm._name) + " init"), startTag, endTag);
-    }
+        /* istanbul ignore if */
+        if ("development" !== 'production' && config.performance && mark) {
+            vm._name = formatComponentName(vm, false);
+            mark(endTag);
+            measure(("vue " + (vm._name) + " init"), startTag, endTag);
+        }
 
-    if (vm.$options.el) {
-      vm.$mount(vm.$options.el);
-    }
-  };
+        if (vm.$options.el) {
+            vm.$mount(vm.$options.el);
+        }
+    };
 }
 
 function initInternalComponent (vm, options) {
@@ -4731,173 +4702,174 @@ function dedupe (latest, extended, sealed) {
 }
 
 function Vue (options) {
-  if ("development" !== 'production' &&
-    !(this instanceof Vue)
-  ) {
-    warn('Vue is a constructor and should be called with the `new` keyword');
-  }
-  this._init(options);
+    if (
+    	"development" !== 'production' &&
+        !(this instanceof Vue)
+    ) {
+        warn('Vue is a constructor and should be called with the `new` keyword');
+    }
+    this._init(options);
 }
 
-initMixin(Vue);
-stateMixin(Vue);
-eventsMixin(Vue);
-lifecycleMixin(Vue);
-renderMixin(Vue);
+initMixin(Vue); // 给原型添加 _init 方法
+stateMixin(Vue); // 给原型添加 $data, $props属性, $set, $delete, $watch 方法
+eventsMixin(Vue); // 给原型添加 $on, $once, $off, $emit 方法
+lifecycleMixin(Vue); // 给原型添加 _update, $forceUpdate, $destroy 方法
+renderMixin(Vue); // 给原型添加 _o,_n,_s,_l,_t,_q,_i,_m,_f,_k,_b,_v,_e,_u,_g, $nextTick, _render 方法
 
 /*  */
 
 function initUse (Vue) {
-  Vue.use = function (plugin) {
-    var installedPlugins = (this._installedPlugins || (this._installedPlugins = []));
-    if (installedPlugins.indexOf(plugin) > -1) {
-      return this
-    }
+    Vue.use = function (plugin) {
+        var installedPlugins = (this._installedPlugins || (this._installedPlugins = []));
+        if (installedPlugins.indexOf(plugin) > -1) {
+            return this
+        }
 
-    // additional parameters
-    var args = toArray(arguments, 1);
-    args.unshift(this);
-    if (typeof plugin.install === 'function') {
-      plugin.install.apply(plugin, args);
-    } else if (typeof plugin === 'function') {
-      plugin.apply(null, args);
-    }
-    installedPlugins.push(plugin);
-    return this
-  };
+        // additional parameters
+        var args = toArray(arguments, 1);
+        args.unshift(this);
+        if (typeof plugin.install === 'function') {
+            plugin.install.apply(plugin, args);
+        } else if (typeof plugin === 'function') {
+            plugin.apply(null, args);
+        }
+        installedPlugins.push(plugin);
+        return this
+    };
 }
 
 /*  */
 
 function initMixin$1 (Vue) {
-  Vue.mixin = function (mixin) {
-    this.options = mergeOptions(this.options, mixin);
-    return this
-  };
+    Vue.mixin = function (mixin) {
+	    this.options = mergeOptions(this.options, mixin);
+	    return this
+    };
 }
 
 /*  */
 
 function initExtend (Vue) {
-  /**
-   * Each instance constructor, including Vue, has a unique
-   * cid. This enables us to create wrapped "child
-   * constructors" for prototypal inheritance and cache them.
-   */
-  Vue.cid = 0;
-  var cid = 1;
+    /**
+     * Each instance constructor, including Vue, has a unique
+     * cid. This enables us to create wrapped "child
+     * constructors" for prototypal inheritance and cache them.
+     */
+    Vue.cid = 0;
+    var cid = 1;
 
-  /**
-   * Class inheritance
-   */
-  Vue.extend = function (extendOptions) {
-    extendOptions = extendOptions || {};
-    var Super = this;
-    var SuperId = Super.cid;
-    var cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {});
-    if (cachedCtors[SuperId]) {
-      return cachedCtors[SuperId]
-    }
+    /**
+     * Class inheritance
+     */
+    Vue.extend = function (extendOptions) {
+        extendOptions = extendOptions || {};
+        var Super = this;
+        var SuperId = Super.cid;
+        var cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {});
+        if (cachedCtors[SuperId]) {
+            return cachedCtors[SuperId]
+        }
 
-    var name = extendOptions.name || Super.options.name;
-    if ("development" !== 'production' && name) {
-      validateComponentName(name);
-    }
+        var name = extendOptions.name || Super.options.name;
+        if ("development" !== 'production' && name) {
+            validateComponentName(name);
+        }
 
-    var Sub = function VueComponent (options) {
-      this._init(options);
+        var Sub = function VueComponent (options) {
+            this._init(options);
+        };
+        Sub.prototype = Object.create(Super.prototype);
+        Sub.prototype.constructor = Sub;
+        Sub.cid = cid++;
+        Sub.options = mergeOptions(
+            Super.options,
+            extendOptions
+        );
+        Sub['super'] = Super;
+
+        // For props and computed properties, we define the proxy getters on
+        // the Vue instances at extension time, on the extended prototype. This
+        // avoids Object.defineProperty calls for each instance created.
+        if (Sub.options.props) {
+            initProps$1(Sub);
+        }
+        if (Sub.options.computed) {
+            initComputed$1(Sub);
+        }
+
+        // allow further extension/mixin/plugin usage
+        Sub.extend = Super.extend;
+        Sub.mixin = Super.mixin;
+        Sub.use = Super.use;
+
+        // create asset registers, so extended classes
+        // can have their private assets too.
+        ASSET_TYPES.forEach(function (type) {
+            Sub[type] = Super[type];
+        });
+        // enable recursive self-lookup
+        if (name) {
+            Sub.options.components[name] = Sub;
+        }
+
+        // keep a reference to the super options at extension time.
+        // later at instantiation we can check if Super's options have
+        // been updated.
+        Sub.superOptions = Super.options;
+        Sub.extendOptions = extendOptions;
+        Sub.sealedOptions = extend({}, Sub.options);
+
+        // cache constructor
+        cachedCtors[SuperId] = Sub;
+        return Sub
     };
-    Sub.prototype = Object.create(Super.prototype);
-    Sub.prototype.constructor = Sub;
-    Sub.cid = cid++;
-    Sub.options = mergeOptions(
-      Super.options,
-      extendOptions
-    );
-    Sub['super'] = Super;
-
-    // For props and computed properties, we define the proxy getters on
-    // the Vue instances at extension time, on the extended prototype. This
-    // avoids Object.defineProperty calls for each instance created.
-    if (Sub.options.props) {
-      initProps$1(Sub);
-    }
-    if (Sub.options.computed) {
-      initComputed$1(Sub);
-    }
-
-    // allow further extension/mixin/plugin usage
-    Sub.extend = Super.extend;
-    Sub.mixin = Super.mixin;
-    Sub.use = Super.use;
-
-    // create asset registers, so extended classes
-    // can have their private assets too.
-    ASSET_TYPES.forEach(function (type) {
-      Sub[type] = Super[type];
-    });
-    // enable recursive self-lookup
-    if (name) {
-      Sub.options.components[name] = Sub;
-    }
-
-    // keep a reference to the super options at extension time.
-    // later at instantiation we can check if Super's options have
-    // been updated.
-    Sub.superOptions = Super.options;
-    Sub.extendOptions = extendOptions;
-    Sub.sealedOptions = extend({}, Sub.options);
-
-    // cache constructor
-    cachedCtors[SuperId] = Sub;
-    return Sub
-  };
 }
 
 function initProps$1 (Comp) {
-  var props = Comp.options.props;
-  for (var key in props) {
-    proxy(Comp.prototype, "_props", key);
-  }
+    var props = Comp.options.props;
+    for (var key in props) {
+        proxy(Comp.prototype, "_props", key);
+    }
 }
 
 function initComputed$1 (Comp) {
-  var computed = Comp.options.computed;
-  for (var key in computed) {
-    defineComputed(Comp.prototype, key, computed[key]);
-  }
+    var computed = Comp.options.computed;
+    for (var key in computed) {
+        defineComputed(Comp.prototype, key, computed[key]);
+    }
 }
 
 /*  */
 
 function initAssetRegisters (Vue) {
-  /**
-   * Create asset registration methods.
-   */
-  ASSET_TYPES.forEach(function (type) {
-    Vue[type] = function (
-      id,
-      definition
-    ) {
-      if (!definition) {
-        return this.options[type + 's'][id]
-      } else {
-        /* istanbul ignore if */
-        if ("development" !== 'production' && type === 'component') {
-          validateComponentName(id);
-        }
-        if (type === 'component' && isPlainObject(definition)) {
-          definition.name = definition.name || id;
-          definition = this.options._base.extend(definition);
-        }
-        if (type === 'directive' && typeof definition === 'function') {
-          definition = { bind: definition, update: definition };
-        }
-        this.options[type + 's'][id] = definition;
-        return definition
-      }
-    };
-  });
+    /**
+     * Create asset registration methods.
+     */
+    ASSET_TYPES.forEach(function (type) {
+        Vue[type] = function (
+            id,
+            definition
+        ) {
+            if (!definition) {
+                return this.options[type + 's'][id]
+            } else {
+                /* istanbul ignore if */
+                if ("development" !== 'production' && type === 'component') {
+                    validateComponentName(id);
+                }
+                if (type === 'component' && isPlainObject(definition)) {
+                    definition.name = definition.name || id;
+                    definition = this.options._base.extend(definition);
+                }
+                if (type === 'directive' && typeof definition === 'function') {
+                    definition = { bind: definition, update: definition };
+                }
+                this.options[type + 's'][id] = definition;
+                return definition
+            }
+        };
+    });
 }
 
 /*  */
@@ -5037,73 +5009,75 @@ var builtInComponents = {
 /*  */
 
 function initGlobalAPI (Vue) {
-  // config
-  var configDef = {};
-  configDef.get = function () { return config; };
-  {
-    configDef.set = function () {
-      warn(
-        'Do not replace the Vue.config object, set individual fields instead.'
-      );
+    // config
+    var configDef = {};
+    configDef.get = function () { return config; };
+    {
+        configDef.set = function () {
+            warn(
+                'Do not replace the Vue.config object, set individual fields instead.'
+            );
+        };
+    }
+    Object.defineProperty(Vue, 'config', configDef);
+
+    // exposed util methods.
+    // NOTE: these are not considered part of the public API - avoid relying on
+    // them unless you are aware of the risk.
+    Vue.util = {
+        warn: warn,
+        extend: extend,
+        mergeOptions: mergeOptions,
+        defineReactive: defineReactive
     };
-  }
-  Object.defineProperty(Vue, 'config', configDef);
 
-  // exposed util methods.
-  // NOTE: these are not considered part of the public API - avoid relying on
-  // them unless you are aware of the risk.
-  Vue.util = {
-    warn: warn,
-    extend: extend,
-    mergeOptions: mergeOptions,
-    defineReactive: defineReactive
-  };
+    Vue.set = set;
+    Vue.delete = del;
+    Vue.nextTick = nextTick;
 
-  Vue.set = set;
-  Vue.delete = del;
-  Vue.nextTick = nextTick;
+    Vue.options = Object.create(null);
+    ASSET_TYPES.forEach(function (type) {
+        Vue.options[type + 's'] = Object.create(null);
+    });
 
-  Vue.options = Object.create(null);
-  ASSET_TYPES.forEach(function (type) {
-    Vue.options[type + 's'] = Object.create(null);
-  });
+    // this is used to identify the "base" constructor to extend all plain-object
+    // components with in Weex's multi-instance scenarios.
+    Vue.options._base = Vue;
 
-  // this is used to identify the "base" constructor to extend all plain-object
-  // components with in Weex's multi-instance scenarios.
-  Vue.options._base = Vue;
+    extend(Vue.options.components, builtInComponents);
 
-  extend(Vue.options.components, builtInComponents);
-
-  initUse(Vue);
-  initMixin$1(Vue);
-  initExtend(Vue);
-  initAssetRegisters(Vue);
+    initUse(Vue);
+    initMixin$1(Vue);
+    initExtend(Vue);
+    initAssetRegisters(Vue);
 }
 
 initGlobalAPI(Vue);
 
+// 给原型添加 $isServer 属性
 Object.defineProperty(Vue.prototype, '$isServer', {
-  get: isServerRendering
+    get: isServerRendering
 });
 
+// 给原型添加 $ssrContext 属性
 Object.defineProperty(Vue.prototype, '$ssrContext', {
-  get: function get () {
-    /* istanbul ignore next */
-    return this.$vnode && this.$vnode.ssrContext
-  }
+    get: function get () {
+	    /* istanbul ignore next */
+	    return this.$vnode && this.$vnode.ssrContext
+    }
 });
 
+// 给 Vue 添加 FunctionalRenderContext 函数
 // expose FunctionalRenderContext for ssr runtime helper installation
 Object.defineProperty(Vue, 'FunctionalRenderContext', {
-  value: FunctionalRenderContext
+    value: FunctionalRenderContext
 });
 
+// 给 Vue 添加 version 属性
 Vue.version = '2.5.17-beta.0';
 
 /*  */
 
-// these are reserved for web because they are directly compiled away
-// during template compilation
 var isReservedAttr = makeMap('style,class');
 
 // attributes that should be using props for binding
@@ -5300,22 +5274,19 @@ var isTextInputType = makeMap('text,number,password,search,email,tel,url');
 
 /*  */
 
-/**
- * Query an element selector if it's not an element already.
- */
 function query (el) {
-  if (typeof el === 'string') {
-    var selected = document.querySelector(el);
-    if (!selected) {
-      "development" !== 'production' && warn(
-        'Cannot find element: ' + el
-      );
-      return document.createElement('div')
+    if (typeof el === 'string') {
+        var selected = document.querySelector(el);
+        if (!selected) {
+            "development" !== 'production' && warn(
+                'Cannot find element: ' + el
+            );
+            return document.createElement('div')
+        }
+        return selected
+    } else {
+        return el
     }
-    return selected
-  } else {
-    return el
-  }
 }
 
 /*  */
@@ -7040,10 +7011,6 @@ function genDefaultModel (
 
 /*  */
 
-// normalize v-model event tokens that can only be determined at runtime.
-// it's important to place the event as the first in the array because
-// the whole point is ensuring the v-model callback gets called before
-// user-attached handlers.
 function normalizeEvents (on) {
   /* istanbul ignore if */
   if (isDef(on[RANGE_TOKEN])) {
@@ -7949,8 +7916,6 @@ var platformModules = [
 
 /*  */
 
-// the directive module should be applied last, after all
-// built-in modules have been applied.
 var modules = platformModules.concat(baseModules);
 
 var patch = createPatchFunction({ nodeOps: nodeOps, modules: modules });
@@ -7960,7 +7925,6 @@ var patch = createPatchFunction({ nodeOps: nodeOps, modules: modules });
  * properties to Elements.
  */
 
-/* istanbul ignore if */
 if (isIE9) {
   // http://www.matts411.com/post/internet-explorer-9-oninput/
   document.addEventListener('selectionchange', function () {
@@ -8096,7 +8060,6 @@ function trigger (el, type) {
 
 /*  */
 
-// recursively search for possible transition defined inside the component root
 function locateNode (vnode) {
   return vnode.componentInstance && (!vnode.data || !vnode.data.transition)
     ? locateNode(vnode.componentInstance._vnode)
@@ -8534,7 +8497,6 @@ var platformComponents = {
 
 /*  */
 
-// install platform specific utils
 Vue.config.mustUseProp = mustUseProp;
 Vue.config.isReservedTag = isReservedTag;
 Vue.config.isReservedAttr = isReservedAttr;
@@ -8550,43 +8512,45 @@ Vue.prototype.__patch__ = inBrowser ? patch : noop;
 
 // public mount method
 Vue.prototype.$mount = function (
-  el,
-  hydrating
+    el,
+    hydrating
 ) {
-  el = el && inBrowser ? query(el) : undefined;
-  return mountComponent(this, el, hydrating)
+    el = el && inBrowser ? query(el) : undefined;
+    return mountComponent(this, el, hydrating)
 };
 
 // devtools global hook
 /* istanbul ignore next */
 if (inBrowser) {
-  setTimeout(function () {
-    if (config.devtools) {
-      if (devtools) {
-        devtools.emit('init', Vue);
-      } else if (
-        "development" !== 'production' &&
-        "development" !== 'test' &&
-        isChrome
-      ) {
-        console[console.info ? 'info' : 'log'](
-          'Download the Vue Devtools extension for a better development experience:\n' +
-          'https://github.com/vuejs/vue-devtools'
-        );
-      }
-    }
-    if ("development" !== 'production' &&
-      "development" !== 'test' &&
-      config.productionTip !== false &&
-      typeof console !== 'undefined'
-    ) {
-      console[console.info ? 'info' : 'log'](
-        "You are running Vue in development mode.\n" +
-        "Make sure to turn on production mode when deploying for production.\n" +
-        "See more tips at https://vuejs.org/guide/deployment.html"
-      );
-    }
-  }, 0);
+    setTimeout(function () {
+        return
+        if (config.devtools) {
+            if (devtools) {
+                devtools.emit('init', Vue);
+            } else if (
+                "development" !== 'production' &&
+                "development" !== 'test' &&
+                isChrome
+            ) {
+                console[console.info ? 'info' : 'log'](
+                    'Download the Vue Devtools extension for a better development experience:\n' +
+                    'https://github.com/vuejs/vue-devtools'
+                );
+            }
+        }
+        if (
+            "development" !== 'production' &&
+            "development" !== 'test' &&
+            config.productionTip !== false &&
+            typeof console !== 'undefined'
+        ) {
+            console[console.info ? 'info' : 'log'](
+                "You are running Vue in development mode.\n" +
+                "Make sure to turn on production mode when deploying for production.\n" +
+                "See more tips at https://vuejs.org/guide/deployment.html"
+            );
+        }
+    }, 0);
 }
 
 /*  */
@@ -8769,7 +8733,6 @@ var isNonPhrasingTag = makeMap(
  * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
  */
 
-// Regular Expressions for parsing tags and attributes
 var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 // could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
 // but for Vue templates we can enforce a simple charset
@@ -10032,6 +9995,8 @@ function genHandlers (
   return res.slice(0, -1) + '}'
 }
 
+// Generate handler code with binding params on Weex
+/* istanbul ignore next */
 function genHandler (
   name,
   handler
@@ -10577,7 +10542,7 @@ function genProps (props) {
   return res.slice(0, -1)
 }
 
-// #3895, #4268
+/* istanbul ignore next */
 function transformSpecialNewlines (text) {
   return text
     .replace(/\u2028/g, '\\u2028')
@@ -10586,8 +10551,6 @@ function transformSpecialNewlines (text) {
 
 /*  */
 
-// these keywords should not appear inside expressions, but operators like
-// typeof, instanceof and in are allowed
 var prohibitedKeywordRE = new RegExp('\\b' + (
   'do,if,for,let,new,try,var,case,else,with,await,break,catch,class,const,' +
   'super,throw,while,yield,delete,export,import,return,switch,default,' +
@@ -10842,9 +10805,6 @@ function createCompilerCreator (baseCompile) {
 
 /*  */
 
-// `createCompilerCreator` allows creating compilers that use alternative
-// parser/optimizer/codegen, e.g the SSR optimizing compiler.
-// Here we just export a default compiler using the default parts.
 var createCompiler = createCompilerCreator(function baseCompile (
   template,
   options
@@ -10868,7 +10828,6 @@ var compileToFunctions = ref$1.compileToFunctions;
 
 /*  */
 
-// check whether current browser encodes a char inside attribute values
 var div;
 function getShouldDecode (href) {
   div = div || document.createElement('div');
@@ -10884,77 +10843,78 @@ var shouldDecodeNewlinesForHref = inBrowser ? getShouldDecode(true) : false;
 /*  */
 
 var idToTemplate = cached(function (id) {
-  var el = query(id);
-  return el && el.innerHTML
+    var el = query(id);
+    return el && el.innerHTML
 });
 
 var mount = Vue.prototype.$mount;
 Vue.prototype.$mount = function (
-  el,
-  hydrating
+    el,
+    hydrating
 ) {
-  el = el && query(el);
+    el = el && query(el); // 获取到dom
 
-  /* istanbul ignore if */
-  if (el === document.body || el === document.documentElement) {
-    "development" !== 'production' && warn(
-      "Do not mount Vue to <html> or <body> - mount to normal elements instead."
-    );
-    return this
-  }
-
-  var options = this.$options;
-  // resolve template/el and convert to render function
-  if (!options.render) {
-    var template = options.template;
-    if (template) {
-      if (typeof template === 'string') {
-        if (template.charAt(0) === '#') {
-          template = idToTemplate(template);
-          /* istanbul ignore if */
-          if ("development" !== 'production' && !template) {
-            warn(
-              ("Template element not found or is empty: " + (options.template)),
-              this
-            );
-          }
-        }
-      } else if (template.nodeType) {
-        template = template.innerHTML;
-      } else {
-        {
-          warn('invalid template option:' + template, this);
-        }
+    /* istanbul ignore if */
+    if (el === document.body || el === document.documentElement) { // el dom 不能为body和html元素
+        "development" !== 'production' && warn(
+            "Do not mount Vue to <html> or <body> - mount to normal elements instead."
+        );
         return this
-      }
-    } else if (el) {
-      template = getOuterHTML(el);
     }
-    if (template) {
-      /* istanbul ignore if */
-      if ("development" !== 'production' && config.performance && mark) {
-        mark('compile');
-      }
 
-      var ref = compileToFunctions(template, {
-        shouldDecodeNewlines: shouldDecodeNewlines,
-        shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
-        delimiters: options.delimiters,
-        comments: options.comments
-      }, this);
-      var render = ref.render;
-      var staticRenderFns = ref.staticRenderFns;
-      options.render = render;
-      options.staticRenderFns = staticRenderFns;
+    var options = this.$options;
+    // resolve template/el and convert to render function 把el转成template,把template转成render渲染函数
+    if (!options.render) { // 选项没有render属性的话
+        var template = options.template; // 则找template属性
+        if (template) {
+            if (typeof template === 'string') { // 使用 X-Templates 的情况
+                if (template.charAt(0) === '#') {
+                    template = idToTemplate(template); // 使用el的 innerHTML 作为模板
+                    /* istanbul ignore if */
+                    if ("development" !== 'production' && !template) { // 非生产环境且没有模板的话,则提示如下
+                        warn(
+                            ("Template element not found or is empty: " + (options.template)),
+                            this
+                        );
+                    }
+                }
+            } else if (template.nodeType) { // 如果 template 是 dom 的话，则使用dom的innerHTML 作为 模板
+                template = template.innerHTML;
+            } else { // 如上都不行的话,提示失效的template选项
+                {
+                    warn('invalid template option:' + template, this);
+                }
+                return this
+            }
+        } else if (el) { // 如果没有定义template模板,怎使用el dom 的 outerHTML 作为tempalte 模板
+            template = getOuterHTML(el);
+        }
+        if (template) { // 拿到模板后
+            /* istanbul ignore if */
+            if ("development" !== 'production' && config.performance && mark) {
+                mark('compile');
+            }
 
-      /* istanbul ignore if */
-      if ("development" !== 'production' && config.performance && mark) {
-        mark('compile end');
-        measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
-      }
+            // 生成render函数和静态渲染函数,且赋值给我们的vm.$options对象
+            var ref = compileToFunctions(template, {
+                shouldDecodeNewlines: shouldDecodeNewlines,
+                shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
+                delimiters: options.delimiters,
+                comments: options.comments
+            }, this);
+            var render = ref.render;
+            var staticRenderFns = ref.staticRenderFns;
+            options.render = render;
+            options.staticRenderFns = staticRenderFns;
+
+            /* istanbul ignore if */
+            if ("development" !== 'production' && config.performance && mark) {
+                mark('compile end');
+                measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
+            }
+        }
     }
-  }
-  return mount.call(this, el, hydrating)
+    return mount.call(this, el, hydrating) // 调用先前存好的mount方法,这么做是因为runtime only版本的vue.js直接调用mount函数,而不会执行这个函数上面的那些语句,是为了代码复用
 };
 
 /**
@@ -10962,13 +10922,13 @@ Vue.prototype.$mount = function (
  * of SVG elements in IE as well.
  */
 function getOuterHTML (el) {
-  if (el.outerHTML) {
-    return el.outerHTML
-  } else {
-    var container = document.createElement('div');
-    container.appendChild(el.cloneNode(true));
-    return container.innerHTML
-  }
+    if (el.outerHTML) {
+        return el.outerHTML
+    } else {
+        var container = document.createElement('div');
+        container.appendChild(el.cloneNode(true));
+        return container.innerHTML
+    }
 }
 
 Vue.compile = compileToFunctions;
@@ -10976,3 +10936,4 @@ Vue.compile = compileToFunctions;
 return Vue;
 
 })));
+//# sourceMappingURL=vue.js.map

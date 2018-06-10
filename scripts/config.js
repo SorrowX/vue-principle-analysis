@@ -172,6 +172,7 @@ const builds = {
 function genConfig (name) {
     const opts = builds[name]
     const config = {
+        sourcemap: true,
         input: opts.entry,
         external: opts.external,
         plugins: [
