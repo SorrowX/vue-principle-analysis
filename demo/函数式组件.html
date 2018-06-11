@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>函数式组件</title>
+</head>
+<body>
+	<div id="app">
+		<functional-p id="btn1">
+			<span>1</span>
+			<span>2</span>
+			<span>
+				<i>i1</i>
+				<i>i2</i>
+			</span>
+		</functional-p>
+	</div>
+	<script src="../dist/vue.js"></script>
+	<script>
+		Vue.component('functional-p', {
+		    functional: true,
+		    render: function (createElement, context) {
+			    // 完全透明的传入任何特性、事件监听器、子结点等。
+			    return createElement('p', context.data, context.children)
+		    }
+		})
+
+		let vm = new Vue({
+
+		}).$mount('#app')
+	</script>
+</body>
+</html>

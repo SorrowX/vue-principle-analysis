@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>插槽</title>
+</head>
+<body>
+	<div id="app">
+		<slot>
+			<p>p标签</p>
+			<span>span标签</span>
+		</slot>
+	</div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+    	var vm = new Vue({
+		    el: '#app'
+		})
+
+		console.log(vm)
+    </script>
+</body>
+</html>
