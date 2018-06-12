@@ -132,9 +132,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
 }
 
 export function mountComponent (
-  vm: Component,
-  el: ?Element,
-  hydrating?: boolean
+    vm: Component,
+    el: ?Element,
+    hydrating?: boolean
 ): Component {
     vm.$el = el
     if (!vm.$options.render) { // 到达这里render函数必要要有了,不然会提示的
