@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件2</title>
+</head>
+<body>
+	<div id="app" class="app">
+		<p> 我是个 p </p>
+        <hello-world id="hw" :msg="messgae" @click="handlerClick">
+        	<span>我是 插槽 span</span>
+        </hello-world>
+	</div>
+	
+	<script src="../dist/vue.js"></script>
+	<script>
+		const HelloWorld = {
+			name: 'HelloWorld',
+			props: {
+				msg: String
+			},
+			template: `
+			    <div class="hello">
+			        <h4>{{ msg }}</h4>
+			    </div>
+			`
+		}
+
+		new Vue({ 
+			components: { HelloWorld },
+			data: {
+				messgae: '我是来自父组件中的messgae值'
+			},
+			methods: {
+				handlerClick() {
+					console.log('click')
+				}
+			}
+		}).$mount('#app')
+	</script>
+</body>
+</html>

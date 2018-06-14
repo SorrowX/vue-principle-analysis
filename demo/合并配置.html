@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>合并配置</title>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="../dist/vue.js"></script>
+	<script>
+		/*let childComp = {
+			data() {
+			    return {
+			        msg: 'Hello Vue'
+			    }
+		    },
+		    template: '<div>{{msg}}</div>',
+		    created() {
+		    	console.log('child created')
+		    },
+		    mounted() {
+		    	console.log('child mounted')
+		    }
+		}
+
+		Vue.mixin({
+		    created() {
+		    	console.log('parent created')
+		    }
+		})
+
+		let app = new Vue({
+		    el: '#app',
+		    render: h => h(childComp)
+		})*/
+
+		let SubVue = Vue.extend({
+			str: 'str',
+			created() {
+				console.log('SubVue extend created')
+			},
+		    template: '<p>{{firstName}} {{lastName}} 英文名 {{alias}}</p>'
+		})
+
+		Vue.mixin({
+			data: function () {
+			    return {
+			      firstName: '徐志康',
+			      lastName: '徐志伟',
+			      alias: 'Sorrow.X'
+			    }
+			}
+		})
+
+		new SubVue({
+			arr: [1, 2, 3],
+			created() {
+				console.log('new SubVue() created')
+			}
+		}).$mount('#app')
+	</script>
+</body>
+</html>

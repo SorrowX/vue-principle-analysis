@@ -133,16 +133,16 @@ strats.data = function (
  * Hooks and props are merged as arrays.
  */
 function mergeHook (
-  parentVal: ?Array<Function>,
-  childVal: ?Function | ?Array<Function>
+    parentVal: ?Array<Function>,
+    childVal: ?Function | ?Array<Function>
 ): ?Array<Function> {
-  return childVal
-    ? parentVal
-      ? parentVal.concat(childVal)
-      : Array.isArray(childVal)
-        ? childVal
-        : [childVal]
-    : parentVal
+    return childVal
+        ? parentVal
+            ? parentVal.concat(childVal)
+            : Array.isArray(childVal)
+                ? childVal
+                : [childVal]
+        : parentVal
 }
 
 LIFECYCLE_HOOKS.forEach(hook => {
@@ -363,45 +363,45 @@ function assertObjectType (name: string, value: any, vm: ?Component) {
  * Core utility used in both instantiation and inheritance.
  */
 export function mergeOptions (
-  parent: Object,
-  child: Object,
-  vm?: Component
+    parent: Object,
+    child: Object,
+    vm?: Component
 ): Object {
-  if (process.env.NODE_ENV !== 'production') {
-    checkComponents(child)
-  }
-
-  if (typeof child === 'function') {
-    child = child.options
-  }
-
-  normalizeProps(child, vm)
-  normalizeInject(child, vm)
-  normalizeDirectives(child)
-  const extendsFrom = child.extends
-  if (extendsFrom) {
-    parent = mergeOptions(parent, extendsFrom, vm)
-  }
-  if (child.mixins) {
-    for (let i = 0, l = child.mixins.length; i < l; i++) {
-      parent = mergeOptions(parent, child.mixins[i], vm)
+    if (process.env.NODE_ENV !== 'production') {
+        checkComponents(child)
     }
-  }
-  const options = {}
-  let key
-  for (key in parent) {
-    mergeField(key)
-  }
-  for (key in child) {
-    if (!hasOwn(parent, key)) {
-      mergeField(key)
+
+    if (typeof child === 'function') {
+        child = child.options
     }
-  }
-  function mergeField (key) {
-    const strat = strats[key] || defaultStrat
-    options[key] = strat(parent[key], child[key], vm, key)
-  }
-  return options
+
+    normalizeProps(child, vm)
+    normalizeInject(child, vm)
+    normalizeDirectives(child)
+    const extendsFrom = child.extends
+    if (extendsFrom) {
+        parent = mergeOptions(parent, extendsFrom, vm)
+    }
+    if (child.mixins) {
+        for (let i = 0, l = child.mixins.length; i < l; i++) {
+            parent = mergeOptions(parent, child.mixins[i], vm)
+        }
+    }
+    const options = {}
+    let key
+    for (key in parent) {
+        mergeField(key)
+    }
+    for (key in child) {
+        if (!hasOwn(parent, key)) {
+            mergeField(key)
+        }
+    }
+    function mergeField (key) {
+        const strat = strats[key] || defaultStrat
+        options[key] = strat(parent[key], child[key], vm, key)
+    }
+    return options
 }
 
 /**
