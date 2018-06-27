@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>data</title>
+</head>
+<body>
+	<div id="app">
+		{{ msg }}
+		<p> {{ str }} </p>
+	</div>
+	<script src="../../dist/vue.js"></script>
+	<script>
+		let vm = new Vue({
+			el: '#app',
+			props: {
+				str: {
+					type: String,
+					default: 'str'
+				}
+			},
+			data: {
+				msg: 'hi vue'
+			}
+		})
+		// vm.msg = '123'
+		// vm.str = 'str123'
+	</script>
+</body>
+</html>

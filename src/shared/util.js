@@ -56,19 +56,19 @@ export function toRawType (value: any): string {
  * for plain JavaScript objects.
  */
 export function isPlainObject (obj: any): boolean {
-  return _toString.call(obj) === '[object Object]'
+    return _toString.call(obj) === '[object Object]'
 }
 
 export function isRegExp (v: any): boolean {
-  return _toString.call(v) === '[object RegExp]'
+    return _toString.call(v) === '[object RegExp]'
 }
 
 /**
  * Check if val is a valid array index.
  */
 export function isValidArrayIndex (val: any): boolean {
-  const n = parseFloat(String(val))
-  return n >= 0 && Math.floor(n) === n && isFinite(val)
+    const n = parseFloat(String(val))
+    return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
 /**
@@ -170,7 +170,7 @@ export const capitalize = cached((str: string): string => {
  */
 const hyphenateRE = /\B([A-Z])/g
 export const hyphenate = cached((str: string): string => {
-  return str.replace(hyphenateRE, '-$1').toLowerCase()
+    return str.replace(hyphenateRE, '-$1').toLowerCase()
 })
 
 /**

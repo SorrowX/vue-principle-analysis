@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>watch</title>
+</head>
+<body>
+	<div id="app">
+	</div>
+	
+	<script src="../dist/vue.js"></script>
+	<script>
+		/*var vm = new Vue({
+		    data: {
+			    firstName: 'Foo'
+		    },
+		    watch: {
+		    	firstName(val, oldVal) {
+		    		console.log(val, oldVal)
+		    	}
+		    }
+		}).$mount('#app')
+
+		// vm.firstName = 'hi'*/
+
+		var vm = new Vue({
+		    data: {
+			    a: {
+			    	b: 1
+			    }
+		    },
+		    watch: {
+		    	a: {
+		    		deep: true,
+				    handler(newVal, oldVal) {
+				        console.log(newVal, oldVal)
+				    }
+				}
+		    }
+		}).$mount('#app')
+
+	</script>
+</body>
+</html>

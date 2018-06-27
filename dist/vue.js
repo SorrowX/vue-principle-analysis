@@ -67,19 +67,19 @@ function toRawType (value) {
  * for plain JavaScript objects.
  */
 function isPlainObject (obj) {
-  return _toString.call(obj) === '[object Object]'
+    return _toString.call(obj) === '[object Object]'
 }
 
 function isRegExp (v) {
-  return _toString.call(v) === '[object RegExp]'
+    return _toString.call(v) === '[object RegExp]'
 }
 
 /**
  * Check if val is a valid array index.
  */
 function isValidArrayIndex (val) {
-  var n = parseFloat(String(val));
-  return n >= 0 && Math.floor(n) === n && isFinite(val)
+    var n = parseFloat(String(val));
+    return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
 /**
@@ -181,7 +181,7 @@ var capitalize = cached(function (str) {
  */
 var hyphenateRE = /\B([A-Z])/g;
 var hyphenate = cached(function (str) {
-  return str.replace(hyphenateRE, '-$1').toLowerCase()
+    return str.replace(hyphenateRE, '-$1').toLowerCase()
 });
 
 /**
@@ -452,20 +452,20 @@ var config = ({
  * Check if a string starts with $ or _
  */
 function isReserved (str) {
-  var c = (str + '').charCodeAt(0);
-  return c === 0x24 || c === 0x5F
+    var c = (str + '').charCodeAt(0);
+    return c === 0x24 || c === 0x5F
 }
 
 /**
  * Define a property.
  */
 function def (obj, key, val, enumerable) {
-  Object.defineProperty(obj, key, {
-    value: val,
-    enumerable: !!enumerable,
-    writable: true,
-    configurable: true
-  });
+    Object.defineProperty(obj, key, {
+        value: val,
+        enumerable: !!enumerable,
+        writable: true,
+        configurable: true
+    });
 }
 
 /**
@@ -473,17 +473,17 @@ function def (obj, key, val, enumerable) {
  */
 var bailRE = /[^\w.$]/;
 function parsePath (path) {
-  if (bailRE.test(path)) {
-    return
-  }
-  var segments = path.split('.');
-  return function (obj) {
-    for (var i = 0; i < segments.length; i++) {
-      if (!obj) { return }
-      obj = obj[segments[i]];
+    if (bailRE.test(path)) {
+        return
     }
-    return obj
-  }
+    var segments = path.split('.');
+    return function (obj) {
+        for (var i = 0; i < segments.length; i++) {
+            if (!obj) { return }
+            obj = obj[segments[i]];
+        }
+        return obj
+    }
 }
 
 /*  */
@@ -678,42 +678,42 @@ var uid = 0;
  * directives subscribing to it.
  */
 var Dep = function Dep () {
-  this.id = uid++;
-  this.subs = [];
+    this.id = uid++;
+    this.subs = [];
 };
 
 Dep.prototype.addSub = function addSub (sub) {
-  this.subs.push(sub);
+    this.subs.push(sub);
 };
 
 Dep.prototype.removeSub = function removeSub (sub) {
-  remove(this.subs, sub);
+    remove(this.subs, sub);
 };
 
 Dep.prototype.depend = function depend () {
-  if (Dep.target) {
-    Dep.target.addDep(this);
-  }
+    if (Dep.target) {
+        Dep.target.addDep(this);
+    }
 };
 
 Dep.prototype.notify = function notify () {
-  // stabilize the subscriber list first
-  var subs = this.subs.slice();
-  for (var i = 0, l = subs.length; i < l; i++) {
-    subs[i].update();
-  }
+    // stabilize the subscriber list first
+    var subs = this.subs.slice();
+    for (var i = 0, l = subs.length; i < l; i++) {
+        subs[i].update();
+    }
 };
 
 Dep.target = null;
 var targetStack = [];
 
 function pushTarget (_target) {
-  if (Dep.target) { targetStack.push(Dep.target); }
-  Dep.target = _target;
+    if (Dep.target) { targetStack.push(Dep.target); }
+    Dep.target = _target;
 }
 
 function popTarget () {
-  Dep.target = targetStack.pop();
+    Dep.target = targetStack.pop();
 }
 
 /*  */
@@ -812,42 +812,42 @@ var arrayProto = Array.prototype;
 var arrayMethods = Object.create(arrayProto);
 
 var methodsToPatch = [
-  'push',
-  'pop',
-  'shift',
-  'unshift',
-  'splice',
-  'sort',
-  'reverse'
+    'push',
+    'pop',
+    'shift',
+    'unshift',
+    'splice',
+    'sort',
+    'reverse'
 ];
 
 /**
  * Intercept mutating methods and emit events
  */
 methodsToPatch.forEach(function (method) {
-  // cache original method
-  var original = arrayProto[method];
-  def(arrayMethods, method, function mutator () {
-    var args = [], len = arguments.length;
-    while ( len-- ) args[ len ] = arguments[ len ];
+    // cache original method
+    var original = arrayProto[method];
+    def(arrayMethods, method, function mutator () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
 
-    var result = original.apply(this, args);
-    var ob = this.__ob__;
-    var inserted;
-    switch (method) {
-      case 'push':
-      case 'unshift':
-        inserted = args;
-        break
-      case 'splice':
-        inserted = args.slice(2);
-        break
-    }
-    if (inserted) { ob.observeArray(inserted); }
-    // notify change
-    ob.dep.notify();
-    return result
-  });
+        var result = original.apply(this, args);
+        var ob = this.__ob__;
+        var inserted;
+        switch (method) {
+            case 'push':
+            case 'unshift':
+                inserted = args;
+                break
+            case 'splice':
+                inserted = args.slice(2);
+                break
+        }
+        if (inserted) { ob.observeArray(inserted); }
+        // notify change
+        ob.dep.notify();
+        return result
+    });
 });
 
 /*  */
@@ -861,7 +861,7 @@ var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
 var shouldObserve = true;
 
 function toggleObserving (value) {
-  shouldObserve = value;
+    shouldObserve = value;
 }
 
 /**
@@ -871,19 +871,19 @@ function toggleObserving (value) {
  * collect dependencies and dispatch updates.
  */
 var Observer = function Observer (value) {
-  this.value = value;
-  this.dep = new Dep();
-  this.vmCount = 0;
-  def(value, '__ob__', this);
-  if (Array.isArray(value)) {
-    var augment = hasProto
-      ? protoAugment
-      : copyAugment;
-    augment(value, arrayMethods, arrayKeys);
-    this.observeArray(value);
-  } else {
-    this.walk(value);
-  }
+    this.value = value;
+    this.dep = new Dep();
+    this.vmCount = 0;
+    def(value, '__ob__', this);
+    if (Array.isArray(value)) {
+        var augment = hasProto
+            ? protoAugment
+            : copyAugment;
+        augment(value, arrayMethods, arrayKeys);
+        this.observeArray(value);
+    } else {
+        this.walk(value);
+    }
 };
 
 /**
@@ -892,19 +892,19 @@ var Observer = function Observer (value) {
  * value type is Object.
  */
 Observer.prototype.walk = function walk (obj) {
-  var keys = Object.keys(obj);
-  for (var i = 0; i < keys.length; i++) {
-    defineReactive(obj, keys[i]);
-  }
+    var keys = Object.keys(obj);
+    for (var i = 0; i < keys.length; i++) {
+        defineReactive(obj, keys[i]);
+    }
 };
 
 /**
  * Observe a list of Array items.
  */
 Observer.prototype.observeArray = function observeArray (items) {
-  for (var i = 0, l = items.length; i < l; i++) {
-    observe(items[i]);
-  }
+    for (var i = 0, l = items.length; i < l; i++) {
+        observe(items[i]);
+    }
 };
 
 // helpers
@@ -914,9 +914,9 @@ Observer.prototype.observeArray = function observeArray (items) {
  * the prototype chain using __proto__
  */
 function protoAugment (target, src, keys) {
-  /* eslint-disable no-proto */
-  target.__proto__ = src;
-  /* eslint-enable no-proto */
+    /* eslint-disable no-proto */
+    target.__proto__ = src;
+    /* eslint-enable no-proto */
 }
 
 /**
@@ -925,10 +925,10 @@ function protoAugment (target, src, keys) {
  */
 /* istanbul ignore next */
 function copyAugment (target, src, keys) {
-  for (var i = 0, l = keys.length; i < l; i++) {
-    var key = keys[i];
-    def(target, key, src[key]);
-  }
+    for (var i = 0, l = keys.length; i < l; i++) {
+        var key = keys[i];
+        def(target, key, src[key]);
+    }
 }
 
 /**
@@ -937,87 +937,87 @@ function copyAugment (target, src, keys) {
  * or the existing observer if the value already has one.
  */
 function observe (value, asRootData) {
-  if (!isObject(value) || value instanceof VNode) {
-    return
-  }
-  var ob;
-  if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
-    ob = value.__ob__;
-  } else if (
-    shouldObserve &&
-    !isServerRendering() &&
-    (Array.isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value) &&
-    !value._isVue
-  ) {
-    ob = new Observer(value);
-  }
-  if (asRootData && ob) {
-    ob.vmCount++;
-  }
-  return ob
+    if (!isObject(value) || value instanceof VNode) {
+        return
+    }
+    var ob;
+    if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+        ob = value.__ob__;
+    } else if (
+        shouldObserve &&
+        !isServerRendering() &&
+        (Array.isArray(value) || isPlainObject(value)) &&
+        Object.isExtensible(value) &&
+        !value._isVue
+    ) {
+        ob = new Observer(value);
+    }
+    if (asRootData && ob) {
+        ob.vmCount++;
+    }
+    return ob
 }
 
 /**
  * Define a reactive property on an Object.
  */
 function defineReactive (
-  obj,
-  key,
-  val,
-  customSetter,
-  shallow
+    obj,
+    key,
+    val,
+    customSetter,
+    shallow
 ) {
-  var dep = new Dep();
+    var dep = new Dep();
 
-  var property = Object.getOwnPropertyDescriptor(obj, key);
-  if (property && property.configurable === false) {
-    return
-  }
-
-  // cater for pre-defined getter/setters
-  var getter = property && property.get;
-  var setter = property && property.set;
-  if ((!getter || setter) && arguments.length === 2) {
-    val = obj[key];
-  }
-
-  var childOb = !shallow && observe(val);
-  Object.defineProperty(obj, key, {
-    enumerable: true,
-    configurable: true,
-    get: function reactiveGetter () {
-      var value = getter ? getter.call(obj) : val;
-      if (Dep.target) {
-        dep.depend();
-        if (childOb) {
-          childOb.dep.depend();
-          if (Array.isArray(value)) {
-            dependArray(value);
-          }
-        }
-      }
-      return value
-    },
-    set: function reactiveSetter (newVal) {
-      var value = getter ? getter.call(obj) : val;
-      /* eslint-disable no-self-compare */
-      if (newVal === value || (newVal !== newVal && value !== value)) {
+    var property = Object.getOwnPropertyDescriptor(obj, key);
+    if (property && property.configurable === false) {
         return
-      }
-      /* eslint-enable no-self-compare */
-      if ("development" !== 'production' && customSetter) {
-        customSetter();
-      }
-      if (setter) {
-        setter.call(obj, newVal);
-      } else {
-        val = newVal;
-      }
-      childOb = !shallow && observe(newVal);
-      dep.notify();
     }
-  });
+
+    // cater for pre-defined getter/setters
+    var getter = property && property.get;
+    var setter = property && property.set;
+    if ((!getter || setter) && arguments.length === 2) {
+        val = obj[key];
+    }
+
+    var childOb = !shallow && observe(val);
+    Object.defineProperty(obj, key, {
+        enumerable: true,
+        configurable: true,
+        get: function reactiveGetter () {
+            var value = getter ? getter.call(obj) : val;
+            if (Dep.target) {
+                dep.depend();
+                if (childOb) {
+                    childOb.dep.depend();
+                    if (Array.isArray(value)) {
+                        dependArray(value);
+                    }
+                }
+            }
+            return value
+        },
+        set: function reactiveSetter (newVal) {
+            var value = getter ? getter.call(obj) : val;
+            /* eslint-disable no-self-compare */
+            if (newVal === value || (newVal !== newVal && value !== value)) {
+                return
+            }
+            /* eslint-enable no-self-compare */
+            if ("development" !== 'production' && customSetter) {
+                customSetter();
+            }
+            if (setter) {
+                setter.call(obj, newVal);
+            } else {
+                val = newVal;
+            }
+            childOb = !shallow && observe(newVal);
+            dep.notify();
+        }
+    });
 }
 
 /**
@@ -1026,66 +1026,68 @@ function defineReactive (
  * already exist.
  */
 function set (target, key, val) {
-  if ("development" !== 'production' &&
-    (isUndef(target) || isPrimitive(target))
-  ) {
-    warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
-  }
-  if (Array.isArray(target) && isValidArrayIndex(key)) {
-    target.length = Math.max(target.length, key);
-    target.splice(key, 1, val);
+    if (
+        "development" !== 'production' &&
+        (isUndef(target) || isPrimitive(target))
+    ) {
+        warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
+    }
+    if (Array.isArray(target) && isValidArrayIndex(key)) {
+        target.length = Math.max(target.length, key);
+        target.splice(key, 1, val);
+        return val
+    }
+    if (key in target && !(key in Object.prototype)) {
+        target[key] = val;
+        return val
+    }
+    var ob = (target).__ob__;
+    if (target._isVue || (ob && ob.vmCount)) {
+        "development" !== 'production' && warn(
+            'Avoid adding reactive properties to a Vue instance or its root $data ' +
+            'at runtime - declare it upfront in the data option.'
+        );
+        return val
+    }
+    if (!ob) {
+        target[key] = val;
+        return val
+    }
+    defineReactive(ob.value, key, val);
+    ob.dep.notify();
     return val
-  }
-  if (key in target && !(key in Object.prototype)) {
-    target[key] = val;
-    return val
-  }
-  var ob = (target).__ob__;
-  if (target._isVue || (ob && ob.vmCount)) {
-    "development" !== 'production' && warn(
-      'Avoid adding reactive properties to a Vue instance or its root $data ' +
-      'at runtime - declare it upfront in the data option.'
-    );
-    return val
-  }
-  if (!ob) {
-    target[key] = val;
-    return val
-  }
-  defineReactive(ob.value, key, val);
-  ob.dep.notify();
-  return val
 }
 
 /**
  * Delete a property and trigger change if necessary.
  */
 function del (target, key) {
-  if ("development" !== 'production' &&
-    (isUndef(target) || isPrimitive(target))
-  ) {
-    warn(("Cannot delete reactive property on undefined, null, or primitive value: " + ((target))));
-  }
-  if (Array.isArray(target) && isValidArrayIndex(key)) {
-    target.splice(key, 1);
-    return
-  }
-  var ob = (target).__ob__;
-  if (target._isVue || (ob && ob.vmCount)) {
-    "development" !== 'production' && warn(
-      'Avoid deleting properties on a Vue instance or its root $data ' +
-      '- just set it to null.'
-    );
-    return
-  }
-  if (!hasOwn(target, key)) {
-    return
-  }
-  delete target[key];
-  if (!ob) {
-    return
-  }
-  ob.dep.notify();
+    if (
+        "development" !== 'production' &&
+        (isUndef(target) || isPrimitive(target))
+    ) {
+        warn(("Cannot delete reactive property on undefined, null, or primitive value: " + ((target))));
+    }
+    if (Array.isArray(target) && isValidArrayIndex(key)) {
+        target.splice(key, 1);
+        return
+    }
+    var ob = (target).__ob__;
+    if (target._isVue || (ob && ob.vmCount)) {
+        "development" !== 'production' && warn(
+            'Avoid deleting properties on a Vue instance or its root $data ' +
+            '- just set it to null.'
+        );
+        return
+    }
+    if (!hasOwn(target, key)) {
+        return
+    }
+    delete target[key];
+    if (!ob) {
+        return
+    }
+    ob.dep.notify();
 }
 
 /**
@@ -1093,13 +1095,13 @@ function del (target, key) {
  * we cannot intercept array element access like property getters.
  */
 function dependArray (value) {
-  for (var e = (void 0), i = 0, l = value.length; i < l; i++) {
-    e = value[i];
-    e && e.__ob__ && e.__ob__.dep.depend();
-    if (Array.isArray(e)) {
-      dependArray(e);
+    for (var e = (void 0), i = 0, l = value.length; i < l; i++) {
+        e = value[i];
+        e && e.__ob__ && e.__ob__.dep.depend();
+        if (Array.isArray(e)) {
+            dependArray(e);
+        }
     }
-  }
 }
 
 /*  */
@@ -1519,153 +1521,154 @@ function resolveAsset (
 /*  */
 
 function validateProp (
-  key,
-  propOptions,
-  propsData,
-  vm
+    key,
+    propOptions,
+    propsData,
+    vm
 ) {
-  var prop = propOptions[key];
-  var absent = !hasOwn(propsData, key);
-  var value = propsData[key];
-  // boolean casting
-  var booleanIndex = getTypeIndex(Boolean, prop.type);
-  if (booleanIndex > -1) {
-    if (absent && !hasOwn(prop, 'default')) {
-      value = false;
-    } else if (value === '' || value === hyphenate(key)) {
-      // only cast empty string / same name to boolean if
-      // boolean has higher priority
-      var stringIndex = getTypeIndex(String, prop.type);
-      if (stringIndex < 0 || booleanIndex < stringIndex) {
-        value = true;
-      }
+    var prop = propOptions[key];
+    var absent = !hasOwn(propsData, key);
+    var value = propsData[key];
+    // boolean casting
+    var booleanIndex = getTypeIndex(Boolean, prop.type);
+    if (booleanIndex > -1) {
+        if (absent && !hasOwn(prop, 'default')) {
+            value = false;
+        } else if (value === '' || value === hyphenate(key)) {
+            // only cast empty string / same name to boolean if
+            // boolean has higher priority
+            var stringIndex = getTypeIndex(String, prop.type);
+            if (stringIndex < 0 || booleanIndex < stringIndex) {
+                value = true;
+            }
+        }
     }
-  }
-  // check default value
-  if (value === undefined) {
-    value = getPropDefaultValue(vm, prop, key);
-    // since the default value is a fresh copy,
-    // make sure to observe it.
-    var prevShouldObserve = shouldObserve;
-    toggleObserving(true);
-    observe(value);
-    toggleObserving(prevShouldObserve);
-  }
-  {
-    assertProp(prop, key, value, vm, absent);
-  }
-  return value
+    // check default value
+    if (value === undefined) {
+        value = getPropDefaultValue(vm, prop, key);
+        // since the default value is a fresh copy,
+        // make sure to observe it.
+        var prevShouldObserve = shouldObserve;
+        toggleObserving(true);
+        observe(value);
+        toggleObserving(prevShouldObserve);
+    }
+    {
+        assertProp(prop, key, value, vm, absent);
+    }
+    return value
 }
 
 /**
  * Get the default value of a prop.
  */
 function getPropDefaultValue (vm, prop, key) {
-  // no default, return undefined
-  if (!hasOwn(prop, 'default')) {
-    return undefined
-  }
-  var def = prop.default;
-  // warn against non-factory defaults for Object & Array
-  if ("development" !== 'production' && isObject(def)) {
-    warn(
-      'Invalid default value for prop "' + key + '": ' +
-      'Props with type Object/Array must use a factory function ' +
-      'to return the default value.',
-      vm
-    );
-  }
-  // the raw prop value was also undefined from previous render,
-  // return previous default value to avoid unnecessary watcher trigger
-  if (vm && vm.$options.propsData &&
-    vm.$options.propsData[key] === undefined &&
-    vm._props[key] !== undefined
-  ) {
-    return vm._props[key]
-  }
-  // call factory function for non-Function types
-  // a value is Function if its prototype is function even across different execution context
-  return typeof def === 'function' && getType(prop.type) !== 'Function'
-    ? def.call(vm)
-    : def
+    // no default, return undefined
+    if (!hasOwn(prop, 'default')) {
+        return undefined
+    }
+    var def = prop.default;
+    // warn against non-factory defaults for Object & Array
+    if ("development" !== 'production' && isObject(def)) {
+        warn(
+            'Invalid default value for prop "' + key + '": ' +
+            'Props with type Object/Array must use a factory function ' +
+            'to return the default value.',
+            vm
+        );
+    }
+    // the raw prop value was also undefined from previous render,
+    // return previous default value to avoid unnecessary watcher trigger
+    if (
+        vm && vm.$options.propsData &&
+        vm.$options.propsData[key] === undefined &&
+        vm._props[key] !== undefined
+    ) {
+        return vm._props[key]
+    }
+    // call factory function for non-Function types
+    // a value is Function if its prototype is function even across different execution context
+    return typeof def === 'function' && getType(prop.type) !== 'Function'
+        ? def.call(vm)
+        : def
 }
 
 /**
  * Assert whether a prop is valid.
  */
 function assertProp (
-  prop,
-  name,
-  value,
-  vm,
-  absent
+    prop,
+    name,
+    value,
+    vm,
+    absent
 ) {
-  if (prop.required && absent) {
-    warn(
-      'Missing required prop: "' + name + '"',
-      vm
-    );
-    return
-  }
-  if (value == null && !prop.required) {
-    return
-  }
-  var type = prop.type;
-  var valid = !type || type === true;
-  var expectedTypes = [];
-  if (type) {
-    if (!Array.isArray(type)) {
-      type = [type];
+    if (prop.required && absent) {
+        warn(
+            'Missing required prop: "' + name + '"',
+            vm
+        );
+        return
     }
-    for (var i = 0; i < type.length && !valid; i++) {
-      var assertedType = assertType(value, type[i]);
-      expectedTypes.push(assertedType.expectedType || '');
-      valid = assertedType.valid;
+    if (value == null && !prop.required) {
+        return
     }
-  }
-  if (!valid) {
-    warn(
-      "Invalid prop: type check failed for prop \"" + name + "\"." +
-      " Expected " + (expectedTypes.map(capitalize).join(', ')) +
-      ", got " + (toRawType(value)) + ".",
-      vm
-    );
-    return
-  }
-  var validator = prop.validator;
-  if (validator) {
-    if (!validator(value)) {
-      warn(
-        'Invalid prop: custom validator check failed for prop "' + name + '".',
-        vm
-      );
+    var type = prop.type;
+    var valid = !type || type === true;
+    var expectedTypes = [];
+    if (type) {
+        if (!Array.isArray(type)) {
+            type = [type];
+        }
+        for (var i = 0; i < type.length && !valid; i++) {
+            var assertedType = assertType(value, type[i]);
+            expectedTypes.push(assertedType.expectedType || '');
+            valid = assertedType.valid;
+        }
     }
-  }
+    if (!valid) {
+        warn(
+            "Invalid prop: type check failed for prop \"" + name + "\"." +
+            " Expected " + (expectedTypes.map(capitalize).join(', ')) +
+            ", got " + (toRawType(value)) + ".",
+            vm
+        );
+        return
+    }
+    var validator = prop.validator;
+    if (validator) {
+        if (!validator(value)) {
+            warn(
+                'Invalid prop: custom validator check failed for prop "' + name + '".',
+                vm
+            );
+        }
+    }
 }
 
 var simpleCheckRE = /^(String|Number|Boolean|Function|Symbol)$/;
 
 function assertType (value, type) {
-  var valid;
-  var expectedType = getType(type);
-  if (simpleCheckRE.test(expectedType)) {
-    var t = typeof value;
-    valid = t === expectedType.toLowerCase();
-    // for primitive wrapper objects
-    if (!valid && t === 'object') {
-      valid = value instanceof type;
+    var valid;
+    var expectedType = getType(type);
+    if (simpleCheckRE.test(expectedType)) {
+        var t = typeof value;
+        valid = t === expectedType.toLowerCase();
+        // for primitive wrapper objects
+        if (!valid && t === 'object') {
+            valid = value instanceof type;
+        }
+    } else if (expectedType === 'Object') {
+        valid = isPlainObject(value);
+    } else if (expectedType === 'Array') {
+        valid = Array.isArray(value);
+    } else {
+        valid = value instanceof type;
     }
-  } else if (expectedType === 'Object') {
-    valid = isPlainObject(value);
-  } else if (expectedType === 'Array') {
-    valid = Array.isArray(value);
-  } else {
-    valid = value instanceof type;
-  }
-  return {
-    valid: valid,
-    expectedType: expectedType
-  }
+    return {
+        valid: valid,
+        expectedType: expectedType
+    }
 }
 
 /**
@@ -1674,24 +1677,24 @@ function assertType (value, type) {
  * across different vms / iframes.
  */
 function getType (fn) {
-  var match = fn && fn.toString().match(/^\s*function (\w+)/);
-  return match ? match[1] : ''
+    var match = fn && fn.toString().match(/^\s*function (\w+)/);
+    return match ? match[1] : ''
 }
 
 function isSameType (a, b) {
-  return getType(a) === getType(b)
+    return getType(a) === getType(b)
 }
 
 function getTypeIndex (type, expectedTypes) {
-  if (!Array.isArray(expectedTypes)) {
-    return isSameType(expectedTypes, type) ? 0 : -1
-  }
-  for (var i = 0, len = expectedTypes.length; i < len; i++) {
-    if (isSameType(expectedTypes[i], type)) {
-      return i
+    if (!Array.isArray(expectedTypes)) {
+        return isSameType(expectedTypes, type) ? 0 : -1
     }
-  }
-  return -1
+    for (var i = 0, len = expectedTypes.length; i < len; i++) {
+        if (isSameType(expectedTypes[i], type)) {
+            return i
+        }
+    }
+    return -1
 }
 
 /*  */
@@ -1746,12 +1749,12 @@ var callbacks = [];
 var pending = false;
 
 function flushCallbacks () {
-  pending = false;
-  var copies = callbacks.slice(0);
-  callbacks.length = 0;
-  for (var i = 0; i < copies.length; i++) {
-    copies[i]();
-  }
+    pending = false;
+    var copies = callbacks.slice(0);
+    callbacks.length = 0;
+    for (var i = 0; i < copies.length; i++) {
+        copies[i]();
+    }
 }
 
 // Here we have async deferring wrappers using both microtasks and (macro) tasks.
@@ -1772,43 +1775,44 @@ var useMacroTask = false;
 // events triggered in the same loop is by using MessageChannel.
 /* istanbul ignore if */
 if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
-  macroTimerFunc = function () {
-    setImmediate(flushCallbacks);
-  };
-} else if (typeof MessageChannel !== 'undefined' && (
-  isNative(MessageChannel) ||
-  // PhantomJS
-  MessageChannel.toString() === '[object MessageChannelConstructor]'
-)) {
-  var channel = new MessageChannel();
-  var port = channel.port2;
-  channel.port1.onmessage = flushCallbacks;
-  macroTimerFunc = function () {
-    port.postMessage(1);
-  };
+    macroTimerFunc = function () {
+        setImmediate(flushCallbacks);
+    };
+} else if (
+    typeof MessageChannel !== 'undefined' && 
+    (isNative(MessageChannel) ||
+    // PhantomJS
+    MessageChannel.toString() === '[object MessageChannelConstructor]')
+) {
+    var channel = new MessageChannel();
+    var port = channel.port2;
+    channel.port1.onmessage = flushCallbacks;
+    macroTimerFunc = function () {
+        port.postMessage(1);
+    };
 } else {
-  /* istanbul ignore next */
-  macroTimerFunc = function () {
-    setTimeout(flushCallbacks, 0);
-  };
+    /* istanbul ignore next */
+    macroTimerFunc = function () {
+        setTimeout(flushCallbacks, 0);
+    };
 }
 
 // Determine microtask defer implementation.
 /* istanbul ignore next, $flow-disable-line */
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
-  var p = Promise.resolve();
-  microTimerFunc = function () {
-    p.then(flushCallbacks);
-    // in problematic UIWebViews, Promise.then doesn't completely break, but
-    // it can get stuck in a weird state where callbacks are pushed into the
-    // microtask queue but the queue isn't being flushed, until the browser
-    // needs to do some other work, e.g. handle a timer. Therefore we can
-    // "force" the microtask queue to be flushed by adding an empty timer.
-    if (isIOS) { setTimeout(noop); }
-  };
+    var p = Promise.resolve();
+    microTimerFunc = function () {
+        p.then(flushCallbacks);
+        // in problematic UIWebViews, Promise.then doesn't completely break, but
+        // it can get stuck in a weird state where callbacks are pushed into the
+        // microtask queue but the queue isn't being flushed, until the browser
+        // needs to do some other work, e.g. handle a timer. Therefore we can
+        // "force" the microtask queue to be flushed by adding an empty timer.
+        if (isIOS) { setTimeout(noop); }
+    };
 } else {
-  // fallback to macro
-  microTimerFunc = macroTimerFunc;
+    // fallback to macro
+    microTimerFunc = macroTimerFunc;
 }
 
 /**
@@ -1816,41 +1820,41 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
  * the changes are queued using a (macro) task instead of a microtask.
  */
 function withMacroTask (fn) {
-  return fn._withTask || (fn._withTask = function () {
-    useMacroTask = true;
-    var res = fn.apply(null, arguments);
-    useMacroTask = false;
-    return res
-  })
+    return fn._withTask || (fn._withTask = function () {
+        useMacroTask = true;
+        var res = fn.apply(null, arguments);
+        useMacroTask = false;
+        return res
+    })
 }
 
 function nextTick (cb, ctx) {
-  var _resolve;
-  callbacks.push(function () {
-    if (cb) {
-      try {
-        cb.call(ctx);
-      } catch (e) {
-        handleError(e, ctx, 'nextTick');
-      }
-    } else if (_resolve) {
-      _resolve(ctx);
+    var _resolve;
+    callbacks.push(function () {
+        if (cb) {
+            try {
+                cb.call(ctx);
+            } catch (e) {
+                handleError(e, ctx, 'nextTick');
+            }
+        } else if (_resolve) {
+            _resolve(ctx);
+        }
+    });
+    if (!pending) {
+        pending = true;
+        if (useMacroTask) {
+            macroTimerFunc();
+        } else {
+            microTimerFunc();
+        }
     }
-  });
-  if (!pending) {
-    pending = true;
-    if (useMacroTask) {
-      macroTimerFunc();
-    } else {
-      microTimerFunc();
+    // $flow-disable-line
+    if (!cb && typeof Promise !== 'undefined') {
+        return new Promise(function (resolve) {
+            _resolve = resolve;
+        })
     }
-  }
-  // $flow-disable-line
-  if (!cb && typeof Promise !== 'undefined') {
-    return new Promise(function (resolve) {
-      _resolve = resolve;
-    })
-  }
 }
 
 /*  */
@@ -1859,23 +1863,23 @@ var mark;
 var measure;
 
 {
-  var perf = inBrowser && window.performance;
-  /* istanbul ignore if */
-  if (
-    perf &&
-    perf.mark &&
-    perf.measure &&
-    perf.clearMarks &&
-    perf.clearMeasures
-  ) {
-    mark = function (tag) { return perf.mark(tag); };
-    measure = function (name, startTag, endTag) {
-      perf.measure(name, startTag, endTag);
-      perf.clearMarks(startTag);
-      perf.clearMarks(endTag);
-      perf.clearMeasures(name);
-    };
-  }
+    var perf = inBrowser && window.performance;
+    /* istanbul ignore if */
+    if (
+        perf &&
+        perf.mark &&
+        perf.measure &&
+        perf.clearMarks &&
+        perf.clearMeasures
+    ) {
+        mark = function (tag) { return perf.mark(tag); };
+        measure = function (name, startTag, endTag) {
+            perf.measure(name, startTag, endTag);
+            perf.clearMarks(startTag);
+            perf.clearMarks(endTag);
+            perf.clearMeasures(name);
+        };
+    }
 }
 
 /* not type checking this file because flow doesn't play well with Proxy */
@@ -1963,31 +1967,31 @@ var seenObjects = new _Set();
  * is collected as a "deep" dependency.
  */
 function traverse (val) {
-  _traverse(val, seenObjects);
-  seenObjects.clear();
+    _traverse(val, seenObjects);
+    seenObjects.clear();
 }
 
 function _traverse (val, seen) {
-  var i, keys;
-  var isA = Array.isArray(val);
-  if ((!isA && !isObject(val)) || Object.isFrozen(val) || val instanceof VNode) {
-    return
-  }
-  if (val.__ob__) {
-    var depId = val.__ob__.dep.id;
-    if (seen.has(depId)) {
-      return
+    var i, keys;
+    var isA = Array.isArray(val);
+    if ((!isA && !isObject(val)) || Object.isFrozen(val) || val instanceof VNode) {
+        return
     }
-    seen.add(depId);
-  }
-  if (isA) {
-    i = val.length;
-    while (i--) { _traverse(val[i], seen); }
-  } else {
-    keys = Object.keys(val);
-    i = keys.length;
-    while (i--) { _traverse(val[keys[i]], seen); }
-  }
+    if (val.__ob__) {
+        var depId = val.__ob__.dep.id;
+        if (seen.has(depId)) {
+            return
+        }
+        seen.add(depId);
+    }
+    if (isA) {
+        i = val.length;
+        while (i--) { _traverse(val[i], seen); }
+    } else {
+        keys = Object.keys(val);
+        i = keys.length;
+        while (i--) { _traverse(val[keys[i]], seen); }
+    }
 }
 
 /*  */
@@ -2936,84 +2940,84 @@ var index = 0;
  * Reset the scheduler's state.
  */
 function resetSchedulerState () {
-  index = queue.length = activatedChildren.length = 0;
-  has = {};
-  {
-    circular = {};
-  }
-  waiting = flushing = false;
+    index = queue.length = activatedChildren.length = 0;
+    has = {};
+    {
+        circular = {};
+    }
+    waiting = flushing = false;
 }
 
 /**
  * Flush both queues and run the watchers.
  */
 function flushSchedulerQueue () {
-  flushing = true;
-  var watcher, id;
+    flushing = true;
+    var watcher, id;
 
-  // Sort queue before flush.
-  // This ensures that:
-  // 1. Components are updated from parent to child. (because parent is always
-  //    created before the child)
-  // 2. A component's user watchers are run before its render watcher (because
-  //    user watchers are created before the render watcher)
-  // 3. If a component is destroyed during a parent component's watcher run,
-  //    its watchers can be skipped.
-  queue.sort(function (a, b) { return a.id - b.id; });
+    // Sort queue before flush.
+    // This ensures that:
+    // 1. Components are updated from parent to child. (because parent is always
+    //    created before the child)
+    // 2. A component's user watchers are run before its render watcher (because
+    //    user watchers are created before the render watcher)
+    // 3. If a component is destroyed during a parent component's watcher run,
+    //    its watchers can be skipped.
+    queue.sort(function (a, b) { return a.id - b.id; });
 
-  // do not cache length because more watchers might be pushed
-  // as we run existing watchers
-  for (index = 0; index < queue.length; index++) {
-    watcher = queue[index];
-    if (watcher.before) {
-      watcher.before();
+    // do not cache length because more watchers might be pushed
+    // as we run existing watchers
+    for (index = 0; index < queue.length; index++) {
+        watcher = queue[index];
+        if (watcher.before) {
+            watcher.before();
+        }
+        id = watcher.id;
+        has[id] = null;
+        watcher.run();
+        // in dev build, check and stop circular updates.
+        if ("development" !== 'production' && has[id] != null) {
+            circular[id] = (circular[id] || 0) + 1;
+            if (circular[id] > MAX_UPDATE_COUNT) {
+                warn(
+                    'You may have an infinite update loop ' + (
+                        watcher.user
+                            ? ("in watcher with expression \"" + (watcher.expression) + "\"")
+                            : "in a component render function."
+                    ),
+                    watcher.vm
+                );
+                break
+            }
+        }
     }
-    id = watcher.id;
-    has[id] = null;
-    watcher.run();
-    // in dev build, check and stop circular updates.
-    if ("development" !== 'production' && has[id] != null) {
-      circular[id] = (circular[id] || 0) + 1;
-      if (circular[id] > MAX_UPDATE_COUNT) {
-        warn(
-          'You may have an infinite update loop ' + (
-            watcher.user
-              ? ("in watcher with expression \"" + (watcher.expression) + "\"")
-              : "in a component render function."
-          ),
-          watcher.vm
-        );
-        break
-      }
+
+    // keep copies of post queues before resetting state
+    var activatedQueue = activatedChildren.slice();
+    var updatedQueue = queue.slice();
+
+    resetSchedulerState();
+
+    // call component updated and activated hooks
+    callActivatedHooks(activatedQueue);
+    callUpdatedHooks(updatedQueue);
+
+    // devtool hook
+    /* istanbul ignore if */
+    if (devtools && config.devtools) {
+        devtools.emit('flush');
     }
-  }
-
-  // keep copies of post queues before resetting state
-  var activatedQueue = activatedChildren.slice();
-  var updatedQueue = queue.slice();
-
-  resetSchedulerState();
-
-  // call component updated and activated hooks
-  callActivatedHooks(activatedQueue);
-  callUpdatedHooks(updatedQueue);
-
-  // devtool hook
-  /* istanbul ignore if */
-  if (devtools && config.devtools) {
-    devtools.emit('flush');
-  }
 }
 
 function callUpdatedHooks (queue) {
-  var i = queue.length;
-  while (i--) {
-    var watcher = queue[i];
-    var vm = watcher.vm;
-    if (vm._watcher === watcher && vm._isMounted) {
-      callHook(vm, 'updated');
+    var i = queue.length;
+    while (i--) {
+        var watcher = queue[i];
+        var vm = watcher.vm;
+        if (vm._watcher === watcher && vm._isMounted) {
+            callHook(vm, 'updated');
+        }
     }
-  }
 }
 
 /**
@@ -3021,17 +3025,17 @@ function callUpdatedHooks (queue) {
  * The queue will be processed after the entire tree has been patched.
  */
 function queueActivatedComponent (vm) {
-  // setting _inactive to false here so that a render function can
-  // rely on checking whether it's in an inactive tree (e.g. router-view)
-  vm._inactive = false;
-  activatedChildren.push(vm);
+    // setting _inactive to false here so that a render function can
+    // rely on checking whether it's in an inactive tree (e.g. router-view)
+    vm._inactive = false;
+    activatedChildren.push(vm);
 }
 
 function callActivatedHooks (queue) {
-  for (var i = 0; i < queue.length; i++) {
-    queue[i]._inactive = true;
-    activateChildComponent(queue[i], true /* true */);
-  }
+    for (var i = 0; i < queue.length; i++) {
+        queue[i]._inactive = true;
+        activateChildComponent(queue[i], true /* true */);
+    }
 }
 
 /**
@@ -3040,26 +3044,26 @@ function callActivatedHooks (queue) {
  * pushed when the queue is being flushed.
  */
 function queueWatcher (watcher) {
-  var id = watcher.id;
-  if (has[id] == null) {
-    has[id] = true;
-    if (!flushing) {
-      queue.push(watcher);
-    } else {
-      // if already flushing, splice the watcher based on its id
-      // if already past its id, it will be run next immediately.
-      var i = queue.length - 1;
-      while (i > index && queue[i].id > watcher.id) {
-        i--;
-      }
-      queue.splice(i + 1, 0, watcher);
+    var id = watcher.id;
+    if (has[id] == null) {
+        has[id] = true;
+        if (!flushing) {
+            queue.push(watcher);
+        } else {
+            // if already flushing, splice the watcher based on its id
+            // if already past its id, it will be run next immediately.
+            var i = queue.length - 1;
+            while (i > index && queue[i].id > watcher.id) {
+                i--;
+            }
+            queue.splice(i + 1, 0, watcher);
+        }
+        // queue the flush
+        if (!waiting) {
+            waiting = true;
+            nextTick(flushSchedulerQueue);
+        }
     }
-    // queue the flush
-    if (!waiting) {
-      waiting = true;
-      nextTick(flushSchedulerQueue);
-    }
-  }
 }
 
 /*  */
@@ -3072,121 +3076,121 @@ var uid$1 = 0;
  * This is used for both the $watch() api and directives.
  */
 var Watcher = function Watcher (
-  vm,
-  expOrFn,
-  cb,
-  options,
-  isRenderWatcher
+    vm,
+    expOrFn,
+    cb,
+    options,
+    isRenderWatcher
 ) {
-  this.vm = vm;
-  if (isRenderWatcher) {
-    vm._watcher = this;
-  }
-  vm._watchers.push(this);
-  // options
-  if (options) {
-    this.deep = !!options.deep;
-    this.user = !!options.user;
-    this.computed = !!options.computed;
-    this.sync = !!options.sync;
-    this.before = options.before;
-  } else {
-    this.deep = this.user = this.computed = this.sync = false;
-  }
-  this.cb = cb;
-  this.id = ++uid$1; // uid for batching
-  this.active = true;
-  this.dirty = this.computed; // for computed watchers
-  this.deps = [];
-  this.newDeps = [];
-  this.depIds = new _Set();
-  this.newDepIds = new _Set();
-  this.expression = expOrFn.toString();
-  // parse expression for getter
-  if (typeof expOrFn === 'function') {
-    this.getter = expOrFn;
-  } else {
-    this.getter = parsePath(expOrFn);
-    if (!this.getter) {
-      this.getter = function () {};
-      "development" !== 'production' && warn(
-        "Failed watching path: \"" + expOrFn + "\" " +
-        'Watcher only accepts simple dot-delimited paths. ' +
-        'For full control, use a function instead.',
-        vm
-      );
+    this.vm = vm;
+    if (isRenderWatcher) {
+        vm._watcher = this;
     }
-  }
-  if (this.computed) {
-    this.value = undefined;
-    this.dep = new Dep();
-  } else {
-    this.value = this.get();
-  }
+    vm._watchers.push(this);
+    // options
+    if (options) {
+        this.deep = !!options.deep;
+        this.user = !!options.user;
+        this.computed = !!options.computed;
+        this.sync = !!options.sync;
+        this.before = options.before;
+    } else {
+        this.deep = this.user = this.computed = this.sync = false;
+    }
+    this.cb = cb;
+    this.id = ++uid$1; // uid for batching
+    this.active = true;
+    this.dirty = this.computed; // for computed watchers
+    this.deps = [];
+    this.newDeps = [];
+    this.depIds = new _Set();
+    this.newDepIds = new _Set();
+    this.expression = expOrFn.toString();
+    // parse expression for getter
+    if (typeof expOrFn === 'function') {
+        this.getter = expOrFn;
+    } else {
+        this.getter = parsePath(expOrFn);
+        if (!this.getter) {
+            this.getter = function () {};
+            "development" !== 'production' && warn(
+                "Failed watching path: \"" + expOrFn + "\" " +
+                'Watcher only accepts simple dot-delimited paths. ' +
+                'For full control, use a function instead.',
+                vm
+            );
+        }
+    }
+    if (this.computed) {
+        this.value = undefined;
+        this.dep = new Dep();
+    } else {
+        this.value = this.get();
+    }
 };
 
 /**
  * Evaluate the getter, and re-collect dependencies.
  */
 Watcher.prototype.get = function get () {
-  pushTarget(this);
-  var value;
-  var vm = this.vm;
-  try {
-    value = this.getter.call(vm, vm);
-  } catch (e) {
-    if (this.user) {
-      handleError(e, vm, ("getter for watcher \"" + (this.expression) + "\""));
-    } else {
-      throw e
+    pushTarget(this);
+    var value;
+    var vm = this.vm;
+    try {
+        value = this.getter.call(vm, vm);
+    } catch (e) {
+        if (this.user) {
+            handleError(e, vm, ("getter for watcher \"" + (this.expression) + "\""));
+        } else {
+            throw e
+        }
+    } finally {
+        // "touch" every property so they are all tracked as
+        // dependencies for deep watching
+        if (this.deep) {
+            traverse(value);
+        }
+        popTarget();
+        this.cleanupDeps();
     }
-  } finally {
-    // "touch" every property so they are all tracked as
-    // dependencies for deep watching
-    if (this.deep) {
-      traverse(value);
-    }
-    popTarget();
-    this.cleanupDeps();
-  }
-  return value
+    return value
 };
 
 /**
  * Add a dependency to this directive.
  */
 Watcher.prototype.addDep = function addDep (dep) {
-  var id = dep.id;
-  if (!this.newDepIds.has(id)) {
-    this.newDepIds.add(id);
-    this.newDeps.push(dep);
-    if (!this.depIds.has(id)) {
-      dep.addSub(this);
+    var id = dep.id;
+    if (!this.newDepIds.has(id)) {
+        this.newDepIds.add(id);
+        this.newDeps.push(dep);
+        if (!this.depIds.has(id)) {
+            dep.addSub(this);
+        }
     }
-  }
 };
 
 /**
  * Clean up for dependency collection.
  */
 Watcher.prototype.cleanupDeps = function cleanupDeps () {
-    var this$1 = this;
+        var this$1 = this;
 
-  var i = this.deps.length;
-  while (i--) {
-    var dep = this$1.deps[i];
-    if (!this$1.newDepIds.has(dep.id)) {
-      dep.removeSub(this$1);
+    var i = this.deps.length;
+    while (i--) {
+        var dep = this$1.deps[i];
+        if (!this$1.newDepIds.has(dep.id)) {
+            dep.removeSub(this$1);
+        }
     }
-  }
-  var tmp = this.depIds;
-  this.depIds = this.newDepIds;
-  this.newDepIds = tmp;
-  this.newDepIds.clear();
-  tmp = this.deps;
-  this.deps = this.newDeps;
-  this.newDeps = tmp;
-  this.newDeps.length = 0;
+    var tmp = this.depIds;
+    this.depIds = this.newDepIds;
+    this.newDepIds = tmp;
+    this.newDepIds.clear();
+    tmp = this.deps;
+    this.deps = this.newDeps;
+    this.newDeps = tmp;
+    this.newDeps.length = 0;
 };
 
 /**
@@ -3194,32 +3198,32 @@ Watcher.prototype.cleanupDeps = function cleanupDeps () {
  * Will be called when a dependency changes.
  */
 Watcher.prototype.update = function update () {
-    var this$1 = this;
+        var this$1 = this;
 
-  /* istanbul ignore else */
-  if (this.computed) {
-    // A computed property watcher has two modes: lazy and activated.
-    // It initializes as lazy by default, and only becomes activated when
-    // it is depended on by at least one subscriber, which is typically
-    // another computed property or a component's render function.
-    if (this.dep.subs.length === 0) {
-      // In lazy mode, we don't want to perform computations until necessary,
-      // so we simply mark the watcher as dirty. The actual computation is
-      // performed just-in-time in this.evaluate() when the computed property
-      // is accessed.
-      this.dirty = true;
+    /* istanbul ignore else */
+    if (this.computed) {
+        // A computed property watcher has two modes: lazy and activated.
+        // It initializes as lazy by default, and only becomes activated when
+        // it is depended on by at least one subscriber, which is typically
+        // another computed property or a component's render function.
+        if (this.dep.subs.length === 0) {
+            // In lazy mode, we don't want to perform computations until necessary,
+            // so we simply mark the watcher as dirty. The actual computation is
+            // performed just-in-time in this.evaluate() when the computed property
+            // is accessed.
+            this.dirty = true;
+        } else {
+            // In activated mode, we want to proactively perform the computation
+            // but only notify our subscribers when the value has indeed changed.
+            this.getAndInvoke(function () {
+              this$1.dep.notify();
+            });
+        }
+    } else if (this.sync) {
+        this.run();
     } else {
-      // In activated mode, we want to proactively perform the computation
-      // but only notify our subscribers when the value has indeed changed.
-      this.getAndInvoke(function () {
-        this$1.dep.notify();
-      });
+        queueWatcher(this);
     }
-  } else if (this.sync) {
-    this.run();
-  } else {
-    queueWatcher(this);
-  }
 };
 
 /**
@@ -3227,35 +3231,35 @@ Watcher.prototype.update = function update () {
  * Will be called by the scheduler.
  */
 Watcher.prototype.run = function run () {
-  if (this.active) {
-    this.getAndInvoke(this.cb);
-  }
+    if (this.active) {
+        this.getAndInvoke(this.cb);
+    }
 };
 
 Watcher.prototype.getAndInvoke = function getAndInvoke (cb) {
-  var value = this.get();
-  if (
-    value !== this.value ||
-    // Deep watchers and watchers on Object/Arrays should fire even
-    // when the value is the same, because the value may
-    // have mutated.
-    isObject(value) ||
-    this.deep
-  ) {
-    // set new value
-    var oldValue = this.value;
-    this.value = value;
-    this.dirty = false;
-    if (this.user) {
-      try {
-        cb.call(this.vm, value, oldValue);
-      } catch (e) {
-        handleError(e, this.vm, ("callback for watcher \"" + (this.expression) + "\""));
-      }
-    } else {
-      cb.call(this.vm, value, oldValue);
+    var value = this.get();
+    if (
+        value !== this.value ||
+        // Deep watchers and watchers on Object/Arrays should fire even
+        // when the value is the same, because the value may
+        // have mutated.
+        isObject(value) ||
+        this.deep
+    ) {
+        // set new value
+        var oldValue = this.value;
+        this.value = value;
+        this.dirty = false;
+        if (this.user) {
+            try {
+                cb.call(this.vm, value, oldValue);
+            } catch (e) {
+                handleError(e, this.vm, ("callback for watcher \"" + (this.expression) + "\""));
+            }
+        } else {
+            cb.call(this.vm, value, oldValue);
+        }
     }
-  }
 };
 
 /**
@@ -3263,41 +3267,41 @@ Watcher.prototype.getAndInvoke = function getAndInvoke (cb) {
  * This only gets called for computed property watchers.
  */
 Watcher.prototype.evaluate = function evaluate () {
-  if (this.dirty) {
-    this.value = this.get();
-    this.dirty = false;
-  }
-  return this.value
+    if (this.dirty) {
+        this.value = this.get();
+        this.dirty = false;
+    }
+    return this.value
 };
 
 /**
  * Depend on this watcher. Only for computed property watchers.
  */
 Watcher.prototype.depend = function depend () {
-  if (this.dep && Dep.target) {
-    this.dep.depend();
-  }
+    if (this.dep && Dep.target) {
+        this.dep.depend();
+    }
 };
 
 /**
  * Remove self from all dependencies' subscriber list.
  */
 Watcher.prototype.teardown = function teardown () {
-    var this$1 = this;
+        var this$1 = this;
 
-  if (this.active) {
-    // remove self from vm's watcher list
-    // this is a somewhat expensive operation so we skip it
-    // if the vm is being destroyed.
-    if (!this.vm._isBeingDestroyed) {
-      remove(this.vm._watchers, this);
+    if (this.active) {
+        // remove self from vm's watcher list
+        // this is a somewhat expensive operation so we skip it
+        // if the vm is being destroyed.
+        if (!this.vm._isBeingDestroyed) {
+            remove(this.vm._watchers, this);
+        }
+        var i = this.deps.length;
+        while (i--) {
+            this$1.deps[i].removeSub(this$1);
+        }
+        this.active = false;
     }
-    var i = this.deps.length;
-    while (i--) {
-      this$1.deps[i].removeSub(this$1);
-    }
-    this.active = false;
-  }
 };
 
 /*  */
@@ -3310,275 +3314,279 @@ var sharedPropertyDefinition = {
 };
 
 function proxy (target, sourceKey, key) {
-  sharedPropertyDefinition.get = function proxyGetter () {
-    return this[sourceKey][key]
-  };
-  sharedPropertyDefinition.set = function proxySetter (val) {
-    this[sourceKey][key] = val;
-  };
-  Object.defineProperty(target, key, sharedPropertyDefinition);
+    sharedPropertyDefinition.get = function proxyGetter () {
+        return this[sourceKey][key]
+    };
+    sharedPropertyDefinition.set = function proxySetter (val) {
+        this[sourceKey][key] = val;
+    };
+    Object.defineProperty(target, key, sharedPropertyDefinition);
 }
 
 function initState (vm) {
-  vm._watchers = [];
-  var opts = vm.$options;
-  if (opts.props) { initProps(vm, opts.props); }
-  if (opts.methods) { initMethods(vm, opts.methods); }
-  if (opts.data) {
-    initData(vm);
-  } else {
-    observe(vm._data = {}, true /* asRootData */);
-  }
-  if (opts.computed) { initComputed(vm, opts.computed); }
-  if (opts.watch && opts.watch !== nativeWatch) {
-    initWatch(vm, opts.watch);
-  }
+    vm._watchers = [];
+    var opts = vm.$options;
+    if (opts.props) { initProps(vm, opts.props); }
+    if (opts.methods) { initMethods(vm, opts.methods); }
+    if (opts.data) {
+        initData(vm);
+    } else {
+        observe(vm._data = {}, true /* asRootData */);
+    }
+    if (opts.computed) { initComputed(vm, opts.computed); }
+    if (opts.watch && opts.watch !== nativeWatch) {
+        initWatch(vm, opts.watch);
+    }
 }
 
 function initProps (vm, propsOptions) {
-  var propsData = vm.$options.propsData || {};
-  var props = vm._props = {};
-  // cache prop keys so that future props updates can iterate using Array
-  // instead of dynamic object key enumeration.
-  var keys = vm.$options._propKeys = [];
-  var isRoot = !vm.$parent;
-  // root instance props should be converted
-  if (!isRoot) {
-    toggleObserving(false);
-  }
-  var loop = function ( key ) {
-    keys.push(key);
-    var value = validateProp(key, propsOptions, propsData, vm);
-    /* istanbul ignore else */
-    {
-      var hyphenatedKey = hyphenate(key);
-      if (isReservedAttribute(hyphenatedKey) ||
-          config.isReservedAttr(hyphenatedKey)) {
-        warn(
-          ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
-          vm
-        );
-      }
-      defineReactive(props, key, value, function () {
-        if (vm.$parent && !isUpdatingChildComponent) {
-          warn(
-            "Avoid mutating a prop directly since the value will be " +
-            "overwritten whenever the parent component re-renders. " +
-            "Instead, use a data or computed property based on the prop's " +
-            "value. Prop being mutated: \"" + key + "\"",
-            vm
-          );
+    var propsData = vm.$options.propsData || {};
+    var props = vm._props = {};
+    // cache prop keys so that future props updates can iterate using Array
+    // instead of dynamic object key enumeration.
+    var keys = vm.$options._propKeys = [];
+    var isRoot = !vm.$parent;
+    // root instance props should be converted
+    if (!isRoot) {
+        toggleObserving(false);
+    }
+    var loop = function ( key ) {
+        keys.push(key);
+        var value = validateProp(key, propsOptions, propsData, vm);
+        /* istanbul ignore else */
+        {
+            var hyphenatedKey = hyphenate(key);
+            if (
+                isReservedAttribute(hyphenatedKey) ||
+                config.isReservedAttr(hyphenatedKey)
+            ) {
+                warn(
+                    ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
+                    vm
+                );
+            }
+            defineReactive(props, key, value, function () {
+                if (vm.$parent && !isUpdatingChildComponent) {
+                    warn(
+                        "Avoid mutating a prop directly since the value will be " +
+                        "overwritten whenever the parent component re-renders. " +
+                        "Instead, use a data or computed property based on the prop's " +
+                        "value. Prop being mutated: \"" + key + "\"",
+                        vm
+                    );
+                }
+            });
         }
-      });
-    }
-    // static props are already proxied on the component's prototype
-    // during Vue.extend(). We only need to proxy props defined at
-    // instantiation here.
-    if (!(key in vm)) {
-      proxy(vm, "_props", key);
-    }
-  };
+        // static props are already proxied on the component's prototype
+        // during Vue.extend(). We only need to proxy props defined at
+        // instantiation here.
+        if (!(key in vm)) {
+            proxy(vm, "_props", key);
+        }
+    };
 
-  for (var key in propsOptions) loop( key );
-  toggleObserving(true);
+    for (var key in propsOptions) loop( key );
+    toggleObserving(true);
 }
 
 function initData (vm) {
-  var data = vm.$options.data;
-  data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
-    : data || {};
-  if (!isPlainObject(data)) {
-    data = {};
-    "development" !== 'production' && warn(
-      'data functions should return an object:\n' +
-      'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
-      vm
-    );
-  }
-  // proxy data on instance
-  var keys = Object.keys(data);
-  var props = vm.$options.props;
-  var methods = vm.$options.methods;
-  var i = keys.length;
-  while (i--) {
-    var key = keys[i];
-    {
-      if (methods && hasOwn(methods, key)) {
-        warn(
-          ("Method \"" + key + "\" has already been defined as a data property."),
-          vm
+    var data = vm.$options.data;
+    data = vm._data = typeof data === 'function'
+        ? getData(data, vm)
+        : data || {};
+    if (!isPlainObject(data)) {
+        data = {};
+        "development" !== 'production' && warn(
+            'data functions should return an object:\n' +
+            'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+            vm
         );
-      }
     }
-    if (props && hasOwn(props, key)) {
-      "development" !== 'production' && warn(
-        "The data property \"" + key + "\" is already declared as a prop. " +
-        "Use prop default value instead.",
-        vm
-      );
-    } else if (!isReserved(key)) {
-      proxy(vm, "_data", key);
+    // proxy data on instance
+    var keys = Object.keys(data);
+    var props = vm.$options.props;
+    var methods = vm.$options.methods;
+    var i = keys.length;
+    while (i--) {
+        var key = keys[i];
+        {
+            if (methods && hasOwn(methods, key)) {
+                warn(
+                    ("Method \"" + key + "\" has already been defined as a data property."),
+                    vm
+                );
+            }
+        }
+        if (props && hasOwn(props, key)) {
+            "development" !== 'production' && warn(
+                "The data property \"" + key + "\" is already declared as a prop. " +
+                "Use prop default value instead.",
+                vm
+            );
+        } else if (!isReserved(key)) {
+            proxy(vm, "_data", key);
+        }
     }
-  }
-  // observe data
-  observe(data, true /* asRootData */);
+    // observe data
+    observe(data, true /* asRootData */);
 }
 
 function getData (data, vm) {
-  // #7573 disable dep collection when invoking data getters
-  pushTarget();
-  try {
-    return data.call(vm, vm)
-  } catch (e) {
-    handleError(e, vm, "data()");
-    return {}
-  } finally {
-    popTarget();
-  }
+    // #7573 disable dep collection when invoking data getters
+    pushTarget();
+    try {
+        return data.call(vm, vm)
+    } catch (e) {
+        handleError(e, vm, "data()");
+        return {}
+    } finally {
+        popTarget();
+    }
 }
 
 var computedWatcherOptions = { computed: true };
 
 function initComputed (vm, computed) {
-  // $flow-disable-line
-  var watchers = vm._computedWatchers = Object.create(null);
-  // computed properties are just getters during SSR
-  var isSSR = isServerRendering();
+    // $flow-disable-line
+    var watchers = vm._computedWatchers = Object.create(null);
+    // computed properties are just getters during SSR
+    var isSSR = isServerRendering();
 
-  for (var key in computed) {
-    var userDef = computed[key];
-    var getter = typeof userDef === 'function' ? userDef : userDef.get;
-    if ("development" !== 'production' && getter == null) {
-      warn(
-        ("Getter is missing for computed property \"" + key + "\"."),
-        vm
-      );
-    }
+    for (var key in computed) {
+        var userDef = computed[key];
+        var getter = typeof userDef === 'function' ? userDef : userDef.get;
+        if ("development" !== 'production' && getter == null) {
+            warn(
+                ("Getter is missing for computed property \"" + key + "\"."),
+                vm
+            );
+        }
 
-    if (!isSSR) {
-      // create internal watcher for the computed property.
-      watchers[key] = new Watcher(
-        vm,
-        getter || noop,
-        noop,
-        computedWatcherOptions
-      );
-    }
+        if (!isSSR) {
+            // create internal watcher for the computed property.
+            watchers[key] = new Watcher(
+                vm,
+                getter || noop,
+                noop,
+                computedWatcherOptions
+            );
+        }
 
-    // component-defined computed properties are already defined on the
-    // component prototype. We only need to define computed properties defined
-    // at instantiation here.
-    if (!(key in vm)) {
-      defineComputed(vm, key, userDef);
-    } else {
-      if (key in vm.$data) {
-        warn(("The computed property \"" + key + "\" is already defined in data."), vm);
-      } else if (vm.$options.props && key in vm.$options.props) {
-        warn(("The computed property \"" + key + "\" is already defined as a prop."), vm);
-      }
+        // component-defined computed properties are already defined on the
+        // component prototype. We only need to define computed properties defined
+        // at instantiation here.
+        if (!(key in vm)) {
+            defineComputed(vm, key, userDef);
+        } else {
+            if (key in vm.$data) {
+                warn(("The computed property \"" + key + "\" is already defined in data."), vm);
+            } else if (vm.$options.props && key in vm.$options.props) {
+                warn(("The computed property \"" + key + "\" is already defined as a prop."), vm);
+            }
+        }
     }
-  }
 }
 
 function defineComputed (
-  target,
-  key,
-  userDef
+    target,
+    key,
+    userDef
 ) {
-  var shouldCache = !isServerRendering();
-  if (typeof userDef === 'function') {
-    sharedPropertyDefinition.get = shouldCache
-      ? createComputedGetter(key)
-      : userDef;
-    sharedPropertyDefinition.set = noop;
-  } else {
-    sharedPropertyDefinition.get = userDef.get
-      ? shouldCache && userDef.cache !== false
-        ? createComputedGetter(key)
-        : userDef.get
-      : noop;
-    sharedPropertyDefinition.set = userDef.set
-      ? userDef.set
-      : noop;
-  }
-  if ("development" !== 'production' &&
-      sharedPropertyDefinition.set === noop) {
-    sharedPropertyDefinition.set = function () {
-      warn(
-        ("Computed property \"" + key + "\" was assigned to but it has no setter."),
-        this
-      );
-    };
-  }
-  Object.defineProperty(target, key, sharedPropertyDefinition);
+    var shouldCache = !isServerRendering();
+    if (typeof userDef === 'function') {
+        sharedPropertyDefinition.get = shouldCache
+            ? createComputedGetter(key)
+            : userDef;
+        sharedPropertyDefinition.set = noop;
+    } else {
+        sharedPropertyDefinition.get = userDef.get
+            ? shouldCache && userDef.cache !== false
+                ? createComputedGetter(key)
+                : userDef.get
+            : noop;
+        sharedPropertyDefinition.set = userDef.set
+            ? userDef.set
+            : noop;
+    }
+    if (
+        "development" !== 'production' &&
+        sharedPropertyDefinition.set === noop
+    ) {
+        sharedPropertyDefinition.set = function () {
+            warn(
+                ("Computed property \"" + key + "\" was assigned to but it has no setter."),
+                this
+            );
+        };
+    }
+    Object.defineProperty(target, key, sharedPropertyDefinition);
 }
 
 function createComputedGetter (key) {
-  return function computedGetter () {
-    var watcher = this._computedWatchers && this._computedWatchers[key];
-    if (watcher) {
-      watcher.depend();
-      return watcher.evaluate()
+    return function computedGetter () {
+        var watcher = this._computedWatchers && this._computedWatchers[key];
+        if (watcher) {
+            watcher.depend();
+            return watcher.evaluate()
+        }
     }
-  }
 }
 
 function initMethods (vm, methods) {
-  var props = vm.$options.props;
-  for (var key in methods) {
-    {
-      if (methods[key] == null) {
-        warn(
-          "Method \"" + key + "\" has an undefined value in the component definition. " +
-          "Did you reference the function correctly?",
-          vm
-        );
-      }
-      if (props && hasOwn(props, key)) {
-        warn(
-          ("Method \"" + key + "\" has already been defined as a prop."),
-          vm
-        );
-      }
-      if ((key in vm) && isReserved(key)) {
-        warn(
-          "Method \"" + key + "\" conflicts with an existing Vue instance method. " +
-          "Avoid defining component methods that start with _ or $."
-        );
-      }
+    var props = vm.$options.props;
+    for (var key in methods) {
+        {
+            if (methods[key] == null) {
+                warn(
+                    "Method \"" + key + "\" has an undefined value in the component definition. " +
+                    "Did you reference the function correctly?",
+                    vm
+                );
+            }
+            if (props && hasOwn(props, key)) {
+                warn(
+                    ("Method \"" + key + "\" has already been defined as a prop."),
+                    vm
+                );
+            }
+            if ((key in vm) && isReserved(key)) {
+                warn(
+                    "Method \"" + key + "\" conflicts with an existing Vue instance method. " +
+                    "Avoid defining component methods that start with _ or $."
+                );
+            }
+        }
+        vm[key] = methods[key] == null ? noop : bind(methods[key], vm);
     }
-    vm[key] = methods[key] == null ? noop : bind(methods[key], vm);
-  }
 }
 
 function initWatch (vm, watch) {
-  for (var key in watch) {
-    var handler = watch[key];
-    if (Array.isArray(handler)) {
-      for (var i = 0; i < handler.length; i++) {
-        createWatcher(vm, key, handler[i]);
-      }
-    } else {
-      createWatcher(vm, key, handler);
+    for (var key in watch) {
+        var handler = watch[key];
+        if (Array.isArray(handler)) {
+            for (var i = 0; i < handler.length; i++) {
+                createWatcher(vm, key, handler[i]);
+            }
+        } else {
+            createWatcher(vm, key, handler);
+        }
     }
-  }
 }
 
 function createWatcher (
-  vm,
-  expOrFn,
-  handler,
-  options
+    vm,
+    expOrFn,
+    handler,
+    options
 ) {
-  if (isPlainObject(handler)) {
-    options = handler;
-    handler = handler.handler;
-  }
-  if (typeof handler === 'string') {
-    handler = vm[handler];
-  }
-  return vm.$watch(expOrFn, handler, options)
+    if (isPlainObject(handler)) {
+        options = handler;
+        handler = handler.handler;
+    }
+    if (typeof handler === 'string') {
+        handler = vm[handler];
+    }
+    return vm.$watch(expOrFn, handler, options)
 }
 
 function stateMixin (Vue) {

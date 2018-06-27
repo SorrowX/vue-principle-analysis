@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>computed</title>
+</head>
+<body>
+	<div id="app" class="app">
+		{{ fullName }}
+	</div>
+	
+	<script src="../dist/vue.js"></script>
+	<script>
+		var vm = new Vue({
+		    data: {
+			    firstName: 'Foo',
+			    lastName: 'Bar'
+		    },
+		    computed: {
+			    fullName: function () {
+			        return this.firstName + ' ' + this.lastName
+			    }
+		    }
+		}).$mount('#app')
+	</script>
+</body>
+</html>
