@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件</title>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="../../dist/vue.js"></script>
+	<script>
+		const HelloWord = {
+			name: 'HelloWord',
+			props: ['flag'],
+			template: `
+			    <div v-if="flag">
+			        我是HelloWord组件div内容
+			    </div>
+			    <ul v-else>
+                    <li> 我是HelloWord组件ul下的内容 </li>
+			    </ul>
+			`
+		}
+
+		const App = {
+			name: 'App',
+			components: { HelloWord },
+			data() {
+				return {
+					flag: true
+				}
+			},
+			methods: {
+				toggle() {
+					this.flag = !this.flag
+				}
+			},
+			template: `
+			    <div id="app">
+			        <HelloWord :flag="flag"></HelloWord>
+			        <button @click="toggle">toggle</button>
+			    </div>
+			`
+		}
+
+		new Vue({
+			render: h => h(App)
+		}).$mount('#app')
+	</script>
+</body>
+</html>

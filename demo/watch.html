@@ -31,6 +31,8 @@
 		    },
 		    watch: {
 		    	a: {
+		    		sync: true,
+		    		immediate: true,
 		    		deep: true,
 				    handler(newVal, oldVal) {
 				        console.log(newVal, oldVal)
