@@ -11,9 +11,15 @@
 		const HelloWord = {
 			name: 'HelloWord',
 			props: ['flag'],
+			data() {
+				return {
+					msg: 'hi'
+				}
+			},
 			template: `
 			    <div v-if="flag">
 			        我是HelloWord组件div内容
+			        <span>{{ msg }}</span>
 			    </div>
 			    <ul v-else>
                     <li> 我是HelloWord组件ul下的内容 </li>
@@ -42,9 +48,12 @@
 			`
 		}
 
-		new Vue({
+		const vm = new Vue({
 			render: h => h(App)
 		}).$mount('#app')
+
+
+
 	</script>
 </body>
 </html>

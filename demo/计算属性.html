@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>计算属性</title>
+</head>
+<body>
+	<div id="app">
+		{{ finalName }}
+	</div>
+    <script src="../dist/vue.js"></script>
+    <script>
+    	let vm = new Vue({
+    		el: '#app',
+    		data: {
+    			firstName: '徐志康',
+    			lastName: '徐志伟',
+    			prefix: '渣渣徐'
+    		},
+    		computed: {
+    			name() {
+    				return this.firstName + ' ' + this.lastName
+    			},
+    			finalName() {
+                    return this.prefix + ' ' + this.name
+    			}
+    		}
+    	})
+
+    	// vm.firstName = '志康'
+    </script>
+</body>
+</html>

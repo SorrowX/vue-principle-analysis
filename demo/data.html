@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>data</title>
+</head>
+<body>
+	<div id="app">
+		{{ arr }}
+	</div>
+    <script src="../dist/vue.js"></script>
+    <script>
+    	let vm = new Vue({
+    		el: '#app',
+    		props: {
+    			arr: {
+    				type: Array,
+    				default: function() {
+    					return [1, 2, 3]
+    				}
+    			}
+    		}
+    	})
+
+    	// vm.$set(vm.obj, 'b', 2)
+    	/*vm.str = 'abc'
+    	vm.str = 'def'
+    	vm.obj.a = 'ghk'*/
+    	vm.$set(vm.arr, 3, 4)
+    </script>
+</body>
+</html>

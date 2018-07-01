@@ -402,75 +402,76 @@ export function createPatchFunction (backend) {
     }
 
     function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
-      let oldStartIdx = 0
-      let newStartIdx = 0
-      let oldEndIdx = oldCh.length - 1
-      let oldStartVnode = oldCh[0]
-      let oldEndVnode = oldCh[oldEndIdx]
-      let newEndIdx = newCh.length - 1
-      let newStartVnode = newCh[0]
-      let newEndVnode = newCh[newEndIdx]
-      let oldKeyToIdx, idxInOld, vnodeToMove, refElm
+        let oldStartIdx = 0
+        let newStartIdx = 0
+        let oldEndIdx = oldCh.length - 1
+        let oldStartVnode = oldCh[0]
+        let oldEndVnode = oldCh[oldEndIdx]
+        let newEndIdx = newCh.length - 1
+        let newStartVnode = newCh[0]
+        let newEndVnode = newCh[newEndIdx]
+        let oldKeyToIdx, idxInOld, vnodeToMove, refElm
 
-      // removeOnly is a special flag used only by <transition-group>
-      // to ensure removed elements stay in correct relative positions
-      // during leaving transitions
-      const canMove = !removeOnly
+        // removeOnly is a special flag used only by <transition-group>
+        // to ensure removed elements stay in correct relative positions
+        // during leaving transitions
+        const canMove = !removeOnly
 
-      if (process.env.NODE_ENV !== 'production') {
-        checkDuplicateKeys(newCh)
-      }
-
-      while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
-        if (isUndef(oldStartVnode)) {
-          oldStartVnode = oldCh[++oldStartIdx] // Vnode has been moved left
-        } else if (isUndef(oldEndVnode)) {
-          oldEndVnode = oldCh[--oldEndIdx]
-        } else if (sameVnode(oldStartVnode, newStartVnode)) {
-          patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)
-          oldStartVnode = oldCh[++oldStartIdx]
-          newStartVnode = newCh[++newStartIdx]
-        } else if (sameVnode(oldEndVnode, newEndVnode)) {
-          patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)
-          oldEndVnode = oldCh[--oldEndIdx]
-          newEndVnode = newCh[--newEndIdx]
-        } else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right
-          patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)
-          canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))
-          oldStartVnode = oldCh[++oldStartIdx]
-          newEndVnode = newCh[--newEndIdx]
-        } else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left
-          patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)
-          canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)
-          oldEndVnode = oldCh[--oldEndIdx]
-          newStartVnode = newCh[++newStartIdx]
-        } else {
-          if (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)
-          idxInOld = isDef(newStartVnode.key)
-            ? oldKeyToIdx[newStartVnode.key]
-            : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx)
-          if (isUndef(idxInOld)) { // New element
-            createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
-          } else {
-            vnodeToMove = oldCh[idxInOld]
-            if (sameVnode(vnodeToMove, newStartVnode)) {
-              patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue)
-              oldCh[idxInOld] = undefined
-              canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
-            } else {
-              // same key but different element. treat as new element
-              createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
-            }
-          }
-          newStartVnode = newCh[++newStartIdx]
+        if (process.env.NODE_ENV !== 'production') {
+            checkDuplicateKeys(newCh)
         }
-      }
-      if (oldStartIdx > oldEndIdx) {
-        refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
-        addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
-      } else if (newStartIdx > newEndIdx) {
-        removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx)
-      }
+
+        while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+            if (isUndef(oldStartVnode)) { // oldStartVnode没有,则oldStartIdx后移一位
+                oldStartVnode = oldCh[++oldStartIdx] // Vnode has been moved left
+            } else if (isUndef(oldEndVnode)) { // oldEndVnode没有,则oldEndIdx前移一位
+                oldEndVnode = oldCh[--oldEndIdx]
+            } else if (sameVnode(oldStartVnode, newStartVnode)) { // 处理 头部 的同类型节点，即oldStartVnode和newStartVnode指向同类节点的情况
+                patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)
+                oldStartVnode = oldCh[++oldStartIdx]
+                newStartVnode = newCh[++newStartIdx] // 标记: oldStartIdx 和 newStartIdx 后移1位
+            } else if (sameVnode(oldEndVnode, newEndVnode)) {  // 处理 尾部 的同类型节点，即oldEndVnode和newEndVnode指向同类节点的情况
+                patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)
+                oldEndVnode = oldCh[--oldEndIdx]
+                newEndVnode = newCh[--newEndIdx] // 标记: oldEndIdx 和 newEndIdx 前移1位
+            } else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right 处理 头尾 同类型节点，即oldStartVnode和newEndVnode指向同类节点的情况
+                patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)
+                canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm)) // 把oldStartVnode的el节点元素右移到oldEndVnode的el节点后面紧跟节点元素的前面(说白了就是oldEndVnode的el节点的后面)
+                oldStartVnode = oldCh[++oldStartIdx]
+                newEndVnode = newCh[--newEndIdx] // 标记: oldStartIdx 后移1位, newEndIdx 前移1位 
+            } else if (sameVnode(oldEndVnode, newStartVnode)) {  // Vnode moved left 处理 尾头 的同类型节点，即oldEndVnode和newStartVnode指向同类节点的情况
+                patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)
+                canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm) // 把oldEndVnode的el节点左移到oldStartVnode的el节点的前面
+                oldEndVnode = oldCh[--oldEndIdx]
+                newStartVnode = newCh[++newStartIdx] // 标记: oldEndIdx 前移1位  newStartIdx 后移1位 
+            } else {
+                if (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx) // oldKeyToIdx一个对象,存储剩下oldCh的键值对: {key: 索引}
+                idxInOld = isDef(newStartVnode.key)
+                    ? oldKeyToIdx[newStartVnode.key]
+                    : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx) // 该三目是为了查找newStartVnode在oldCh的索引
+                if (isUndef(idxInOld)) { // New element undefined的话，说明newStartVnode未在oldCh中找到,说明它是一个新增的节点,则创建一个新的节点,且插入到oldStartVnode的elm dom的前面
+                    createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
+                } else { // 找到newStartVnode在oldCh中的索引,说明是需要处理更新的节点
+                    vnodeToMove = oldCh[idxInOld] // 在oldCh中找到需要移动的vnode
+                    if (sameVnode(vnodeToMove, newStartVnode)) { // 如果需要移动的vnode和newStartVnode是同类节点,则把vnodeToMove的el dom移动到oldStartVnode的el dom的前面，且把刚才移动的vnode标记为undefined
+                        patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue)
+                        oldCh[idxInOld] = undefined // 标记为undefined目的是: 
+                        canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
+                    } else { // 如果key相同,元素不同，则视为新增元素
+                        // same key but different element. treat as new element
+                        createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
+                    }
+                }
+                newStartVnode = newCh[++newStartIdx] // 如果是处理新增节点的情况: oldCh中没有新增节点，所以标记过程中它的指针不需要移动，只需要把newStartIdx后移1位
+                                                     // 如果是处理更新的节点的情况: 在oldCh中该节点不在指针处，所以采用设置为undefined的方式来标记,但是newCh中的newStartIdx后移1位
+            }
+        }
+        if (oldStartIdx > oldEndIdx) { // 当oldCh中的起止点相遇了，但是新vnode中的起止点没有相遇，这时需要对新vnode中的未处理节点进行处理，这类节点属于更新中被加入的节点，需要将他们插入到DOM树中
+            refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
+            addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
+        } else if (newStartIdx > newEndIdx) { // 当新vnode中的起止点相遇,且newStartIdx超过newEndIdx,需要把oldCh中oldStartIdx和oldEndIdx之间(包含他们)的dom删除(但是oldCh还有undefined标记的则不需要删除)
+            removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx)
+        }
     }
 
     function checkDuplicateKeys (children) {
@@ -499,63 +500,64 @@ export function createPatchFunction (backend) {
     }
 
     function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
-      if (oldVnode === vnode) {
-        return
-      }
-
-      const elm = vnode.elm = oldVnode.elm
-
-      if (isTrue(oldVnode.isAsyncPlaceholder)) {
-        if (isDef(vnode.asyncFactory.resolved)) {
-          hydrate(oldVnode.elm, vnode, insertedVnodeQueue)
-        } else {
-          vnode.isAsyncPlaceholder = true
+        if (oldVnode === vnode) {
+            return
         }
-        return
-      }
 
-      // reuse element for static trees.
-      // note we only do this if the vnode is cloned -
-      // if the new node is not cloned it means the render functions have been
-      // reset by the hot-reload-api and we need to do a proper re-render.
-      if (isTrue(vnode.isStatic) &&
-        isTrue(oldVnode.isStatic) &&
-        vnode.key === oldVnode.key &&
-        (isTrue(vnode.isCloned) || isTrue(vnode.isOnce))
-      ) {
-        vnode.componentInstance = oldVnode.componentInstance
-        return
-      }
+        const elm = vnode.elm = oldVnode.elm
 
-      let i
-      const data = vnode.data
-      if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
-        i(oldVnode, vnode)
-      }
-
-      const oldCh = oldVnode.children
-      const ch = vnode.children
-      if (isDef(data) && isPatchable(vnode)) {
-        for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
-        if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
-      }
-      if (isUndef(vnode.text)) {
-        if (isDef(oldCh) && isDef(ch)) {
-          if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
-        } else if (isDef(ch)) {
-          if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
-          addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
-        } else if (isDef(oldCh)) {
-          removeVnodes(elm, oldCh, 0, oldCh.length - 1)
-        } else if (isDef(oldVnode.text)) {
-          nodeOps.setTextContent(elm, '')
+        if (isTrue(oldVnode.isAsyncPlaceholder)) {
+            if (isDef(vnode.asyncFactory.resolved)) {
+                hydrate(oldVnode.elm, vnode, insertedVnodeQueue)
+            } else {
+                vnode.isAsyncPlaceholder = true
+            }
+            return
         }
-      } else if (oldVnode.text !== vnode.text) {
-        nodeOps.setTextContent(elm, vnode.text)
-      }
-      if (isDef(data)) {
-        if (isDef(i = data.hook) && isDef(i = i.postpatch)) i(oldVnode, vnode)
-      }
+
+        // reuse element for static trees.
+        // note we only do this if the vnode is cloned -
+        // if the new node is not cloned it means the render functions have been
+        // reset by the hot-reload-api and we need to do a proper re-render.
+        if (
+            isTrue(vnode.isStatic) &&
+            isTrue(oldVnode.isStatic) &&
+            vnode.key === oldVnode.key &&
+            (isTrue(vnode.isCloned) || isTrue(vnode.isOnce))
+        ) {
+            vnode.componentInstance = oldVnode.componentInstance
+            return
+        }
+
+        let i
+        const data = vnode.data
+        if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
+            i(oldVnode, vnode)
+        }
+
+        const oldCh = oldVnode.children
+        const ch = vnode.children
+        if (isDef(data) && isPatchable(vnode)) {
+            for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
+            if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
+        }
+        if (isUndef(vnode.text)) {
+            if (isDef(oldCh) && isDef(ch)) {
+                if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
+            } else if (isDef(ch)) {
+                if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
+              addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
+            } else if (isDef(oldCh)) {
+                removeVnodes(elm, oldCh, 0, oldCh.length - 1)
+            } else if (isDef(oldVnode.text)) {
+                nodeOps.setTextContent(elm, '')
+            }
+        } else if (oldVnode.text !== vnode.text) {
+            nodeOps.setTextContent(elm, vnode.text)
+        }
+        if (isDef(data)) {
+            if (isDef(i = data.hook) && isDef(i = i.postpatch)) i(oldVnode, vnode)
+        }
     }
 
     function invokeInsertHook (vnode, queue, initial) {
