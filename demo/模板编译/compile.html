@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>compile</title>
+</head>
+<body>
+	<script type="text/javascript" src="../../dist/vue.js"></script>
+    <script>
+
+        /*const vm = new Vue({
+            data: {
+                arr: Array.apply(null, { length: 10 }).map((item, index) => {
+                    return index + 1
+                })
+            },
+            methods: {
+                switchArr() {
+                    this.arr = [1, 9, 11, 7, 3, 4, 5, 6, 2, 10]
+                }
+            },
+            template: `
+                <div>
+                    <p 
+                        v-for="(item, index) in arr" 
+                        :key="item"
+                    >
+                        {{ item }}
+                    </p>
+                </div>
+            `
+        }).$mount('#app')*/
+
+
+    	/*const res = Vue.compile(`
+            <div>
+                <p 
+                    v-for="(item, index) in arr" 
+                    :key="item"
+                >
+                    {{ item }}
+                </p>
+            </div>
+    	`)
+        console.log(res)
+
+    	const vm = new Vue({
+    		data: {
+    			arr: Array.apply(null, { length: 10 }).map((item, index) => {
+                    return index + 1
+    			})
+    		},
+    		methods: {
+    			switchArr() {
+    				this.arr = [1, 9, 11, 7, 3, 4, 5, 6, 2, 10]
+    			}
+    		},
+    		render: res.render,
+    		staticRenderFns: res.staticRenderFns
+    	}).$mount('#app')*/
+
+        /*const res = Vue.compile(`
+            <ul :class="bindCls" class="list" v-if="isShow">
+                <li v-for="(item, index) in data" @click="clickItem(index)">{{item}}:{{index}}</li>
+            </ul>
+        `)
+        console.log(res)*/
+
+
+        /*const res = Vue.compile(`
+            <p>
+                111
+                <div>222</div>
+            </p>
+        `)
+        console.log(res)*/
+
+        const res = Vue.compile(`
+            <p>
+                111
+                <p>222</p>
+            </p>
+        `)
+        console.log(res)
+
+
+    </script>
+</body>
+</html>

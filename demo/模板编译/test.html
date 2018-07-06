@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+</head>
+<body>
+	<script src="./simplehtmlparser.js"></script>
+	<script>
+		let template = `
+		    <div>
+		        <p 
+		            v-for="(item, index) in arr" 
+		            :key="item"
+		        >
+		            {{ item }}
+		        </p>
+		    </div>
+		`
+		new SimpleHtmlParser().parse(template, {
+			startElement: function (sTagName, oAttrs) {
+				console.log(sTagName, oAttrs)
+			},
+			endElement: function (sTagName) {
+				console.log(sTagName)
+			},
+		    characters:	function (s) {
+		    	console.log(s)
+		    },
+		    comment: function (s) {
+		    	console.log(s)
+		    }
+		})
+	</script>
+</body>
+</html>
