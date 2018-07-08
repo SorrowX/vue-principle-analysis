@@ -9966,30 +9966,30 @@ var simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?
 
 // KeyboardEvent.keyCode aliases
 var keyCodes = {
-  esc: 27,
-  tab: 9,
-  enter: 13,
-  space: 32,
-  up: 38,
-  left: 37,
-  right: 39,
-  down: 40,
-  'delete': [8, 46]
+    esc: 27,
+    tab: 9,
+    enter: 13,
+    space: 32,
+    up: 38,
+    left: 37,
+    right: 39,
+    down: 40,
+    'delete': [8, 46]
 };
 
 // KeyboardEvent.key aliases
 var keyNames = {
-  // #7880: IE11 and Edge use `Esc` for Escape key name.
-  esc: ['Esc', 'Escape'],
-  tab: 'Tab',
-  enter: 'Enter',
-  space: ' ',
-  // #7806: IE11 uses key names without `Arrow` prefix for arrow keys.
-  up: ['Up', 'ArrowUp'],
-  left: ['Left', 'ArrowLeft'],
-  right: ['Right', 'ArrowRight'],
-  down: ['Down', 'ArrowDown'],
-  'delete': ['Backspace', 'Delete']
+    // #7880: IE11 and Edge use `Esc` for Escape key name.
+    esc: ['Esc', 'Escape'],
+    tab: 'Tab',
+    enter: 'Enter',
+    space: ' ',
+    // #7806: IE11 uses key names without `Arrow` prefix for arrow keys.
+    up: ['Up', 'ArrowUp'],
+    left: ['Left', 'ArrowLeft'],
+    right: ['Right', 'ArrowRight'],
+    down: ['Down', 'ArrowDown'],
+    'delete': ['Backspace', 'Delete']
 };
 
 // #4868: modifiers that prevent the execution of the listener
@@ -9998,112 +9998,110 @@ var keyNames = {
 var genGuard = function (condition) { return ("if(" + condition + ")return null;"); };
 
 var modifierCode = {
-  stop: '$event.stopPropagation();',
-  prevent: '$event.preventDefault();',
-  self: genGuard("$event.target !== $event.currentTarget"),
-  ctrl: genGuard("!$event.ctrlKey"),
-  shift: genGuard("!$event.shiftKey"),
-  alt: genGuard("!$event.altKey"),
-  meta: genGuard("!$event.metaKey"),
-  left: genGuard("'button' in $event && $event.button !== 0"),
-  middle: genGuard("'button' in $event && $event.button !== 1"),
-  right: genGuard("'button' in $event && $event.button !== 2")
+    stop: '$event.stopPropagation();',
+    prevent: '$event.preventDefault();',
+    self: genGuard("$event.target !== $event.currentTarget"),
+    ctrl: genGuard("!$event.ctrlKey"),
+    shift: genGuard("!$event.shiftKey"),
+    alt: genGuard("!$event.altKey"),
+    meta: genGuard("!$event.metaKey"),
+    left: genGuard("'button' in $event && $event.button !== 0"),
+    middle: genGuard("'button' in $event && $event.button !== 1"),
+    right: genGuard("'button' in $event && $event.button !== 2")
 };
 
 function genHandlers (
-  events,
-  isNative,
-  warn
+    events,
+    isNative,
+    warn
 ) {
-  var res = isNative ? 'nativeOn:{' : 'on:{';
-  for (var name in events) {
-    res += "\"" + name + "\":" + (genHandler(name, events[name])) + ",";
-  }
-  return res.slice(0, -1) + '}'
+    var res = isNative ? 'nativeOn:{' : 'on:{';
+    for (var name in events) {
+        res += "\"" + name + "\":" + (genHandler(name, events[name])) + ",";
+    }
+    return res.slice(0, -1) + '}'
 }
 
-// Generate handler code with binding params on Weex
-/* istanbul ignore next */
 function genHandler (
-  name,
-  handler
+    name,
+    handler
 ) {
-  if (!handler) {
-    return 'function(){}'
-  }
-
-  if (Array.isArray(handler)) {
-    return ("[" + (handler.map(function (handler) { return genHandler(name, handler); }).join(',')) + "]")
-  }
-
-  var isMethodPath = simplePathRE.test(handler.value);
-  var isFunctionExpression = fnExpRE.test(handler.value);
-
-  if (!handler.modifiers) {
-    if (isMethodPath || isFunctionExpression) {
-      return handler.value
+    if (!handler) {
+        return 'function(){}'
     }
-    /* istanbul ignore if */
-    return ("function($event){" + (handler.value) + "}") // inline statement
-  } else {
-    var code = '';
-    var genModifierCode = '';
-    var keys = [];
-    for (var key in handler.modifiers) {
-      if (modifierCode[key]) {
-        genModifierCode += modifierCode[key];
-        // left/right
-        if (keyCodes[key]) {
-          keys.push(key);
+
+    if (Array.isArray(handler)) {
+        return ("[" + (handler.map(function (handler) { return genHandler(name, handler); }).join(',')) + "]")
+    }
+
+    var isMethodPath = simplePathRE.test(handler.value);
+    var isFunctionExpression = fnExpRE.test(handler.value);
+
+    if (!handler.modifiers) {
+        if (isMethodPath || isFunctionExpression) {
+            return handler.value
         }
-      } else if (key === 'exact') {
-        var modifiers = (handler.modifiers);
-        genModifierCode += genGuard(
-          ['ctrl', 'shift', 'alt', 'meta']
-            .filter(function (keyModifier) { return !modifiers[keyModifier]; })
-            .map(function (keyModifier) { return ("$event." + keyModifier + "Key"); })
-            .join('||')
-        );
-      } else {
-        keys.push(key);
-      }
+        /* istanbul ignore if */
+        return ("function($event){" + (handler.value) + "}") // inline statement
+    } else {
+        var code = '';
+        var genModifierCode = '';
+        var keys = [];
+        for (var key in handler.modifiers) {
+            if (modifierCode[key]) {
+                genModifierCode += modifierCode[key];
+                // left/right
+                if (keyCodes[key]) {
+                    keys.push(key);
+                }
+            } else if (key === 'exact') {
+                var modifiers = (handler.modifiers);
+                genModifierCode += genGuard(
+                    ['ctrl', 'shift', 'alt', 'meta']
+                        .filter(function (keyModifier) { return !modifiers[keyModifier]; })
+                        .map(function (keyModifier) { return ("$event." + keyModifier + "Key"); })
+                        .join('||')
+                );
+            } else {
+                keys.push(key);
+            }
+        }
+        if (keys.length) {
+            code += genKeyFilter(keys);
+        }
+        // Make sure modifiers like prevent and stop get executed after key filtering
+        if (genModifierCode) {
+            code += genModifierCode;
+        }
+        var handlerCode = isMethodPath
+            ? ("return " + (handler.value) + "($event)")
+            : isFunctionExpression
+                ? ("return (" + (handler.value) + ")($event)")
+                : handler.value;
+        /* istanbul ignore if */
+        return ("function($event){" + code + handlerCode + "}")
     }
-    if (keys.length) {
-      code += genKeyFilter(keys);
-    }
-    // Make sure modifiers like prevent and stop get executed after key filtering
-    if (genModifierCode) {
-      code += genModifierCode;
-    }
-    var handlerCode = isMethodPath
-      ? ("return " + (handler.value) + "($event)")
-      : isFunctionExpression
-        ? ("return (" + (handler.value) + ")($event)")
-        : handler.value;
-    /* istanbul ignore if */
-    return ("function($event){" + code + handlerCode + "}")
-  }
 }
 
 function genKeyFilter (keys) {
-  return ("if(!('button' in $event)&&" + (keys.map(genFilterCode).join('&&')) + ")return null;")
+    return ("if(!('button' in $event)&&" + (keys.map(genFilterCode).join('&&')) + ")return null;")
 }
 
 function genFilterCode (key) {
-  var keyVal = parseInt(key, 10);
-  if (keyVal) {
-    return ("$event.keyCode!==" + keyVal)
-  }
-  var keyCode = keyCodes[key];
-  var keyName = keyNames[key];
-  return (
-    "_k($event.keyCode," +
-    (JSON.stringify(key)) + "," +
-    (JSON.stringify(keyCode)) + "," +
-    "$event.key," +
-    "" + (JSON.stringify(keyName)) +
-    ")"
-  )
+    var keyVal = parseInt(key, 10);
+    if (keyVal) {
+        return ("$event.keyCode!==" + keyVal)
+    }
+    var keyCode = keyCodes[key];
+    var keyName = keyNames[key];
+    return (
+        "_k($event.keyCode," +
+        (JSON.stringify(key)) + "," +
+        (JSON.stringify(keyCode)) + "," +
+        "$event.key," +
+        "" + (JSON.stringify(keyName)) +
+        ")"
+    )
 }
 
 /*  */
@@ -10134,348 +10132,348 @@ var baseDirectives = {
 /*  */
 
 var CodegenState = function CodegenState (options) {
-  this.options = options;
-  this.warn = options.warn || baseWarn;
-  this.transforms = pluckModuleFunction(options.modules, 'transformCode');
-  this.dataGenFns = pluckModuleFunction(options.modules, 'genData');
-  this.directives = extend(extend({}, baseDirectives), options.directives);
-  var isReservedTag = options.isReservedTag || no;
-  this.maybeComponent = function (el) { return !isReservedTag(el.tag); };
-  this.onceId = 0;
-  this.staticRenderFns = [];
+    this.options = options;
+    this.warn = options.warn || baseWarn;
+    this.transforms = pluckModuleFunction(options.modules, 'transformCode');
+    this.dataGenFns = pluckModuleFunction(options.modules, 'genData');
+    this.directives = extend(extend({}, baseDirectives), options.directives);
+    var isReservedTag = options.isReservedTag || no;
+    this.maybeComponent = function (el) { return !isReservedTag(el.tag); };
+    this.onceId = 0;
+    this.staticRenderFns = [];
 };
 
 
 
 function generate (
-  ast,
-  options
+    ast,
+    options
 ) {
-  var state = new CodegenState(options);
-  var code = ast ? genElement(ast, state) : '_c("div")';
-  return {
-    render: ("with(this){return " + code + "}"),
-    staticRenderFns: state.staticRenderFns
-  }
+    var state = new CodegenState(options);
+    var code = ast ? genElement(ast, state) : '_c("div")';
+    return {
+        render: ("with(this){return " + code + "}"),
+        staticRenderFns: state.staticRenderFns
+    }
 }
 
 function genElement (el, state) {
-  if (el.staticRoot && !el.staticProcessed) {
-    return genStatic(el, state)
-  } else if (el.once && !el.onceProcessed) {
-    return genOnce(el, state)
-  } else if (el.for && !el.forProcessed) {
-    return genFor(el, state)
-  } else if (el.if && !el.ifProcessed) {
-    return genIf(el, state)
-  } else if (el.tag === 'template' && !el.slotTarget) {
-    return genChildren(el, state) || 'void 0'
-  } else if (el.tag === 'slot') {
-    return genSlot(el, state)
-  } else {
-    // component or element
-    var code;
-    if (el.component) {
-      code = genComponent(el.component, el, state);
+    if (el.staticRoot && !el.staticProcessed) {
+        return genStatic(el, state)
+    } else if (el.once && !el.onceProcessed) {
+        return genOnce(el, state)
+    } else if (el.for && !el.forProcessed) {
+        return genFor(el, state)
+    } else if (el.if && !el.ifProcessed) {
+        return genIf(el, state)
+    } else if (el.tag === 'template' && !el.slotTarget) {
+        return genChildren(el, state) || 'void 0'
+    } else if (el.tag === 'slot') {
+        return genSlot(el, state)
     } else {
-      var data = el.plain ? undefined : genData$2(el, state);
+        // component or element
+        var code;
+        if (el.component) {
+            code = genComponent(el.component, el, state);
+        } else {
+            var data = el.plain ? undefined : genData$2(el, state);
 
-      var children = el.inlineTemplate ? null : genChildren(el, state, true);
-      code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
+            var children = el.inlineTemplate ? null : genChildren(el, state, true);
+            code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
+        }
+        // module transforms
+        for (var i = 0; i < state.transforms.length; i++) {
+            code = state.transforms[i](el, code);
+        }
+        return code
     }
-    // module transforms
-    for (var i = 0; i < state.transforms.length; i++) {
-      code = state.transforms[i](el, code);
-    }
-    return code
-  }
 }
 
 // hoist static sub-trees out
 function genStatic (el, state) {
-  el.staticProcessed = true;
-  state.staticRenderFns.push(("with(this){return " + (genElement(el, state)) + "}"));
-  return ("_m(" + (state.staticRenderFns.length - 1) + (el.staticInFor ? ',true' : '') + ")")
+    el.staticProcessed = true;
+    state.staticRenderFns.push(("with(this){return " + (genElement(el, state)) + "}"));
+    return ("_m(" + (state.staticRenderFns.length - 1) + (el.staticInFor ? ',true' : '') + ")")
 }
 
 // v-once
 function genOnce (el, state) {
-  el.onceProcessed = true;
-  if (el.if && !el.ifProcessed) {
-    return genIf(el, state)
-  } else if (el.staticInFor) {
-    var key = '';
-    var parent = el.parent;
-    while (parent) {
-      if (parent.for) {
-        key = parent.key;
-        break
-      }
-      parent = parent.parent;
+    el.onceProcessed = true;
+    if (el.if && !el.ifProcessed) {
+        return genIf(el, state)
+    } else if (el.staticInFor) {
+        var key = '';
+        var parent = el.parent;
+        while (parent) {
+            if (parent.for) {
+                key = parent.key;
+                break
+            }
+            parent = parent.parent;
+        }
+        if (!key) {
+            "development" !== 'production' && state.warn(
+                "v-once can only be used inside v-for that is keyed. "
+            );
+            return genElement(el, state)
+        }
+        return ("_o(" + (genElement(el, state)) + "," + (state.onceId++) + "," + key + ")")
+    } else {
+        return genStatic(el, state)
     }
-    if (!key) {
-      "development" !== 'production' && state.warn(
-        "v-once can only be used inside v-for that is keyed. "
-      );
-      return genElement(el, state)
-    }
-    return ("_o(" + (genElement(el, state)) + "," + (state.onceId++) + "," + key + ")")
-  } else {
-    return genStatic(el, state)
-  }
 }
 
 function genIf (
-  el,
-  state,
-  altGen,
-  altEmpty
+    el,
+    state,
+    altGen,
+    altEmpty
 ) {
-  el.ifProcessed = true; // avoid recursion
-  return genIfConditions(el.ifConditions.slice(), state, altGen, altEmpty)
+    el.ifProcessed = true; // avoid recursion
+    return genIfConditions(el.ifConditions.slice(), state, altGen, altEmpty)
 }
 
 function genIfConditions (
-  conditions,
-  state,
-  altGen,
-  altEmpty
+    conditions,
+    state,
+    altGen,
+    altEmpty
 ) {
-  if (!conditions.length) {
-    return altEmpty || '_e()'
-  }
+    if (!conditions.length) {
+        return altEmpty || '_e()'
+    }
 
-  var condition = conditions.shift();
-  if (condition.exp) {
-    return ("(" + (condition.exp) + ")?" + (genTernaryExp(condition.block)) + ":" + (genIfConditions(conditions, state, altGen, altEmpty)))
-  } else {
-    return ("" + (genTernaryExp(condition.block)))
-  }
+    var condition = conditions.shift();
+    if (condition.exp) {
+        return ("(" + (condition.exp) + ")?" + (genTernaryExp(condition.block)) + ":" + (genIfConditions(conditions, state, altGen, altEmpty)))
+    } else {
+        return ("" + (genTernaryExp(condition.block)))
+    }
 
-  // v-if with v-once should generate code like (a)?_m(0):_m(1)
-  function genTernaryExp (el) {
-    return altGen
-      ? altGen(el, state)
-      : el.once
-        ? genOnce(el, state)
-        : genElement(el, state)
-  }
+    // v-if with v-once should generate code like (a)?_m(0):_m(1)
+    function genTernaryExp (el) {
+        return altGen
+            ? altGen(el, state)
+            : el.once
+                ? genOnce(el, state)
+                : genElement(el, state)
+    }
 }
 
 function genFor (
-  el,
-  state,
-  altGen,
-  altHelper
+    el,
+    state,
+    altGen,
+    altHelper
 ) {
-  var exp = el.for;
-  var alias = el.alias;
-  var iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';
-  var iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';
+    var exp = el.for;
+    var alias = el.alias;
+    var iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';
+    var iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';
 
-  if ("development" !== 'production' &&
-    state.maybeComponent(el) &&
-    el.tag !== 'slot' &&
-    el.tag !== 'template' &&
-    !el.key
-  ) {
-    state.warn(
-      "<" + (el.tag) + " v-for=\"" + alias + " in " + exp + "\">: component lists rendered with " +
-      "v-for should have explicit keys. " +
-      "See https://vuejs.org/guide/list.html#key for more info.",
-      true /* tip */
-    );
-  }
+    if ("development" !== 'production' &&
+        state.maybeComponent(el) &&
+        el.tag !== 'slot' &&
+        el.tag !== 'template' &&
+        !el.key
+    ) {
+        state.warn(
+            "<" + (el.tag) + " v-for=\"" + alias + " in " + exp + "\">: component lists rendered with " +
+            "v-for should have explicit keys. " +
+            "See https://vuejs.org/guide/list.html#key for more info.",
+            true /* tip */
+        );
+    }
 
-  el.forProcessed = true; // avoid recursion
-  return (altHelper || '_l') + "((" + exp + ")," +
-    "function(" + alias + iterator1 + iterator2 + "){" +
-      "return " + ((altGen || genElement)(el, state)) +
-    '})'
+    el.forProcessed = true; // avoid recursion
+    return (altHelper || '_l') + "((" + exp + ")," +
+        "function(" + alias + iterator1 + iterator2 + "){" +
+          "return " + ((altGen || genElement)(el, state)) +
+        '})'
 }
 
 function genData$2 (el, state) {
-  var data = '{';
+    var data = '{';
 
-  // directives first.
-  // directives may mutate the el's other properties before they are generated.
-  var dirs = genDirectives(el, state);
-  if (dirs) { data += dirs + ','; }
+    // directives first.
+    // directives may mutate the el's other properties before they are generated.
+    var dirs = genDirectives(el, state);
+    if (dirs) { data += dirs + ','; }
 
-  // key
-  if (el.key) {
-    data += "key:" + (el.key) + ",";
-  }
-  // ref
-  if (el.ref) {
-    data += "ref:" + (el.ref) + ",";
-  }
-  if (el.refInFor) {
-    data += "refInFor:true,";
-  }
-  // pre
-  if (el.pre) {
-    data += "pre:true,";
-  }
-  // record original tag name for components using "is" attribute
-  if (el.component) {
-    data += "tag:\"" + (el.tag) + "\",";
-  }
-  // module data generation functions
-  for (var i = 0; i < state.dataGenFns.length; i++) {
-    data += state.dataGenFns[i](el);
-  }
-  // attributes
-  if (el.attrs) {
-    data += "attrs:{" + (genProps(el.attrs)) + "},";
-  }
-  // DOM props
-  if (el.props) {
-    data += "domProps:{" + (genProps(el.props)) + "},";
-  }
-  // event handlers
-  if (el.events) {
-    data += (genHandlers(el.events, false, state.warn)) + ",";
-  }
-  if (el.nativeEvents) {
-    data += (genHandlers(el.nativeEvents, true, state.warn)) + ",";
-  }
-  // slot target
-  // only for non-scoped slots
-  if (el.slotTarget && !el.slotScope) {
-    data += "slot:" + (el.slotTarget) + ",";
-  }
-  // scoped slots
-  if (el.scopedSlots) {
-    data += (genScopedSlots(el.scopedSlots, state)) + ",";
-  }
-  // component v-model
-  if (el.model) {
-    data += "model:{value:" + (el.model.value) + ",callback:" + (el.model.callback) + ",expression:" + (el.model.expression) + "},";
-  }
-  // inline-template
-  if (el.inlineTemplate) {
-    var inlineTemplate = genInlineTemplate(el, state);
-    if (inlineTemplate) {
-      data += inlineTemplate + ",";
+    // key
+    if (el.key) {
+        data += "key:" + (el.key) + ",";
     }
-  }
-  data = data.replace(/,$/, '') + '}';
-  // v-bind data wrap
-  if (el.wrapData) {
-    data = el.wrapData(data);
-  }
-  // v-on data wrap
-  if (el.wrapListeners) {
-    data = el.wrapListeners(data);
-  }
-  return data
+    // ref
+    if (el.ref) {
+        data += "ref:" + (el.ref) + ",";
+    }
+    if (el.refInFor) {
+        data += "refInFor:true,";
+    }
+    // pre
+    if (el.pre) {
+        data += "pre:true,";
+    }
+    // record original tag name for components using "is" attribute
+    if (el.component) {
+        data += "tag:\"" + (el.tag) + "\",";
+    }
+    // module data generation functions
+    for (var i = 0; i < state.dataGenFns.length; i++) {
+        data += state.dataGenFns[i](el);
+    }
+    // attributes
+    if (el.attrs) {
+        data += "attrs:{" + (genProps(el.attrs)) + "},";
+    }
+    // DOM props
+    if (el.props) {
+        data += "domProps:{" + (genProps(el.props)) + "},";
+    }
+    // event handlers
+    if (el.events) {
+        data += (genHandlers(el.events, false, state.warn)) + ",";
+    }
+    if (el.nativeEvents) {
+        data += (genHandlers(el.nativeEvents, true, state.warn)) + ",";
+    }
+    // slot target
+    // only for non-scoped slots
+    if (el.slotTarget && !el.slotScope) {
+        data += "slot:" + (el.slotTarget) + ",";
+    }
+    // scoped slots
+    if (el.scopedSlots) {
+        data += (genScopedSlots(el.scopedSlots, state)) + ",";
+    }
+    // component v-model
+    if (el.model) {
+        data += "model:{value:" + (el.model.value) + ",callback:" + (el.model.callback) + ",expression:" + (el.model.expression) + "},";
+    }
+    // inline-template
+    if (el.inlineTemplate) {
+        var inlineTemplate = genInlineTemplate(el, state);
+        if (inlineTemplate) {
+            data += inlineTemplate + ",";
+        }
+    }
+    data = data.replace(/,$/, '') + '}';
+    // v-bind data wrap
+    if (el.wrapData) {
+        data = el.wrapData(data);
+    }
+    // v-on data wrap
+    if (el.wrapListeners) {
+        data = el.wrapListeners(data);
+    }
+    return data
 }
 
 function genDirectives (el, state) {
-  var dirs = el.directives;
-  if (!dirs) { return }
-  var res = 'directives:[';
-  var hasRuntime = false;
-  var i, l, dir, needRuntime;
-  for (i = 0, l = dirs.length; i < l; i++) {
-    dir = dirs[i];
-    needRuntime = true;
-    var gen = state.directives[dir.name];
-    if (gen) {
-      // compile-time directive that manipulates AST.
-      // returns true if it also needs a runtime counterpart.
-      needRuntime = !!gen(el, dir, state.warn);
+    var dirs = el.directives;
+    if (!dirs) { return }
+    var res = 'directives:[';
+    var hasRuntime = false;
+    var i, l, dir, needRuntime;
+    for (i = 0, l = dirs.length; i < l; i++) {
+        dir = dirs[i];
+        needRuntime = true;
+        var gen = state.directives[dir.name];
+        if (gen) {
+            // compile-time directive that manipulates AST.
+            // returns true if it also needs a runtime counterpart.
+            needRuntime = !!gen(el, dir, state.warn);
+        }
+        if (needRuntime) {
+            hasRuntime = true;
+            res += "{name:\"" + (dir.name) + "\",rawName:\"" + (dir.rawName) + "\"" + (dir.value ? (",value:(" + (dir.value) + "),expression:" + (JSON.stringify(dir.value))) : '') + (dir.arg ? (",arg:\"" + (dir.arg) + "\"") : '') + (dir.modifiers ? (",modifiers:" + (JSON.stringify(dir.modifiers))) : '') + "},";
+        }
     }
-    if (needRuntime) {
-      hasRuntime = true;
-      res += "{name:\"" + (dir.name) + "\",rawName:\"" + (dir.rawName) + "\"" + (dir.value ? (",value:(" + (dir.value) + "),expression:" + (JSON.stringify(dir.value))) : '') + (dir.arg ? (",arg:\"" + (dir.arg) + "\"") : '') + (dir.modifiers ? (",modifiers:" + (JSON.stringify(dir.modifiers))) : '') + "},";
+    if (hasRuntime) {
+        return res.slice(0, -1) + ']'
     }
-  }
-  if (hasRuntime) {
-    return res.slice(0, -1) + ']'
-  }
 }
 
 function genInlineTemplate (el, state) {
-  var ast = el.children[0];
-  if ("development" !== 'production' && (
-    el.children.length !== 1 || ast.type !== 1
-  )) {
-    state.warn('Inline-template components must have exactly one child element.');
-  }
-  if (ast.type === 1) {
-    var inlineRenderFns = generate(ast, state.options);
-    return ("inlineTemplate:{render:function(){" + (inlineRenderFns.render) + "},staticRenderFns:[" + (inlineRenderFns.staticRenderFns.map(function (code) { return ("function(){" + code + "}"); }).join(',')) + "]}")
-  }
+    var ast = el.children[0];
+    if ("development" !== 'production' && (
+        el.children.length !== 1 || ast.type !== 1
+    )) {
+        state.warn('Inline-template components must have exactly one child element.');
+    }
+    if (ast.type === 1) {
+        var inlineRenderFns = generate(ast, state.options);
+        return ("inlineTemplate:{render:function(){" + (inlineRenderFns.render) + "},staticRenderFns:[" + (inlineRenderFns.staticRenderFns.map(function (code) { return ("function(){" + code + "}"); }).join(',')) + "]}")
+    }
 }
 
 function genScopedSlots (
-  slots,
-  state
+    slots,
+    state
 ) {
-  return ("scopedSlots:_u([" + (Object.keys(slots).map(function (key) {
-      return genScopedSlot(key, slots[key], state)
-    }).join(',')) + "])")
+    return ("scopedSlots:_u([" + (Object.keys(slots).map(function (key) {
+            return genScopedSlot(key, slots[key], state)
+        }).join(',')) + "])")
 }
 
 function genScopedSlot (
-  key,
-  el,
-  state
+    key,
+    el,
+    state
 ) {
-  if (el.for && !el.forProcessed) {
-    return genForScopedSlot(key, el, state)
-  }
-  var fn = "function(" + (String(el.slotScope)) + "){" +
-    "return " + (el.tag === 'template'
-      ? el.if
-        ? ((el.if) + "?" + (genChildren(el, state) || 'undefined') + ":undefined")
-        : genChildren(el, state) || 'undefined'
-      : genElement(el, state)) + "}";
-  return ("{key:" + key + ",fn:" + fn + "}")
+    if (el.for && !el.forProcessed) {
+        return genForScopedSlot(key, el, state)
+    }
+    var fn = "function(" + (String(el.slotScope)) + "){" +
+        "return " + (el.tag === 'template'
+          ? el.if
+            ? ((el.if) + "?" + (genChildren(el, state) || 'undefined') + ":undefined")
+            : genChildren(el, state) || 'undefined'
+          : genElement(el, state)) + "}";
+    return ("{key:" + key + ",fn:" + fn + "}")
 }
 
 function genForScopedSlot (
-  key,
-  el,
-  state
+    key,
+    el,
+    state
 ) {
-  var exp = el.for;
-  var alias = el.alias;
-  var iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';
-  var iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';
-  el.forProcessed = true; // avoid recursion
-  return "_l((" + exp + ")," +
-    "function(" + alias + iterator1 + iterator2 + "){" +
-      "return " + (genScopedSlot(key, el, state)) +
-    '})'
+    var exp = el.for;
+    var alias = el.alias;
+    var iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';
+    var iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';
+    el.forProcessed = true; // avoid recursion
+    return "_l((" + exp + ")," +
+        "function(" + alias + iterator1 + iterator2 + "){" +
+          "return " + (genScopedSlot(key, el, state)) +
+        '})'
 }
 
 function genChildren (
-  el,
-  state,
-  checkSkip,
-  altGenElement,
-  altGenNode
+    el,
+    state,
+    checkSkip,
+    altGenElement,
+    altGenNode
 ) {
-  var children = el.children;
-  if (children.length) {
-    var el$1 = children[0];
-    // optimize single v-for
-    if (children.length === 1 &&
-      el$1.for &&
-      el$1.tag !== 'template' &&
-      el$1.tag !== 'slot'
-    ) {
-      return (altGenElement || genElement)(el$1, state)
+    var children = el.children;
+    if (children.length) {
+        var el$1 = children[0];
+        // optimize single v-for
+        if (children.length === 1 &&
+            el$1.for &&
+            el$1.tag !== 'template' &&
+            el$1.tag !== 'slot'
+        ) {
+            return (altGenElement || genElement)(el$1, state)
+        }
+        var normalizationType = checkSkip
+          ? getNormalizationType(children, state.maybeComponent)
+          : 0;
+        var gen = altGenNode || genNode;
+        return ("[" + (children.map(function (c) { return gen(c, state); }).join(',')) + "]" + (normalizationType ? ("," + normalizationType) : ''))
     }
-    var normalizationType = checkSkip
-      ? getNormalizationType(children, state.maybeComponent)
-      : 0;
-    var gen = altGenNode || genNode;
-    return ("[" + (children.map(function (c) { return gen(c, state); }).join(',')) + "]" + (normalizationType ? ("," + normalizationType) : ''))
-  }
 }
 
 // determine the normalization needed for the children array.
@@ -10483,97 +10481,101 @@ function genChildren (
 // 1: simple normalization needed (possible 1-level deep nested array)
 // 2: full normalization needed
 function getNormalizationType (
-  children,
-  maybeComponent
+    children,
+    maybeComponent
 ) {
-  var res = 0;
-  for (var i = 0; i < children.length; i++) {
-    var el = children[i];
-    if (el.type !== 1) {
-      continue
+    var res = 0;
+    for (var i = 0; i < children.length; i++) {
+        var el = children[i];
+        if (el.type !== 1) {
+            continue
+        }
+        if (
+            needsNormalization(el) ||
+            (el.ifConditions && el.ifConditions.some(function (c) { return needsNormalization(c.block); }))
+        ) {
+          res = 2;
+          break
+        }
+        if (
+            maybeComponent(el) ||
+            (el.ifConditions && el.ifConditions.some(function (c) { return maybeComponent(c.block); }))
+        ) {
+            res = 1;
+        }
     }
-    if (needsNormalization(el) ||
-        (el.ifConditions && el.ifConditions.some(function (c) { return needsNormalization(c.block); }))) {
-      res = 2;
-      break
-    }
-    if (maybeComponent(el) ||
-        (el.ifConditions && el.ifConditions.some(function (c) { return maybeComponent(c.block); }))) {
-      res = 1;
-    }
-  }
-  return res
+    return res
 }
 
 function needsNormalization (el) {
-  return el.for !== undefined || el.tag === 'template' || el.tag === 'slot'
+    return el.for !== undefined || el.tag === 'template' || el.tag === 'slot'
 }
 
 function genNode (node, state) {
-  if (node.type === 1) {
-    return genElement(node, state)
-  } if (node.type === 3 && node.isComment) {
-    return genComment(node)
-  } else {
-    return genText(node)
-  }
+    if (node.type === 1) {
+        return genElement(node, state)
+    } if (node.type === 3 && node.isComment) {
+        return genComment(node)
+    } else {
+        return genText(node)
+    }
 }
 
 function genText (text) {
-  return ("_v(" + (text.type === 2
-    ? text.expression // no need for () because already wrapped in _s()
-    : transformSpecialNewlines(JSON.stringify(text.text))) + ")")
+    return ("_v(" + (text.type === 2
+        ? text.expression // no need for () because already wrapped in _s()
+        : transformSpecialNewlines(JSON.stringify(text.text))) + ")")
 }
 
 function genComment (comment) {
-  return ("_e(" + (JSON.stringify(comment.text)) + ")")
+    return ("_e(" + (JSON.stringify(comment.text)) + ")")
 }
 
 function genSlot (el, state) {
-  var slotName = el.slotName || '"default"';
-  var children = genChildren(el, state);
-  var res = "_t(" + slotName + (children ? ("," + children) : '');
-  var attrs = el.attrs && ("{" + (el.attrs.map(function (a) { return ((camelize(a.name)) + ":" + (a.value)); }).join(',')) + "}");
-  var bind$$1 = el.attrsMap['v-bind'];
-  if ((attrs || bind$$1) && !children) {
-    res += ",null";
-  }
-  if (attrs) {
-    res += "," + attrs;
-  }
-  if (bind$$1) {
-    res += (attrs ? '' : ',null') + "," + bind$$1;
-  }
-  return res + ')'
+    var slotName = el.slotName || '"default"';
+    var children = genChildren(el, state);
+    var res = "_t(" + slotName + (children ? ("," + children) : '');
+    var attrs = el.attrs && ("{" + (el.attrs.map(function (a) { return ((camelize(a.name)) + ":" + (a.value)); }).join(',')) + "}");
+    var bind$$1 = el.attrsMap['v-bind'];
+    if ((attrs || bind$$1) && !children) {
+        res += ",null";
+    }
+    if (attrs) {
+        res += "," + attrs;
+    }
+    if (bind$$1) {
+        res += (attrs ? '' : ',null') + "," + bind$$1;
+    }
+    return res + ')'
 }
 
 // componentName is el.component, take it as argument to shun flow's pessimistic refinement
 function genComponent (
-  componentName,
-  el,
-  state
+    componentName,
+    el,
+    state
 ) {
-  var children = el.inlineTemplate ? null : genChildren(el, state, true);
-  return ("_c(" + componentName + "," + (genData$2(el, state)) + (children ? ("," + children) : '') + ")")
+    var children = el.inlineTemplate ? null : genChildren(el, state, true);
+    return ("_c(" + componentName + "," + (genData$2(el, state)) + (children ? ("," + children) : '') + ")")
 }
 
 function genProps (props) {
-  var res = '';
-  for (var i = 0; i < props.length; i++) {
-    var prop = props[i];
-    /* istanbul ignore if */
-    {
-      res += "\"" + (prop.name) + "\":" + (transformSpecialNewlines(prop.value)) + ",";
+    var res = '';
+    for (var i = 0; i < props.length; i++) {
+        var prop = props[i];
+        /* istanbul ignore if */
+        {
+            res += "\"" + (prop.name) + "\":" + (transformSpecialNewlines(prop.value)) + ",";
+        }
     }
-  }
-  return res.slice(0, -1)
+    return res.slice(0, -1)
 }
 
 /* istanbul ignore next */
 function transformSpecialNewlines (text) {
-  return text
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029')
+    return text
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029')
 }
 
 /*  */
