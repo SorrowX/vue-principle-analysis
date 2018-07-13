@@ -10,37 +10,37 @@ import {
 import { updateListeners } from '../vdom/helpers/index'
 
 export function initEvents (vm: Component) {
-  vm._events = Object.create(null)
-  vm._hasHookEvent = false
-  // init parent attached events
-  const listeners = vm.$options._parentListeners
-  if (listeners) {
-    updateComponentListeners(vm, listeners)
-  }
+    vm._events = Object.create(null)
+    vm._hasHookEvent = false
+    // init parent attached events
+    const listeners = vm.$options._parentListeners
+    if (listeners) {
+        updateComponentListeners(vm, listeners)
+    }
 }
 
 let target: any
 
 function add (event, fn, once) {
-  if (once) {
-    target.$once(event, fn)
-  } else {
-    target.$on(event, fn)
-  }
+    if (once) {
+        target.$once(event, fn)
+    } else {
+        target.$on(event, fn)
+    }
 }
 
 function remove (event, fn) {
-  target.$off(event, fn)
+    target.$off(event, fn)
 }
 
 export function updateComponentListeners (
-  vm: Component,
-  listeners: Object,
-  oldListeners: ?Object
+    vm: Component,
+    listeners: Object,
+    oldListeners: ?Object
 ) {
-  target = vm
-  updateListeners(listeners, oldListeners || {}, add, remove, vm)
-  target = undefined
+    target = vm
+    updateListeners(listeners, oldListeners || {}, add, remove, vm)
+    target = undefined
 }
 
 export function eventsMixin (Vue: Class<Component>) {

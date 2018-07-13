@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-model</title>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="../../dist/vue.js"></script>
+	<script>
+		let vm = new Vue({
+		    data() {
+		    	return {
+		    		message: ''
+		    	}
+		    },
+		    template: `
+		        <div>
+		            <input v-model="message" placeholder="edit me">
+		            <p>Message is: {{ message }}</p>
+		        </div>
+		    `
+		}).$mount('#app')
+
+		/*with (this) {
+			return _c(
+				'div',
+				[
+				    _c(
+				    	'input',
+				    	{
+				    		directives: [
+				    		    {
+				    		    	name:"model",
+				    		    	rawName:"v-model",
+				    		    	value:(message),
+				    		    	expression:"message"
+				    		    }
+				    		],
+				    		attrs: {
+				    			"placeholder":"edit me"
+				    		},
+				    		domProps: {
+				    			"value":(message)
+				    		},
+				    		on: {
+				    			"input": function($event){
+				    				if($event.target.composing)
+				    					return;
+				    				message=$event.target.value
+				    			}
+				    		}
+				    	}
+				    ),
+				    _v(" "),
+				    _c(
+				    	'p',
+				    	[_v("Message is: "+_s(message))]
+				    )
+				]
+			)
+		}*/
+	</script>
+</body>
+</html>

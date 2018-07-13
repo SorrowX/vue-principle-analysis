@@ -392,8 +392,8 @@ export function genChildren (
             return (altGenElement || genElement)(el, state)
         }
         const normalizationType = checkSkip
-          ? getNormalizationType(children, state.maybeComponent)
-          : 0
+            ? getNormalizationType(children, state.maybeComponent)
+            : 0
         const gen = altGenNode || genNode
         return `[${children.map(c => gen(c, state)).join(',')}]${
             normalizationType ? `,${normalizationType}` : ''

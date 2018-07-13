@@ -302,14 +302,14 @@ export function createPatchFunction (backend) {
     }
 
     function invokeCreateHooks (vnode, insertedVnodeQueue) {
-      for (let i = 0; i < cbs.create.length; ++i) {
-        cbs.create[i](emptyNode, vnode)
-      }
-      i = vnode.data.hook // Reuse variable
-      if (isDef(i)) {
-        if (isDef(i.create)) i.create(emptyNode, vnode)
-        if (isDef(i.insert)) insertedVnodeQueue.push(vnode)
-      }
+        for (let i = 0; i < cbs.create.length; ++i) {
+            cbs.create[i](emptyNode, vnode)
+        }
+        i = vnode.data.hook // Reuse variable
+        if (isDef(i)) {
+            if (isDef(i.create)) i.create(emptyNode, vnode)
+            if (isDef(i.insert)) insertedVnodeQueue.push(vnode)
+        }
     }
 
     // set scope id attribute for scoped CSS.
@@ -339,9 +339,9 @@ export function createPatchFunction (backend) {
     }
 
     function addVnodes (parentElm, refElm, vnodes, startIdx, endIdx, insertedVnodeQueue) {
-      for (; startIdx <= endIdx; ++startIdx) {
-        createElm(vnodes[startIdx], insertedVnodeQueue, parentElm, refElm, false, vnodes, startIdx)
-      }
+        for (; startIdx <= endIdx; ++startIdx) {
+            createElm(vnodes[startIdx], insertedVnodeQueue, parentElm, refElm, false, vnodes, startIdx)
+        }
     }
 
     function invokeDestroyHook (vnode) {
@@ -493,10 +493,10 @@ export function createPatchFunction (backend) {
     }
 
     function findIdxInOld (node, oldCh, start, end) {
-      for (let i = start; i < end; i++) {
-        const c = oldCh[i]
-        if (isDef(c) && sameVnode(node, c)) return i
-      }
+        for (let i = start; i < end; i++) {
+            const c = oldCh[i]
+            if (isDef(c) && sameVnode(node, c)) return i
+        }
     }
 
     function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {

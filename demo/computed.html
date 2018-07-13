@@ -22,6 +22,63 @@
 			    }
 		    }
 		}).$mount('#app')
+
+		// 1. dirty属性其实是给计算watcher用的，当实例化一个计算watcher时，默认这个值true(源码：this.dirty = this.computed // for computed watchers)
+        // 2. 当我们使用 计算属性时(Object.defineProperty(target, key, sharedPropertyDefinition))便会触发get方法如下：
+        function createComputedGetter (key) {
+		    return function computedGetter () {
+		        const watcher = this._computedWatchers && this._computedWatchers[key]
+		        if (watcher) {
+		            watcher.depend()
+		            return watcher.evaluate()
+		        }
+		    }
+		}
+		// 之后会调用watcher.evaluate()方法(watcher类中方法如下)
+		evaluate () {
+		    if (this.dirty) {
+		        this.value = this.get()
+		        this.dirty = false
+		    }
+		    return this.value
+		}
+		// 可以看到dirty的真假取决于是否调用this.get()方法，这个方法主要用于在计算属性中依赖了哪些响应式数据，那些数据的dep会收集当前的计算watcher,然后返回值，然后把dirty重置false.
+		// 那什么时候重置为true呢
+	    // 就是当我们修改计算属性依赖的响应数据时会触发wather的notify,因为响应数据收集了计算watcher，所以会执行
+	    update () {
+            /* istanbul ignore else */
+            if (this.computed) {
+                // A computed property watcher has two modes: lazy and activated.
+                // It initializes as lazy by default, and only becomes activated when
+                // it is depended on by at least one subscriber, which is typically
+                // another computed property or a component's render function.
+                if (this.dep.subs.length === 0) {
+                    // In lazy mode, we don't want to perform computations until necessary,
+                    // so we simply mark the watcher as dirty. The actual computation is
+                    // performed just-in-time in this.evaluate() when the computed property
+                    // is accessed.
+                    this.dirty = true
+                } else {
+                    // In activated mode, we want to proactively perform the computation
+                    // but only notify our subscribers when the value has indeed changed.
+                    this.getAndInvoke(() => {
+                      this.dep.notify()
+                    })
+                }
+            } else if (this.sync) {
+                this.run()
+            } else {
+                queueWatcher(this)
+            }
+        }
+        // 当计算watcher的dep属性的长度为0时，它会重置dirty为true
+        // 那什么时候会执行这个分支
+        this.getAndInvoke(() => {
+          this.dep.notify()
+        })
+        // 其实很简单，当我们的模板中使用了该计算属性时，计算属性的dep属性会收集当前模板的渲染watcher，所以它的长度就不为0
+        // 其实它还可以收集计算wanther，我记得老师那晚提醒了我一下（视频中没讲吧）
+
 	</script>
 </body>
 </html>
