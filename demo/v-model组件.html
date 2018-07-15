@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件v-model</title>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="../dist/vue.js"></script>
+	<script>
+        let Child = {
+            props: ['value'],
+            methods: {
+                updateValue(e) {
+                    this.$emit('input', e.target.value)
+                }
+            },
+            template: `
+                <div>
+                    <input :value="value" @input="updateValue" placeholder="edit me">
+                </div>
+            `
+        }
+
+        let vm = new Vue({
+            el: '#app',
+            components: { Child },
+            data() {
+                return {
+                    message: ''
+                }
+            },
+            template: `
+                <div>
+                    <child v-model="message"></child>
+                    <p>Message is: {{ message }}</p>
+                </div>
+            `
+        })
+	</script>
+</body>
+</html>

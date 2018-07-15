@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>普通插槽</title>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="../../dist/vue.js"></script>
+	<script>
+		let AppLayout = {
+			template: `
+			    <div class="container">
+                    <header>
+                        <slot name="header"></slot>
+                    </header>
+                    <main>
+                        <slot>默认内容</slot>
+                    </main>
+                    <footer>
+                        <slot name="footer"></slot>
+                    </footer>
+			    </div>
+			`
+		}
+
+		let vm = new Vue({
+			components: { AppLayout },
+            data() {
+            	return {
+            		title: '我是标题',
+            		msg: '我是内容',
+            		desc: '其他信息'
+            	}
+            },
+            template: `
+                <div>
+                    <app-layout>
+                        <h1 slot="header">{{ title }}</h1>
+                        <p>{{ msg }}</p>
+                        <p slot="footer">{{ desc }}</p>
+                    </app-layout>
+                </div>
+            `
+		}).$mount('#app')
+	</script>
+</body>
+</html>
