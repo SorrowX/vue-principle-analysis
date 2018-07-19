@@ -33,6 +33,11 @@
             		desc: '其他信息'
             	}
             },
+            methods: {
+            	changeTitle() {
+            		this.title = 'hi'
+            	}
+            },
             template: `
                 <div>
                     <app-layout>
@@ -40,6 +45,7 @@
                         <p>{{ msg }}</p>
                         <p slot="footer">{{ desc }}</p>
                     </app-layout>
+                    <button @click="changeTitle">title</button>
                 </div>
             `
 		}).$mount('#app')

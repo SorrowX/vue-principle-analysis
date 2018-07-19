@@ -2386,14 +2386,14 @@ function isAsyncPlaceholder (node) {
 /*  */
 
 function getFirstComponentChild (children) {
-  if (Array.isArray(children)) {
-    for (var i = 0; i < children.length; i++) {
-      var c = children[i];
-      if (isDef(c) && (isDef(c.componentOptions) || isAsyncPlaceholder(c))) {
-        return c
-      }
+    if (Array.isArray(children)) {
+	    for (var i = 0; i < children.length; i++) {
+	        var c = children[i];
+	        if (isDef(c) && (isDef(c.componentOptions) || isAsyncPlaceholder(c))) {
+	        	return c
+	        }
+	    }
     }
-  }
 }
 
 /*  */
@@ -2544,62 +2544,62 @@ function eventsMixin (Vue) {
  * Runtime helper for resolving raw children VNodes into a slot object.
  */
 function resolveSlots (
-  children,
-  context
+    children,
+    context
 ) {
-  var slots = {};
-  if (!children) {
+    var slots = {};
+    if (!children) {
+        return slots
+    }
+    for (var i = 0, l = children.length; i < l; i++) {
+        var child = children[i];
+        var data = child.data;
+        // remove slot attribute if the node is resolved as a Vue slot node
+        if (data && data.attrs && data.attrs.slot) {
+            delete data.attrs.slot;
+        }
+        // named slots should only be respected if the vnode was rendered in the
+        // same context.
+        if ((child.context === context || child.fnContext === context) &&
+            data && data.slot != null
+        ) {
+            var name = data.slot;
+            var slot = (slots[name] || (slots[name] = []));
+            if (child.tag === 'template') {
+                slot.push.apply(slot, child.children || []);
+            } else {
+                slot.push(child);
+            }
+        } else {
+            (slots.default || (slots.default = [])).push(child);
+        }
+    }
+    // ignore slots that contains only whitespace
+    for (var name$1 in slots) {
+        if (slots[name$1].every(isWhitespace)) {
+            delete slots[name$1];
+        }
+    }
     return slots
-  }
-  for (var i = 0, l = children.length; i < l; i++) {
-    var child = children[i];
-    var data = child.data;
-    // remove slot attribute if the node is resolved as a Vue slot node
-    if (data && data.attrs && data.attrs.slot) {
-      delete data.attrs.slot;
-    }
-    // named slots should only be respected if the vnode was rendered in the
-    // same context.
-    if ((child.context === context || child.fnContext === context) &&
-      data && data.slot != null
-    ) {
-      var name = data.slot;
-      var slot = (slots[name] || (slots[name] = []));
-      if (child.tag === 'template') {
-        slot.push.apply(slot, child.children || []);
-      } else {
-        slot.push(child);
-      }
-    } else {
-      (slots.default || (slots.default = [])).push(child);
-    }
-  }
-  // ignore slots that contains only whitespace
-  for (var name$1 in slots) {
-    if (slots[name$1].every(isWhitespace)) {
-      delete slots[name$1];
-    }
-  }
-  return slots
 }
 
 function isWhitespace (node) {
-  return (node.isComment && !node.asyncFactory) || node.text === ' '
+    return (node.isComment && !node.asyncFactory) || node.text === ' '
 }
 
 function resolveScopedSlots (
-  fns, // see flow/vnode
-  res
+    fns, // see flow/vnode
+    res
 ) {
-  res = res || {};
-  for (var i = 0; i < fns.length; i++) {
-    if (Array.isArray(fns[i])) {
-      resolveScopedSlots(fns[i], res);
-    } else {
-      res[fns[i].key] = fns[i].fn;
+    res = res || {};
+    for (var i = 0; i < fns.length; i++) {
+        if (Array.isArray(fns[i])) {
+            resolveScopedSlots(fns[i], res);
+        } else {
+            res[fns[i].key] = fns[i].fn;
+        }
     }
-  }
-  return res
+    return res
 }
 
 /*  */
@@ -4893,135 +4893,135 @@ function initAssetRegisters (Vue) {
 /*  */
 
 function getComponentName (opts) {
-  return opts && (opts.Ctor.options.name || opts.tag)
+    return opts && (opts.Ctor.options.name || opts.tag)
 }
 
 function matches (pattern, name) {
-  if (Array.isArray(pattern)) {
-    return pattern.indexOf(name) > -1
-  } else if (typeof pattern === 'string') {
-    return pattern.split(',').indexOf(name) > -1
-  } else if (isRegExp(pattern)) {
-    return pattern.test(name)
-  }
-  /* istanbul ignore next */
-  return false
+    if (Array.isArray(pattern)) {
+        return pattern.indexOf(name) > -1
+    } else if (typeof pattern === 'string') {
+        return pattern.split(',').indexOf(name) > -1
+    } else if (isRegExp(pattern)) {
+        return pattern.test(name)
+    }
+    /* istanbul ignore next */
+    return false
 }
 
 function pruneCache (keepAliveInstance, filter) {
-  var cache = keepAliveInstance.cache;
-  var keys = keepAliveInstance.keys;
-  var _vnode = keepAliveInstance._vnode;
-  for (var key in cache) {
-    var cachedNode = cache[key];
-    if (cachedNode) {
-      var name = getComponentName(cachedNode.componentOptions);
-      if (name && !filter(name)) {
-        pruneCacheEntry(cache, key, keys, _vnode);
-      }
+    var cache = keepAliveInstance.cache;
+    var keys = keepAliveInstance.keys;
+    var _vnode = keepAliveInstance._vnode;
+    for (var key in cache) {
+        var cachedNode = cache[key];
+        if (cachedNode) {
+            var name = getComponentName(cachedNode.componentOptions);
+            if (name && !filter(name)) {
+                pruneCacheEntry(cache, key, keys, _vnode);
+            }
+        }
     }
-  }
 }
 
 function pruneCacheEntry (
-  cache,
-  key,
-  keys,
-  current
+    cache,
+    key,
+    keys,
+    current
 ) {
-  var cached$$1 = cache[key];
-  if (cached$$1 && (!current || cached$$1.tag !== current.tag)) {
-    cached$$1.componentInstance.$destroy();
-  }
-  cache[key] = null;
-  remove(keys, key);
+    var cached$$1 = cache[key];
+    if (cached$$1 && (!current || cached$$1.tag !== current.tag)) {
+        cached$$1.componentInstance.$destroy();
+    }
+    cache[key] = null;
+    remove(keys, key);
 }
 
 var patternTypes = [String, RegExp, Array];
 
 var KeepAlive = {
-  name: 'keep-alive',
-  abstract: true,
+    name: 'keep-alive',
+    abstract: true,
 
-  props: {
-    include: patternTypes,
-    exclude: patternTypes,
-    max: [String, Number]
-  },
+    props: {
+        include: patternTypes,
+        exclude: patternTypes,
+        max: [String, Number]
+    },
 
-  created: function created () {
-    this.cache = Object.create(null);
-    this.keys = [];
-  },
+    created: function created () {
+        this.cache = Object.create(null);
+        this.keys = [];
+    },
 
-  destroyed: function destroyed () {
-    var this$1 = this;
+    destroyed: function destroyed () {
+        var this$1 = this;
 
-    for (var key in this$1.cache) {
-      pruneCacheEntry(this$1.cache, key, this$1.keys);
-    }
-  },
-
-  mounted: function mounted () {
-    var this$1 = this;
-
-    this.$watch('include', function (val) {
-      pruneCache(this$1, function (name) { return matches(val, name); });
-    });
-    this.$watch('exclude', function (val) {
-      pruneCache(this$1, function (name) { return !matches(val, name); });
-    });
-  },
-
-  render: function render () {
-    var slot = this.$slots.default;
-    var vnode = getFirstComponentChild(slot);
-    var componentOptions = vnode && vnode.componentOptions;
-    if (componentOptions) {
-      // check pattern
-      var name = getComponentName(componentOptions);
-      var ref = this;
-      var include = ref.include;
-      var exclude = ref.exclude;
-      if (
-        // not included
-        (include && (!name || !matches(include, name))) ||
-        // excluded
-        (exclude && name && matches(exclude, name))
-      ) {
-        return vnode
-      }
-
-      var ref$1 = this;
-      var cache = ref$1.cache;
-      var keys = ref$1.keys;
-      var key = vnode.key == null
-        // same constructor may get registered as different local components
-        // so cid alone is not enough (#3269)
-        ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
-        : vnode.key;
-      if (cache[key]) {
-        vnode.componentInstance = cache[key].componentInstance;
-        // make current key freshest
-        remove(keys, key);
-        keys.push(key);
-      } else {
-        cache[key] = vnode;
-        keys.push(key);
-        // prune oldest entry
-        if (this.max && keys.length > parseInt(this.max)) {
-          pruneCacheEntry(cache, keys[0], keys, this._vnode);
+        for (var key in this$1.cache) {
+            pruneCacheEntry(this$1.cache, key, this$1.keys);
         }
-      }
+    },
 
-      vnode.data.keepAlive = true;
+    mounted: function mounted () {
+        var this$1 = this;
+
+        this.$watch('include', function (val) {
+            pruneCache(this$1, function (name) { return matches(val, name); });
+        });
+        this.$watch('exclude', function (val) {
+            pruneCache(this$1, function (name) { return !matches(val, name); });
+        });
+    },
+
+    render: function render () {
+        var slot = this.$slots.default;
+        var vnode = getFirstComponentChild(slot);
+        var componentOptions = vnode && vnode.componentOptions;
+        if (componentOptions) {
+            // check pattern
+            var name = getComponentName(componentOptions);
+            var ref = this;
+            var include = ref.include;
+            var exclude = ref.exclude;
+            if (
+                // not included
+                (include && (!name || !matches(include, name))) ||
+                // excluded
+                (exclude && name && matches(exclude, name))
+            ) {
+                return vnode
+            }
+
+            var ref$1 = this;
+            var cache = ref$1.cache;
+            var keys = ref$1.keys;
+            var key = vnode.key == null
+                // same constructor may get registered as different local components
+                // so cid alone is not enough (#3269)
+                ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
+                : vnode.key;
+            if (cache[key]) {
+                vnode.componentInstance = cache[key].componentInstance;
+                // make current key freshest
+                remove(keys, key);
+                keys.push(key);
+            } else {
+                cache[key] = vnode;
+                keys.push(key);
+                // prune oldest entry
+                if (this.max && keys.length > parseInt(this.max)) {
+                    pruneCacheEntry(cache, keys[0], keys, this._vnode);
+                }
+            }
+
+            vnode.data.keepAlive = true;
+        }
+        return vnode || (slot && slot[0])
     }
-    return vnode || (slot && slot[0])
-  }
 }
 
 var builtInComponents = {
-  KeepAlive: KeepAlive
+    KeepAlive: KeepAlive
 }
 
 /*  */
