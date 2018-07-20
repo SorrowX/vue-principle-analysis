@@ -719,38 +719,38 @@ function popTarget () {
 /*  */
 
 var VNode = function VNode (
-  tag,
-  data,
-  children,
-  text,
-  elm,
-  context,
-  componentOptions,
-  asyncFactory
+    tag,
+    data,
+    children,
+    text,
+    elm,
+    context,
+    componentOptions,
+    asyncFactory
 ) {
-  this.tag = tag;
-  this.data = data;
-  this.children = children;
-  this.text = text;
-  this.elm = elm;
-  this.ns = undefined;
-  this.context = context;
-  this.fnContext = undefined;
-  this.fnOptions = undefined;
-  this.fnScopeId = undefined;
-  this.key = data && data.key;
-  this.componentOptions = componentOptions;
-  this.componentInstance = undefined;
-  this.parent = undefined;
-  this.raw = false;
-  this.isStatic = false;
-  this.isRootInsert = true;
-  this.isComment = false;
-  this.isCloned = false;
-  this.isOnce = false;
-  this.asyncFactory = asyncFactory;
-  this.asyncMeta = undefined;
-  this.isAsyncPlaceholder = false;
+    this.tag = tag;
+    this.data = data;
+    this.children = children;
+    this.text = text;
+    this.elm = elm;
+    this.ns = undefined;
+    this.context = context;
+    this.fnContext = undefined;
+    this.fnOptions = undefined;
+    this.fnScopeId = undefined;
+    this.key = data && data.key;
+    this.componentOptions = componentOptions;
+    this.componentInstance = undefined;
+    this.parent = undefined;
+    this.raw = false;
+    this.isStatic = false;
+    this.isRootInsert = true;
+    this.isComment = false;
+    this.isCloned = false;
+    this.isOnce = false;
+    this.asyncFactory = asyncFactory;
+    this.asyncMeta = undefined;
+    this.isAsyncPlaceholder = false;
 };
 
 var prototypeAccessors = { child: { configurable: true } };
@@ -758,22 +758,22 @@ var prototypeAccessors = { child: { configurable: true } };
 // DEPRECATED: alias for componentInstance for backwards compat.
 /* istanbul ignore next */
 prototypeAccessors.child.get = function () {
-  return this.componentInstance
+    return this.componentInstance
 };
 
 Object.defineProperties( VNode.prototype, prototypeAccessors );
 
 var createEmptyVNode = function (text) {
-  if ( text === void 0 ) text = '';
+    if ( text === void 0 ) text = '';
 
-  var node = new VNode();
-  node.text = text;
-  node.isComment = true;
-  return node
+    var node = new VNode();
+    node.text = text;
+    node.isComment = true;
+    return node
 };
 
 function createTextVNode (val) {
-  return new VNode(undefined, undefined, undefined, String(val))
+    return new VNode(undefined, undefined, undefined, String(val))
 }
 
 // optimized shallow clone
@@ -781,26 +781,26 @@ function createTextVNode (val) {
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
 function cloneVNode (vnode) {
-  var cloned = new VNode(
-    vnode.tag,
-    vnode.data,
-    vnode.children,
-    vnode.text,
-    vnode.elm,
-    vnode.context,
-    vnode.componentOptions,
-    vnode.asyncFactory
-  );
-  cloned.ns = vnode.ns;
-  cloned.isStatic = vnode.isStatic;
-  cloned.key = vnode.key;
-  cloned.isComment = vnode.isComment;
-  cloned.fnContext = vnode.fnContext;
-  cloned.fnOptions = vnode.fnOptions;
-  cloned.fnScopeId = vnode.fnScopeId;
-  cloned.asyncMeta = vnode.asyncMeta;
-  cloned.isCloned = true;
-  return cloned
+    var cloned = new VNode(
+        vnode.tag,
+        vnode.data,
+        vnode.children,
+        vnode.text,
+        vnode.elm,
+        vnode.context,
+        vnode.componentOptions,
+        vnode.asyncFactory
+    );
+    cloned.ns = vnode.ns;
+    cloned.isStatic = vnode.isStatic;
+    cloned.key = vnode.key;
+    cloned.isComment = vnode.isComment;
+    cloned.fnContext = vnode.fnContext;
+    cloned.fnOptions = vnode.fnOptions;
+    cloned.fnScopeId = vnode.fnScopeId;
+    cloned.asyncMeta = vnode.asyncMeta;
+    cloned.isCloned = true;
+    return cloned
 }
 
 /*
@@ -2864,44 +2864,44 @@ function updateChildComponent (
 }
 
 function isInInactiveTree (vm) {
-  while (vm && (vm = vm.$parent)) {
-    if (vm._inactive) { return true }
-  }
-  return false
+    while (vm && (vm = vm.$parent)) {
+        if (vm._inactive) { return true }
+    }
+    return false
 }
 
 function activateChildComponent (vm, direct) {
-  if (direct) {
-    vm._directInactive = false;
-    if (isInInactiveTree(vm)) {
-      return
+    if (direct) {
+        vm._directInactive = false;
+        if (isInInactiveTree(vm)) {
+            return
+        }
+    } else if (vm._directInactive) {
+        return
     }
-  } else if (vm._directInactive) {
-    return
-  }
-  if (vm._inactive || vm._inactive === null) {
-    vm._inactive = false;
-    for (var i = 0; i < vm.$children.length; i++) {
-      activateChildComponent(vm.$children[i]);
+    if (vm._inactive || vm._inactive === null) {
+        vm._inactive = false;
+        for (var i = 0; i < vm.$children.length; i++) {
+            activateChildComponent(vm.$children[i]);
+        }
+        callHook(vm, 'activated');
     }
-    callHook(vm, 'activated');
-  }
 }
 
 function deactivateChildComponent (vm, direct) {
-  if (direct) {
-    vm._directInactive = true;
-    if (isInInactiveTree(vm)) {
-      return
+    if (direct) {
+        vm._directInactive = true;
+        if (isInInactiveTree(vm)) {
+            return
+        }
     }
-  }
-  if (!vm._inactive) {
-    vm._inactive = true;
-    for (var i = 0; i < vm.$children.length; i++) {
-      deactivateChildComponent(vm.$children[i]);
+    if (!vm._inactive) {
+        vm._inactive = true;
+        for (var i = 0; i < vm.$children.length; i++) {
+            deactivateChildComponent(vm.$children[i]);
+        }
+        callHook(vm, 'deactivated');
     }
-    callHook(vm, 'deactivated');
-  }
 }
 
 function callHook (vm, hook) {
@@ -5640,25 +5640,25 @@ function createPatchFunction (backend) {
     }
 
     function reactivateComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
-      var i;
-      // hack for #4339: a reactivated component with inner transition
-      // does not trigger because the inner node's created hooks are not called
-      // again. It's not ideal to involve module-specific logic in here but
-      // there doesn't seem to be a better way to do it.
-      var innerNode = vnode;
-      while (innerNode.componentInstance) {
-        innerNode = innerNode.componentInstance._vnode;
-        if (isDef(i = innerNode.data) && isDef(i = i.transition)) {
-          for (i = 0; i < cbs.activate.length; ++i) {
-            cbs.activate[i](emptyNode, innerNode);
-          }
-          insertedVnodeQueue.push(innerNode);
-          break
+        var i;
+        // hack for #4339: a reactivated component with inner transition
+        // does not trigger because the inner node's created hooks are not called
+        // again. It's not ideal to involve module-specific logic in here but
+        // there doesn't seem to be a better way to do it.
+        var innerNode = vnode;
+        while (innerNode.componentInstance) {
+            innerNode = innerNode.componentInstance._vnode;
+            if (isDef(i = innerNode.data) && isDef(i = i.transition)) {
+                for (i = 0; i < cbs.activate.length; ++i) {
+                    cbs.activate[i](emptyNode, innerNode);
+                }
+                insertedVnodeQueue.push(innerNode);
+                break
+            }
         }
-      }
-      // unlike a newly created component,
-      // a reactivated keep-alive component doesn't insert itself
-      insert(parentElm, vnode.elm, refElm);
+        // unlike a newly created component,
+        // a reactivated keep-alive component doesn't insert itself
+        insert(parentElm, vnode.elm, refElm);
     }
 
     function insert (parent, elm, ref$$1) {

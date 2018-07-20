@@ -278,44 +278,44 @@ export function updateChildComponent (
 }
 
 function isInInactiveTree (vm) {
-  while (vm && (vm = vm.$parent)) {
-    if (vm._inactive) return true
-  }
-  return false
+    while (vm && (vm = vm.$parent)) {
+        if (vm._inactive) return true
+    }
+    return false
 }
 
 export function activateChildComponent (vm: Component, direct?: boolean) {
-  if (direct) {
-    vm._directInactive = false
-    if (isInInactiveTree(vm)) {
-      return
+    if (direct) {
+        vm._directInactive = false
+        if (isInInactiveTree(vm)) {
+            return
+        }
+    } else if (vm._directInactive) {
+        return
     }
-  } else if (vm._directInactive) {
-    return
-  }
-  if (vm._inactive || vm._inactive === null) {
-    vm._inactive = false
-    for (let i = 0; i < vm.$children.length; i++) {
-      activateChildComponent(vm.$children[i])
+    if (vm._inactive || vm._inactive === null) {
+        vm._inactive = false
+        for (let i = 0; i < vm.$children.length; i++) {
+            activateChildComponent(vm.$children[i])
+        }
+        callHook(vm, 'activated')
     }
-    callHook(vm, 'activated')
-  }
 }
 
 export function deactivateChildComponent (vm: Component, direct?: boolean) {
-  if (direct) {
-    vm._directInactive = true
-    if (isInInactiveTree(vm)) {
-      return
+    if (direct) {
+        vm._directInactive = true
+        if (isInInactiveTree(vm)) {
+            return
+        }
     }
-  }
-  if (!vm._inactive) {
-    vm._inactive = true
-    for (let i = 0; i < vm.$children.length; i++) {
-      deactivateChildComponent(vm.$children[i])
+    if (!vm._inactive) {
+        vm._inactive = true
+        for (let i = 0; i < vm.$children.length; i++) {
+            deactivateChildComponent(vm.$children[i])
+        }
+        callHook(vm, 'deactivated')
     }
-    callHook(vm, 'deactivated')
-  }
 }
 
 export function callHook (vm: Component, hook: string) {

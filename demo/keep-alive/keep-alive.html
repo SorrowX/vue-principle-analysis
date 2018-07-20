@@ -10,6 +10,12 @@
 	<script>
 		let A = {
 			name: 'A',
+			activated() {
+				console.log('A activated')
+			},
+			deactivated() {
+				console.log('A deactivated')
+			},
 			template: `
 			    <div class="a">
 			        <p>A Component</p>
@@ -19,6 +25,12 @@
 
 		let B = {
 			name: 'B',
+			activated() {
+				console.log('B activated')
+			},
+			deactivated() {
+				console.log('B deactivated')
+			},
 			template: `
 			    <div class="b">
 			        <p>B Component</p>
