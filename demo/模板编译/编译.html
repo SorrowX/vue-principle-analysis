@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>编译</title>
+</head>
+<body>
+    <span id="app"></span>
+	<script type="text/javascript" src="../../dist/vue.js"></script>
+	<script>
+	    new Vue({
+	    	data() {
+	    		return {
+	    			msg: 'hi'
+	    		}
+	    	},
+	    	template: `
+	    	    <div id="app">
+	    	        <header class="header"></header>
+	    	        <main class="main">
+	    	            <p>{{ msg }}</p>
+	    	            <child>
+	    	                <span>11</span>
+	    	                <p>22</p>
+	    	            </child>
+	    	        </main>
+	    	        <footer class="footer"></footer>
+	    	    </div>
+	    	`
+	    }).$mount('#app')
+	</script>
+</body>
+</html>

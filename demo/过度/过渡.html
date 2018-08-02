@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过渡</title>
+	<style>
+		.fade-enter-active, .fade-leave-active {
+		    transition: opacity .5s;
+		}
+		.fade-enter, .fade-leave-to {
+		    opacity: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="../../dist/vue.js"></script>
+	<script>
+		let vm = new Vue({
+            data() {
+            	return {
+            		show: true
+            	}
+            },
+            template: `
+                <div id="demo">
+                    <button @click="show = !show">Toggle</button>
+                    <transition :appear="true" name="fade">
+                        <p v-if="show">hello</p>
+                    </transition>
+                </div>
+            `
+		}).$mount('#app')
+	</script>
+</body>
+</html>

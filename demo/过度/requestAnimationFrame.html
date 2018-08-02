@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>requestAnimationFrame</title>
+	<style>
+		.box {
+			width: 100px;
+			height: 100px;
+			background: #eee;
+		}
+	</style>
+</head>
+<body>
+	<div id="SomeElementYouWantToAnimate" class="box"></div>
+	<script>
+		var start = null
+		var element = document.getElementById('SomeElementYouWantToAnimate')
+		element.style.position = 'absolute'
+
+		function step(timestamp) {
+			console.log('下一次浏览器重绘之前调用step函数: ', timestamp)
+		    if (!start) start = timestamp
+		    var progress = timestamp - start
+		    element.style.left = Math.min(progress / 10, 200) + 'px'
+			if (progress < 2000) {
+			    // window.requestAnimationFrame(step)
+			}
+		}
+
+		window.requestAnimationFrame(step)
+
+		setTimeout(() => {
+			console.log('下次事件循环开始')
+		}, 0)
+
+		Promise.resolve().then(() => {
+			console.log('本次事件循环末尾!')
+		})
+	</script>
+</body>
+</html>

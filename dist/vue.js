@@ -7370,24 +7370,24 @@ var style = {
  * SVG elements in IE
  */
 function addClass (el, cls) {
-  /* istanbul ignore if */
-  if (!cls || !(cls = cls.trim())) {
-    return
-  }
+    /* istanbul ignore if */
+    if (!cls || !(cls = cls.trim())) {
+        return
+    }
 
-  /* istanbul ignore else */
-  if (el.classList) {
-    if (cls.indexOf(' ') > -1) {
-      cls.split(/\s+/).forEach(function (c) { return el.classList.add(c); });
+    /* istanbul ignore else */
+    if (el.classList) {
+        if (cls.indexOf(' ') > -1) {
+            cls.split(/\s+/).forEach(function (c) { return el.classList.add(c); });
+        } else {
+            el.classList.add(cls);
+        }
     } else {
-      el.classList.add(cls);
+        var cur = " " + (el.getAttribute('class') || '') + " ";
+        if (cur.indexOf(' ' + cls + ' ') < 0) {
+            el.setAttribute('class', (cur + cls).trim());
+        }
     }
-  } else {
-    var cur = " " + (el.getAttribute('class') || '') + " ";
-    if (cur.indexOf(' ' + cls + ' ') < 0) {
-      el.setAttribute('class', (cur + cls).trim());
-    }
-  }
 }
 
 /**
@@ -7395,64 +7395,64 @@ function addClass (el, cls) {
  * SVG elements in IE
  */
 function removeClass (el, cls) {
-  /* istanbul ignore if */
-  if (!cls || !(cls = cls.trim())) {
-    return
-  }
+    /* istanbul ignore if */
+    if (!cls || !(cls = cls.trim())) {
+        return
+    }
 
-  /* istanbul ignore else */
-  if (el.classList) {
-    if (cls.indexOf(' ') > -1) {
-      cls.split(/\s+/).forEach(function (c) { return el.classList.remove(c); });
+    /* istanbul ignore else */
+    if (el.classList) {
+        if (cls.indexOf(' ') > -1) {
+            cls.split(/\s+/).forEach(function (c) { return el.classList.remove(c); });
+        } else {
+            el.classList.remove(cls);
+        }
+        if (!el.classList.length) {
+            el.removeAttribute('class');
+        }
     } else {
-      el.classList.remove(cls);
+        var cur = " " + (el.getAttribute('class') || '') + " ";
+        var tar = ' ' + cls + ' ';
+        while (cur.indexOf(tar) >= 0) {
+          cur = cur.replace(tar, ' ');
+        }
+        cur = cur.trim();
+        if (cur) {
+            el.setAttribute('class', cur);
+        } else {
+            el.removeAttribute('class');
+        }
     }
-    if (!el.classList.length) {
-      el.removeAttribute('class');
-    }
-  } else {
-    var cur = " " + (el.getAttribute('class') || '') + " ";
-    var tar = ' ' + cls + ' ';
-    while (cur.indexOf(tar) >= 0) {
-      cur = cur.replace(tar, ' ');
-    }
-    cur = cur.trim();
-    if (cur) {
-      el.setAttribute('class', cur);
-    } else {
-      el.removeAttribute('class');
-    }
-  }
 }
 
 /*  */
 
 function resolveTransition (def) {
-  if (!def) {
-    return
-  }
-  /* istanbul ignore else */
-  if (typeof def === 'object') {
-    var res = {};
-    if (def.css !== false) {
-      extend(res, autoCssTransition(def.name || 'v'));
+    if (!def) {
+        return
     }
-    extend(res, def);
-    return res
-  } else if (typeof def === 'string') {
-    return autoCssTransition(def)
-  }
+    /* istanbul ignore else */
+    if (typeof def === 'object') {
+        var res = {};
+        if (def.css !== false) {
+            extend(res, autoCssTransition(def.name || 'v'));
+        }
+        extend(res, def);
+        return res
+    } else if (typeof def === 'string') {
+        return autoCssTransition(def)
+    }
 }
 
 var autoCssTransition = cached(function (name) {
-  return {
-    enterClass: (name + "-enter"),
-    enterToClass: (name + "-enter-to"),
-    enterActiveClass: (name + "-enter-active"),
-    leaveClass: (name + "-leave"),
-    leaveToClass: (name + "-leave-to"),
-    leaveActiveClass: (name + "-leave-active")
-  }
+    return {
+        enterClass: (name + "-enter"),
+        enterToClass: (name + "-enter-to"),
+        enterActiveClass: (name + "-enter-active"),
+        leaveClass: (name + "-leave"),
+        leaveToClass: (name + "-leave-to"),
+        leaveActiveClass: (name + "-leave-active")
+    }
 });
 
 var hasTransition = inBrowser && !isIE9;
@@ -7465,422 +7465,422 @@ var transitionEndEvent = 'transitionend';
 var animationProp = 'animation';
 var animationEndEvent = 'animationend';
 if (hasTransition) {
-  /* istanbul ignore if */
-  if (window.ontransitionend === undefined &&
-    window.onwebkittransitionend !== undefined
-  ) {
-    transitionProp = 'WebkitTransition';
-    transitionEndEvent = 'webkitTransitionEnd';
-  }
-  if (window.onanimationend === undefined &&
-    window.onwebkitanimationend !== undefined
-  ) {
-    animationProp = 'WebkitAnimation';
-    animationEndEvent = 'webkitAnimationEnd';
-  }
+    /* istanbul ignore if */
+    if (window.ontransitionend === undefined &&
+      window.onwebkittransitionend !== undefined
+    ) {
+        transitionProp = 'WebkitTransition';
+        transitionEndEvent = 'webkitTransitionEnd';
+    }
+    if (window.onanimationend === undefined &&
+      window.onwebkitanimationend !== undefined
+    ) {
+        animationProp = 'WebkitAnimation';
+        animationEndEvent = 'webkitAnimationEnd';
+    }
 }
 
 // binding to window is necessary to make hot reload work in IE in strict mode
 var raf = inBrowser
-  ? window.requestAnimationFrame
-    ? window.requestAnimationFrame.bind(window)
-    : setTimeout
-  : /* istanbul ignore next */ function (fn) { return fn(); };
+    ? window.requestAnimationFrame
+        ? window.requestAnimationFrame.bind(window)
+        : setTimeout
+    : /* istanbul ignore next */ function (fn) { return fn(); };
 
 function nextFrame (fn) {
-  raf(function () {
-    raf(fn);
-  });
+    raf(function () {
+        raf(fn);
+    });
 }
 
 function addTransitionClass (el, cls) {
-  var transitionClasses = el._transitionClasses || (el._transitionClasses = []);
-  if (transitionClasses.indexOf(cls) < 0) {
-    transitionClasses.push(cls);
-    addClass(el, cls);
-  }
+    var transitionClasses = el._transitionClasses || (el._transitionClasses = []);
+    if (transitionClasses.indexOf(cls) < 0) {
+        transitionClasses.push(cls);
+        addClass(el, cls);
+    }
 }
 
 function removeTransitionClass (el, cls) {
-  if (el._transitionClasses) {
-    remove(el._transitionClasses, cls);
-  }
-  removeClass(el, cls);
+    if (el._transitionClasses) {
+        remove(el._transitionClasses, cls);
+    }
+    removeClass(el, cls);
 }
 
 function whenTransitionEnds (
-  el,
-  expectedType,
-  cb
+    el,
+    expectedType,
+    cb
 ) {
-  var ref = getTransitionInfo(el, expectedType);
-  var type = ref.type;
-  var timeout = ref.timeout;
-  var propCount = ref.propCount;
-  if (!type) { return cb() }
-  var event = type === TRANSITION ? transitionEndEvent : animationEndEvent;
-  var ended = 0;
-  var end = function () {
-    el.removeEventListener(event, onEnd);
-    cb();
-  };
-  var onEnd = function (e) {
-    if (e.target === el) {
-      if (++ended >= propCount) {
-        end();
-      }
-    }
-  };
-  setTimeout(function () {
-    if (ended < propCount) {
-      end();
-    }
-  }, timeout + 1);
-  el.addEventListener(event, onEnd);
+    var ref = getTransitionInfo(el, expectedType);
+    var type = ref.type;
+    var timeout = ref.timeout;
+    var propCount = ref.propCount;
+    if (!type) { return cb() }
+    var event = type === TRANSITION ? transitionEndEvent : animationEndEvent;
+    var ended = 0;
+    var end = function () {
+        el.removeEventListener(event, onEnd);
+        cb();
+    };
+    var onEnd = function (e) {
+        if (e.target === el) {
+            if (++ended >= propCount) {
+                end();
+            }
+        }
+    };
+    setTimeout(function () {
+        if (ended < propCount) {
+            end();
+        }
+    }, timeout + 1);
+    el.addEventListener(event, onEnd);
 }
 
 var transformRE = /\b(transform|all)(,|$)/;
 
 function getTransitionInfo (el, expectedType) {
-  var styles = window.getComputedStyle(el);
-  var transitionDelays = styles[transitionProp + 'Delay'].split(', ');
-  var transitionDurations = styles[transitionProp + 'Duration'].split(', ');
-  var transitionTimeout = getTimeout(transitionDelays, transitionDurations);
-  var animationDelays = styles[animationProp + 'Delay'].split(', ');
-  var animationDurations = styles[animationProp + 'Duration'].split(', ');
-  var animationTimeout = getTimeout(animationDelays, animationDurations);
+    var styles = window.getComputedStyle(el);
+    var transitionDelays = styles[transitionProp + 'Delay'].split(', ');
+    var transitionDurations = styles[transitionProp + 'Duration'].split(', ');
+    var transitionTimeout = getTimeout(transitionDelays, transitionDurations);
+    var animationDelays = styles[animationProp + 'Delay'].split(', ');
+    var animationDurations = styles[animationProp + 'Duration'].split(', ');
+    var animationTimeout = getTimeout(animationDelays, animationDurations);
 
-  var type;
-  var timeout = 0;
-  var propCount = 0;
-  /* istanbul ignore if */
-  if (expectedType === TRANSITION) {
-    if (transitionTimeout > 0) {
-      type = TRANSITION;
-      timeout = transitionTimeout;
-      propCount = transitionDurations.length;
+    var type;
+    var timeout = 0;
+    var propCount = 0;
+    /* istanbul ignore if */
+    if (expectedType === TRANSITION) {
+        if (transitionTimeout > 0) {
+            type = TRANSITION;
+            timeout = transitionTimeout;
+            propCount = transitionDurations.length;
+        }
+    } else if (expectedType === ANIMATION) {
+        if (animationTimeout > 0) {
+            type = ANIMATION;
+            timeout = animationTimeout;
+            propCount = animationDurations.length;
+        }
+    } else {
+        timeout = Math.max(transitionTimeout, animationTimeout);
+        type = timeout > 0
+            ? transitionTimeout > animationTimeout
+                ? TRANSITION
+                : ANIMATION
+            : null;
+        propCount = type
+            ? type === TRANSITION
+                ? transitionDurations.length
+                : animationDurations.length
+            : 0;
     }
-  } else if (expectedType === ANIMATION) {
-    if (animationTimeout > 0) {
-      type = ANIMATION;
-      timeout = animationTimeout;
-      propCount = animationDurations.length;
+    var hasTransform =
+        type === TRANSITION &&
+        transformRE.test(styles[transitionProp + 'Property']);
+    return {
+        type: type,
+        timeout: timeout,
+        propCount: propCount,
+        hasTransform: hasTransform
     }
-  } else {
-    timeout = Math.max(transitionTimeout, animationTimeout);
-    type = timeout > 0
-      ? transitionTimeout > animationTimeout
-        ? TRANSITION
-        : ANIMATION
-      : null;
-    propCount = type
-      ? type === TRANSITION
-        ? transitionDurations.length
-        : animationDurations.length
-      : 0;
-  }
-  var hasTransform =
-    type === TRANSITION &&
-    transformRE.test(styles[transitionProp + 'Property']);
-  return {
-    type: type,
-    timeout: timeout,
-    propCount: propCount,
-    hasTransform: hasTransform
-  }
 }
 
 function getTimeout (delays, durations) {
-  /* istanbul ignore next */
-  while (delays.length < durations.length) {
-    delays = delays.concat(delays);
-  }
+    /* istanbul ignore next */
+    while (delays.length < durations.length) {
+        delays = delays.concat(delays);
+    }
 
-  return Math.max.apply(null, durations.map(function (d, i) {
-    return toMs(d) + toMs(delays[i])
-  }))
+    return Math.max.apply(null, durations.map(function (d, i) {
+        return toMs(d) + toMs(delays[i])
+    }))
 }
 
 function toMs (s) {
-  return Number(s.slice(0, -1)) * 1000
+    return Number(s.slice(0, -1)) * 1000
 }
 
 /*  */
 
 function enter (vnode, toggleDisplay) {
-  var el = vnode.elm;
+    var el = vnode.elm;
 
-  // call leave callback now
-  if (isDef(el._leaveCb)) {
-    el._leaveCb.cancelled = true;
-    el._leaveCb();
-  }
-
-  var data = resolveTransition(vnode.data.transition);
-  if (isUndef(data)) {
-    return
-  }
-
-  /* istanbul ignore if */
-  if (isDef(el._enterCb) || el.nodeType !== 1) {
-    return
-  }
-
-  var css = data.css;
-  var type = data.type;
-  var enterClass = data.enterClass;
-  var enterToClass = data.enterToClass;
-  var enterActiveClass = data.enterActiveClass;
-  var appearClass = data.appearClass;
-  var appearToClass = data.appearToClass;
-  var appearActiveClass = data.appearActiveClass;
-  var beforeEnter = data.beforeEnter;
-  var enter = data.enter;
-  var afterEnter = data.afterEnter;
-  var enterCancelled = data.enterCancelled;
-  var beforeAppear = data.beforeAppear;
-  var appear = data.appear;
-  var afterAppear = data.afterAppear;
-  var appearCancelled = data.appearCancelled;
-  var duration = data.duration;
-
-  // activeInstance will always be the <transition> component managing this
-  // transition. One edge case to check is when the <transition> is placed
-  // as the root node of a child component. In that case we need to check
-  // <transition>'s parent for appear check.
-  var context = activeInstance;
-  var transitionNode = activeInstance.$vnode;
-  while (transitionNode && transitionNode.parent) {
-    transitionNode = transitionNode.parent;
-    context = transitionNode.context;
-  }
-
-  var isAppear = !context._isMounted || !vnode.isRootInsert;
-
-  if (isAppear && !appear && appear !== '') {
-    return
-  }
-
-  var startClass = isAppear && appearClass
-    ? appearClass
-    : enterClass;
-  var activeClass = isAppear && appearActiveClass
-    ? appearActiveClass
-    : enterActiveClass;
-  var toClass = isAppear && appearToClass
-    ? appearToClass
-    : enterToClass;
-
-  var beforeEnterHook = isAppear
-    ? (beforeAppear || beforeEnter)
-    : beforeEnter;
-  var enterHook = isAppear
-    ? (typeof appear === 'function' ? appear : enter)
-    : enter;
-  var afterEnterHook = isAppear
-    ? (afterAppear || afterEnter)
-    : afterEnter;
-  var enterCancelledHook = isAppear
-    ? (appearCancelled || enterCancelled)
-    : enterCancelled;
-
-  var explicitEnterDuration = toNumber(
-    isObject(duration)
-      ? duration.enter
-      : duration
-  );
-
-  if ("development" !== 'production' && explicitEnterDuration != null) {
-    checkDuration(explicitEnterDuration, 'enter', vnode);
-  }
-
-  var expectsCSS = css !== false && !isIE9;
-  var userWantsControl = getHookArgumentsLength(enterHook);
-
-  var cb = el._enterCb = once(function () {
-    if (expectsCSS) {
-      removeTransitionClass(el, toClass);
-      removeTransitionClass(el, activeClass);
+    // call leave callback now
+    if (isDef(el._leaveCb)) {
+        el._leaveCb.cancelled = true;
+        el._leaveCb();
     }
-    if (cb.cancelled) {
-      if (expectsCSS) {
-        removeTransitionClass(el, startClass);
-      }
-      enterCancelledHook && enterCancelledHook(el);
-    } else {
-      afterEnterHook && afterEnterHook(el);
+
+    var data = resolveTransition(vnode.data.transition);
+    if (isUndef(data)) {
+        return
     }
-    el._enterCb = null;
-  });
 
-  if (!vnode.data.show) {
-    // remove pending leave element on enter by injecting an insert hook
-    mergeVNodeHook(vnode, 'insert', function () {
-      var parent = el.parentNode;
-      var pendingNode = parent && parent._pending && parent._pending[vnode.key];
-      if (pendingNode &&
-        pendingNode.tag === vnode.tag &&
-        pendingNode.elm._leaveCb
-      ) {
-        pendingNode.elm._leaveCb();
-      }
-      enterHook && enterHook(el, cb);
-    });
-  }
+    /* istanbul ignore if */
+    if (isDef(el._enterCb) || el.nodeType !== 1) {
+        return
+    }
 
-  // start enter transition
-  beforeEnterHook && beforeEnterHook(el);
-  if (expectsCSS) {
-    addTransitionClass(el, startClass);
-    addTransitionClass(el, activeClass);
-    nextFrame(function () {
-      removeTransitionClass(el, startClass);
-      if (!cb.cancelled) {
-        addTransitionClass(el, toClass);
-        if (!userWantsControl) {
-          if (isValidDuration(explicitEnterDuration)) {
-            setTimeout(cb, explicitEnterDuration);
-          } else {
-            whenTransitionEnds(el, type, cb);
-          }
+    var css = data.css;
+    var type = data.type;
+    var enterClass = data.enterClass;
+    var enterToClass = data.enterToClass;
+    var enterActiveClass = data.enterActiveClass;
+    var appearClass = data.appearClass;
+    var appearToClass = data.appearToClass;
+    var appearActiveClass = data.appearActiveClass;
+    var beforeEnter = data.beforeEnter;
+    var enter = data.enter;
+    var afterEnter = data.afterEnter;
+    var enterCancelled = data.enterCancelled;
+    var beforeAppear = data.beforeAppear;
+    var appear = data.appear;
+    var afterAppear = data.afterAppear;
+    var appearCancelled = data.appearCancelled;
+    var duration = data.duration;
+
+    // activeInstance will always be the <transition> component managing this
+    // transition. One edge case to check is when the <transition> is placed
+    // as the root node of a child component. In that case we need to check
+    // <transition>'s parent for appear check.
+    var context = activeInstance;
+    var transitionNode = activeInstance.$vnode;
+    while (transitionNode && transitionNode.parent) {
+        transitionNode = transitionNode.parent;
+        context = transitionNode.context;
+    }
+
+    var isAppear = !context._isMounted || !vnode.isRootInsert;
+
+    if (isAppear && !appear && appear !== '') {
+        return
+    }
+
+    var startClass = isAppear && appearClass
+        ? appearClass
+        : enterClass;
+    var activeClass = isAppear && appearActiveClass
+        ? appearActiveClass
+        : enterActiveClass;
+    var toClass = isAppear && appearToClass
+        ? appearToClass
+        : enterToClass;
+
+    var beforeEnterHook = isAppear
+        ? (beforeAppear || beforeEnter)
+        : beforeEnter;
+    var enterHook = isAppear
+        ? (typeof appear === 'function' ? appear : enter)
+        : enter;
+    var afterEnterHook = isAppear
+        ? (afterAppear || afterEnter)
+        : afterEnter;
+    var enterCancelledHook = isAppear
+        ? (appearCancelled || enterCancelled)
+        : enterCancelled;
+
+    var explicitEnterDuration = toNumber(
+        isObject(duration)
+            ? duration.enter
+            : duration
+    );
+
+    if ("development" !== 'production' && explicitEnterDuration != null) {
+        checkDuration(explicitEnterDuration, 'enter', vnode);
+    }
+
+    var expectsCSS = css !== false && !isIE9;
+    var userWantsControl = getHookArgumentsLength(enterHook);
+
+    var cb = el._enterCb = once(function () {
+        if (expectsCSS) {
+            removeTransitionClass(el, toClass);
+            removeTransitionClass(el, activeClass);
         }
-      }
+        if (cb.cancelled) {
+            if (expectsCSS) {
+                removeTransitionClass(el, startClass);
+            }
+            enterCancelledHook && enterCancelledHook(el);
+        } else {
+            afterEnterHook && afterEnterHook(el);
+        }
+        el._enterCb = null;
     });
-  }
 
-  if (vnode.data.show) {
-    toggleDisplay && toggleDisplay();
-    enterHook && enterHook(el, cb);
-  }
+    if (!vnode.data.show) {
+        // remove pending leave element on enter by injecting an insert hook
+        mergeVNodeHook(vnode, 'insert', function () {
+            var parent = el.parentNode;
+            var pendingNode = parent && parent._pending && parent._pending[vnode.key];
+            if (pendingNode &&
+                pendingNode.tag === vnode.tag &&
+                pendingNode.elm._leaveCb
+            ) {
+                pendingNode.elm._leaveCb();
+            }
+            enterHook && enterHook(el, cb);
+        });
+    }
 
-  if (!expectsCSS && !userWantsControl) {
-    cb();
-  }
+    // start enter transition
+    beforeEnterHook && beforeEnterHook(el);
+    if (expectsCSS) {
+        addTransitionClass(el, startClass);
+        addTransitionClass(el, activeClass);
+        nextFrame(function () {
+            removeTransitionClass(el, startClass);
+            if (!cb.cancelled) {
+                addTransitionClass(el, toClass);
+                if (!userWantsControl) {
+                    if (isValidDuration(explicitEnterDuration)) {
+                        setTimeout(cb, explicitEnterDuration);
+                    } else {
+                        whenTransitionEnds(el, type, cb);
+                    }
+                }
+            }
+        });
+    }
+
+    if (vnode.data.show) {
+        toggleDisplay && toggleDisplay();
+        enterHook && enterHook(el, cb);
+    }
+
+    if (!expectsCSS && !userWantsControl) {
+        cb();
+    }
 }
 
 function leave (vnode, rm) {
-  var el = vnode.elm;
+    var el = vnode.elm;
 
-  // call enter callback now
-  if (isDef(el._enterCb)) {
-    el._enterCb.cancelled = true;
-    el._enterCb();
-  }
-
-  var data = resolveTransition(vnode.data.transition);
-  if (isUndef(data) || el.nodeType !== 1) {
-    return rm()
-  }
-
-  /* istanbul ignore if */
-  if (isDef(el._leaveCb)) {
-    return
-  }
-
-  var css = data.css;
-  var type = data.type;
-  var leaveClass = data.leaveClass;
-  var leaveToClass = data.leaveToClass;
-  var leaveActiveClass = data.leaveActiveClass;
-  var beforeLeave = data.beforeLeave;
-  var leave = data.leave;
-  var afterLeave = data.afterLeave;
-  var leaveCancelled = data.leaveCancelled;
-  var delayLeave = data.delayLeave;
-  var duration = data.duration;
-
-  var expectsCSS = css !== false && !isIE9;
-  var userWantsControl = getHookArgumentsLength(leave);
-
-  var explicitLeaveDuration = toNumber(
-    isObject(duration)
-      ? duration.leave
-      : duration
-  );
-
-  if ("development" !== 'production' && isDef(explicitLeaveDuration)) {
-    checkDuration(explicitLeaveDuration, 'leave', vnode);
-  }
-
-  var cb = el._leaveCb = once(function () {
-    if (el.parentNode && el.parentNode._pending) {
-      el.parentNode._pending[vnode.key] = null;
+    // call enter callback now
+    if (isDef(el._enterCb)) {
+        el._enterCb.cancelled = true;
+        el._enterCb();
     }
-    if (expectsCSS) {
-      removeTransitionClass(el, leaveToClass);
-      removeTransitionClass(el, leaveActiveClass);
-    }
-    if (cb.cancelled) {
-      if (expectsCSS) {
-        removeTransitionClass(el, leaveClass);
-      }
-      leaveCancelled && leaveCancelled(el);
-    } else {
-      rm();
-      afterLeave && afterLeave(el);
-    }
-    el._leaveCb = null;
-  });
 
-  if (delayLeave) {
-    delayLeave(performLeave);
-  } else {
-    performLeave();
-  }
+    var data = resolveTransition(vnode.data.transition);
+    if (isUndef(data) || el.nodeType !== 1) {
+        return rm()
+    }
 
-  function performLeave () {
-    // the delayed leave may have already been cancelled
-    if (cb.cancelled) {
-      return
+    /* istanbul ignore if */
+    if (isDef(el._leaveCb)) {
+        return
     }
-    // record leaving element
-    if (!vnode.data.show) {
-      (el.parentNode._pending || (el.parentNode._pending = {}))[(vnode.key)] = vnode;
+
+    var css = data.css;
+    var type = data.type;
+    var leaveClass = data.leaveClass;
+    var leaveToClass = data.leaveToClass;
+    var leaveActiveClass = data.leaveActiveClass;
+    var beforeLeave = data.beforeLeave;
+    var leave = data.leave;
+    var afterLeave = data.afterLeave;
+    var leaveCancelled = data.leaveCancelled;
+    var delayLeave = data.delayLeave;
+    var duration = data.duration;
+
+    var expectsCSS = css !== false && !isIE9;
+    var userWantsControl = getHookArgumentsLength(leave);
+
+    var explicitLeaveDuration = toNumber(
+        isObject(duration)
+            ? duration.leave
+            : duration
+    );
+
+    if ("development" !== 'production' && isDef(explicitLeaveDuration)) {
+        checkDuration(explicitLeaveDuration, 'leave', vnode);
     }
-    beforeLeave && beforeLeave(el);
-    if (expectsCSS) {
-      addTransitionClass(el, leaveClass);
-      addTransitionClass(el, leaveActiveClass);
-      nextFrame(function () {
-        removeTransitionClass(el, leaveClass);
-        if (!cb.cancelled) {
-          addTransitionClass(el, leaveToClass);
-          if (!userWantsControl) {
-            if (isValidDuration(explicitLeaveDuration)) {
-              setTimeout(cb, explicitLeaveDuration);
-            } else {
-              whenTransitionEnds(el, type, cb);
-            }
-          }
+
+    var cb = el._leaveCb = once(function () {
+        if (el.parentNode && el.parentNode._pending) {
+            el.parentNode._pending[vnode.key] = null;
         }
-      });
+        if (expectsCSS) {
+            removeTransitionClass(el, leaveToClass);
+            removeTransitionClass(el, leaveActiveClass);
+        }
+        if (cb.cancelled) {
+            if (expectsCSS) {
+                removeTransitionClass(el, leaveClass);
+            }
+            leaveCancelled && leaveCancelled(el);
+        } else {
+            rm();
+            afterLeave && afterLeave(el);
+        }
+        el._leaveCb = null;
+    });
+
+    if (delayLeave) {
+        delayLeave(performLeave);
+    } else {
+        performLeave();
     }
-    leave && leave(el, cb);
-    if (!expectsCSS && !userWantsControl) {
-      cb();
+
+    function performLeave () {
+        // the delayed leave may have already been cancelled
+        if (cb.cancelled) {
+            return
+        }
+        // record leaving element
+        if (!vnode.data.show) {
+            (el.parentNode._pending || (el.parentNode._pending = {}))[(vnode.key)] = vnode;
+        }
+        beforeLeave && beforeLeave(el);
+        if (expectsCSS) {
+            addTransitionClass(el, leaveClass);
+            addTransitionClass(el, leaveActiveClass);
+            nextFrame(function () {
+                removeTransitionClass(el, leaveClass);
+                if (!cb.cancelled) {
+                    addTransitionClass(el, leaveToClass);
+                    if (!userWantsControl) {
+                        if (isValidDuration(explicitLeaveDuration)) {
+                            setTimeout(cb, explicitLeaveDuration);
+                        } else {
+                            whenTransitionEnds(el, type, cb);
+                        }
+                    }
+                }
+            });
+        }
+        leave && leave(el, cb);
+        if (!expectsCSS && !userWantsControl) {
+            cb();
+        }
     }
-  }
 }
 
 // only used in dev mode
 function checkDuration (val, name, vnode) {
-  if (typeof val !== 'number') {
-    warn(
-      "<transition> explicit " + name + " duration is not a valid number - " +
-      "got " + (JSON.stringify(val)) + ".",
-      vnode.context
-    );
-  } else if (isNaN(val)) {
-    warn(
-      "<transition> explicit " + name + " duration is NaN - " +
-      'the duration expression might be incorrect.',
-      vnode.context
-    );
-  }
+    if (typeof val !== 'number') {
+        warn(
+            "<transition> explicit " + name + " duration is not a valid number - " +
+            "got " + (JSON.stringify(val)) + ".",
+            vnode.context
+        );
+    } else if (isNaN(val)) {
+        warn(
+            "<transition> explicit " + name + " duration is NaN - " +
+            'the duration expression might be incorrect.',
+            vnode.context
+        );
+    }
 }
 
 function isValidDuration (val) {
-  return typeof val === 'number' && !isNaN(val)
+    return typeof val === 'number' && !isNaN(val)
 }
 
 /**
@@ -7890,39 +7890,39 @@ function isValidDuration (val) {
  * - a plain function (.length)
  */
 function getHookArgumentsLength (fn) {
-  if (isUndef(fn)) {
-    return false
-  }
-  var invokerFns = fn.fns;
-  if (isDef(invokerFns)) {
-    // invoker
-    return getHookArgumentsLength(
-      Array.isArray(invokerFns)
-        ? invokerFns[0]
-        : invokerFns
-    )
-  } else {
-    return (fn._length || fn.length) > 1
-  }
+    if (isUndef(fn)) {
+        return false
+    }
+    var invokerFns = fn.fns;
+    if (isDef(invokerFns)) {
+        // invoker
+        return getHookArgumentsLength(
+            Array.isArray(invokerFns)
+                ? invokerFns[0]
+                : invokerFns
+        )
+    } else {
+        return (fn._length || fn.length) > 1
+    }
 }
 
 function _enter (_, vnode) {
-  if (vnode.data.show !== true) {
-    enter(vnode);
-  }
+    if (vnode.data.show !== true) {
+        enter(vnode);
+    }
 }
 
 var transition = inBrowser ? {
-  create: _enter,
-  activate: _enter,
-  remove: function remove$$1 (vnode, rm) {
-    /* istanbul ignore else */
-    if (vnode.data.show !== true) {
-      leave(vnode, rm);
-    } else {
-      rm();
+    create: _enter,
+    activate: _enter,
+    remove: function remove$$1 (vnode, rm) {
+        /* istanbul ignore else */
+        if (vnode.data.show !== true) {
+            leave(vnode, rm);
+        } else {
+            rm();
+        }
     }
-  }
 } : {}
 
 var platformModules = [
@@ -8152,187 +8152,188 @@ var platformDirectives = {
 // supports transition mode (out-in / in-out)
 
 var transitionProps = {
-  name: String,
-  appear: Boolean,
-  css: Boolean,
-  mode: String,
-  type: String,
-  enterClass: String,
-  leaveClass: String,
-  enterToClass: String,
-  leaveToClass: String,
-  enterActiveClass: String,
-  leaveActiveClass: String,
-  appearClass: String,
-  appearActiveClass: String,
-  appearToClass: String,
-  duration: [Number, String, Object]
+    name: String,
+    appear: Boolean,
+    css: Boolean,
+    mode: String,
+    type: String,
+    enterClass: String,
+    leaveClass: String,
+    enterToClass: String,
+    leaveToClass: String,
+    enterActiveClass: String,
+    leaveActiveClass: String,
+    appearClass: String,
+    appearActiveClass: String,
+    appearToClass: String,
+    duration: [Number, String, Object]
 };
 
 // in case the child is also an abstract component, e.g. <keep-alive>
 // we want to recursively retrieve the real component to be rendered
 function getRealChild (vnode) {
-  var compOptions = vnode && vnode.componentOptions;
-  if (compOptions && compOptions.Ctor.options.abstract) {
-    return getRealChild(getFirstComponentChild(compOptions.children))
-  } else {
-    return vnode
-  }
+    var compOptions = vnode && vnode.componentOptions;
+    if (compOptions && compOptions.Ctor.options.abstract) {
+        return getRealChild(getFirstComponentChild(compOptions.children))
+    } else {
+        return vnode
+    }
 }
 
 function extractTransitionData (comp) {
-  var data = {};
-  var options = comp.$options;
-  // props
-  for (var key in options.propsData) {
-    data[key] = comp[key];
-  }
-  // events.
-  // extract listeners and pass them directly to the transition methods
-  var listeners = options._parentListeners;
-  for (var key$1 in listeners) {
-    data[camelize(key$1)] = listeners[key$1];
-  }
-  return data
+    var data = {};
+    var options = comp.$options;
+    // props
+    for (var key in options.propsData) {
+        data[key] = comp[key];
+    }
+    // events.
+    // extract listeners and pass them directly to the transition methods
+    var listeners = options._parentListeners;
+    for (var key$1 in listeners) {
+        data[camelize(key$1)] = listeners[key$1];
+    }
+    return data
 }
 
 function placeholder (h, rawChild) {
-  if (/\d-keep-alive$/.test(rawChild.tag)) {
-    return h('keep-alive', {
-      props: rawChild.componentOptions.propsData
-    })
-  }
+    if (/\d-keep-alive$/.test(rawChild.tag)) {
+        return h('keep-alive', {
+            props: rawChild.componentOptions.propsData
+        })
+    }
 }
 
 function hasParentTransition (vnode) {
-  while ((vnode = vnode.parent)) {
-    if (vnode.data.transition) {
-      return true
+    while ((vnode = vnode.parent)) {
+        if (vnode.data.transition) {
+            return true
+        }
     }
-  }
 }
 
 function isSameChild (child, oldChild) {
-  return oldChild.key === child.key && oldChild.tag === child.tag
+    return oldChild.key === child.key && oldChild.tag === child.tag
 }
 
 var Transition = {
-  name: 'transition',
-  props: transitionProps,
-  abstract: true,
+    name: 'transition',
+    props: transitionProps,
+    abstract: true,
 
-  render: function render (h) {
-    var this$1 = this;
+    render: function render (h) {
+        var this$1 = this;
 
-    var children = this.$slots.default;
-    if (!children) {
-      return
-    }
-
-    // filter out text nodes (possible whitespaces)
-    children = children.filter(function (c) { return c.tag || isAsyncPlaceholder(c); });
-    /* istanbul ignore if */
-    if (!children.length) {
-      return
-    }
-
-    // warn multiple elements
-    if ("development" !== 'production' && children.length > 1) {
-      warn(
-        '<transition> can only be used on a single element. Use ' +
-        '<transition-group> for lists.',
-        this.$parent
-      );
-    }
-
-    var mode = this.mode;
-
-    // warn invalid mode
-    if ("development" !== 'production' &&
-      mode && mode !== 'in-out' && mode !== 'out-in'
-    ) {
-      warn(
-        'invalid <transition> mode: ' + mode,
-        this.$parent
-      );
-    }
-
-    var rawChild = children[0];
-
-    // if this is a component root node and the component's
-    // parent container node also has transition, skip.
-    if (hasParentTransition(this.$vnode)) {
-      return rawChild
-    }
-
-    // apply transition data to child
-    // use getRealChild() to ignore abstract components e.g. keep-alive
-    var child = getRealChild(rawChild);
-    /* istanbul ignore if */
-    if (!child) {
-      return rawChild
-    }
-
-    if (this._leaving) {
-      return placeholder(h, rawChild)
-    }
-
-    // ensure a key that is unique to the vnode type and to this transition
-    // component instance. This key will be used to remove pending leaving nodes
-    // during entering.
-    var id = "__transition-" + (this._uid) + "-";
-    child.key = child.key == null
-      ? child.isComment
-        ? id + 'comment'
-        : id + child.tag
-      : isPrimitive(child.key)
-        ? (String(child.key).indexOf(id) === 0 ? child.key : id + child.key)
-        : child.key;
-
-    var data = (child.data || (child.data = {})).transition = extractTransitionData(this);
-    var oldRawChild = this._vnode;
-    var oldChild = getRealChild(oldRawChild);
-
-    // mark v-show
-    // so that the transition module can hand over the control to the directive
-    if (child.data.directives && child.data.directives.some(function (d) { return d.name === 'show'; })) {
-      child.data.show = true;
-    }
-
-    if (
-      oldChild &&
-      oldChild.data &&
-      !isSameChild(child, oldChild) &&
-      !isAsyncPlaceholder(oldChild) &&
-      // #6687 component root is a comment node
-      !(oldChild.componentInstance && oldChild.componentInstance._vnode.isComment)
-    ) {
-      // replace old child transition data with fresh one
-      // important for dynamic transitions!
-      var oldData = oldChild.data.transition = extend({}, data);
-      // handle transition mode
-      if (mode === 'out-in') {
-        // return placeholder node and queue update when leave finishes
-        this._leaving = true;
-        mergeVNodeHook(oldData, 'afterLeave', function () {
-          this$1._leaving = false;
-          this$1.$forceUpdate();
-        });
-        return placeholder(h, rawChild)
-      } else if (mode === 'in-out') {
-        if (isAsyncPlaceholder(child)) {
-          return oldRawChild
+        var children = this.$slots.default;
+        if (!children) {
+            return
         }
-        var delayedLeave;
-        var performLeave = function () { delayedLeave(); };
-        mergeVNodeHook(data, 'afterEnter', performLeave);
-        mergeVNodeHook(data, 'enterCancelled', performLeave);
-        mergeVNodeHook(oldData, 'delayLeave', function (leave) { delayedLeave = leave; });
-      }
-    }
 
-    return rawChild
-  }
+        // filter out text nodes (possible whitespaces)
+        children = children.filter(function (c) { return c.tag || isAsyncPlaceholder(c); });
+        /* istanbul ignore if */
+        if (!children.length) {
+            return
+        }
+
+        // warn multiple elements
+        if ("development" !== 'production' && children.length > 1) {
+            warn(
+                '<transition> can only be used on a single element. Use ' +
+                '<transition-group> for lists.',
+                this.$parent
+            );
+        }
+
+        var mode = this.mode;
+
+        // warn invalid mode
+        if (
+            "development" !== 'production' &&
+            mode && mode !== 'in-out' && mode !== 'out-in'
+        ) {
+            warn(
+                'invalid <transition> mode: ' + mode,
+                this.$parent
+            );
+        }
+
+        var rawChild = children[0];
+
+        // if this is a component root node and the component's
+        // parent container node also has transition, skip.
+        if (hasParentTransition(this.$vnode)) {
+            return rawChild
+        }
+
+        // apply transition data to child
+        // use getRealChild() to ignore abstract components e.g. keep-alive
+        var child = getRealChild(rawChild);
+        /* istanbul ignore if */
+        if (!child) {
+            return rawChild
+        }
+
+        if (this._leaving) {
+            return placeholder(h, rawChild)
+        }
+
+        // ensure a key that is unique to the vnode type and to this transition
+        // component instance. This key will be used to remove pending leaving nodes
+        // during entering.
+        var id = "__transition-" + (this._uid) + "-";
+        child.key = child.key == null
+            ? child.isComment
+                ? id + 'comment'
+                : id + child.tag
+            : isPrimitive(child.key)
+                ? (String(child.key).indexOf(id) === 0 ? child.key : id + child.key)
+                : child.key;
+
+        var data = (child.data || (child.data = {})).transition = extractTransitionData(this);
+        var oldRawChild = this._vnode;
+        var oldChild = getRealChild(oldRawChild);
+
+        // mark v-show
+        // so that the transition module can hand over the control to the directive
+        if (child.data.directives && child.data.directives.some(function (d) { return d.name === 'show'; })) {
+            child.data.show = true;
+        }
+
+        if (
+            oldChild &&
+            oldChild.data &&
+            !isSameChild(child, oldChild) &&
+            !isAsyncPlaceholder(oldChild) &&
+            // #6687 component root is a comment node
+            !(oldChild.componentInstance && oldChild.componentInstance._vnode.isComment)
+        ) {
+            // replace old child transition data with fresh one
+            // important for dynamic transitions!
+            var oldData = oldChild.data.transition = extend({}, data);
+            // handle transition mode
+            if (mode === 'out-in') {
+                // return placeholder node and queue update when leave finishes
+                this._leaving = true;
+                mergeVNodeHook(oldData, 'afterLeave', function () {
+                    this$1._leaving = false;
+                    this$1.$forceUpdate();
+                });
+                return placeholder(h, rawChild)
+            } else if (mode === 'in-out') {
+                if (isAsyncPlaceholder(child)) {
+                    return oldRawChild
+                }
+                var delayedLeave;
+                var performLeave = function () { delayedLeave(); };
+                mergeVNodeHook(data, 'afterEnter', performLeave);
+                mergeVNodeHook(data, 'enterCancelled', performLeave);
+                mergeVNodeHook(oldData, 'delayLeave', function (leave) { delayedLeave = leave; });
+            }
+        }
+
+        return rawChild
+    }
 }
 
 /*  */
@@ -8349,165 +8350,165 @@ var Transition = {
 // nodes will remain where they should be.
 
 var props = extend({
-  tag: String,
-  moveClass: String
+    tag: String,
+    moveClass: String
 }, transitionProps);
 
 delete props.mode;
 
 var TransitionGroup = {
-  props: props,
+    props: props,
 
-  beforeMount: function beforeMount () {
-    var this$1 = this;
+    beforeMount: function beforeMount () {
+        var this$1 = this;
 
-    var update = this._update;
-    this._update = function (vnode, hydrating) {
-      // force removing pass
-      this$1.__patch__(
-        this$1._vnode,
-        this$1.kept,
-        false, // hydrating
-        true // removeOnly (!important, avoids unnecessary moves)
-      );
-      this$1._vnode = this$1.kept;
-      update.call(this$1, vnode, hydrating);
-    };
-  },
+        var update = this._update;
+        this._update = function (vnode, hydrating) {
+            // force removing pass
+            this$1.__patch__(
+                this$1._vnode,
+                this$1.kept,
+                false, // hydrating
+                true // removeOnly (!important, avoids unnecessary moves)
+            );
+            this$1._vnode = this$1.kept;
+            update.call(this$1, vnode, hydrating);
+        };
+    },
 
-  render: function render (h) {
-    var tag = this.tag || this.$vnode.data.tag || 'span';
-    var map = Object.create(null);
-    var prevChildren = this.prevChildren = this.children;
-    var rawChildren = this.$slots.default || [];
-    var children = this.children = [];
-    var transitionData = extractTransitionData(this);
+    render: function render (h) {
+        var tag = this.tag || this.$vnode.data.tag || 'span';
+        var map = Object.create(null);
+        var prevChildren = this.prevChildren = this.children;
+        var rawChildren = this.$slots.default || [];
+        var children = this.children = [];
+        var transitionData = extractTransitionData(this);
 
-    for (var i = 0; i < rawChildren.length; i++) {
-      var c = rawChildren[i];
-      if (c.tag) {
-        if (c.key != null && String(c.key).indexOf('__vlist') !== 0) {
-          children.push(c);
-          map[c.key] = c
-          ;(c.data || (c.data = {})).transition = transitionData;
-        } else {
-          var opts = c.componentOptions;
-          var name = opts ? (opts.Ctor.options.name || opts.tag || '') : c.tag;
-          warn(("<transition-group> children must be keyed: <" + name + ">"));
+        for (var i = 0; i < rawChildren.length; i++) {
+            var c = rawChildren[i];
+            if (c.tag) {
+                if (c.key != null && String(c.key).indexOf('__vlist') !== 0) {
+                    children.push(c);
+                    map[c.key] = c
+                    ;(c.data || (c.data = {})).transition = transitionData;
+                } else {
+                    var opts = c.componentOptions;
+                    var name = opts ? (opts.Ctor.options.name || opts.tag || '') : c.tag;
+                    warn(("<transition-group> children must be keyed: <" + name + ">"));
+                }
+            }
         }
-      }
-    }
 
-    if (prevChildren) {
-      var kept = [];
-      var removed = [];
-      for (var i$1 = 0; i$1 < prevChildren.length; i$1++) {
-        var c$1 = prevChildren[i$1];
-        c$1.data.transition = transitionData;
-        c$1.data.pos = c$1.elm.getBoundingClientRect();
-        if (map[c$1.key]) {
-          kept.push(c$1);
-        } else {
-          removed.push(c$1);
+        if (prevChildren) {
+            var kept = [];
+            var removed = [];
+            for (var i$1 = 0; i$1 < prevChildren.length; i$1++) {
+                var c$1 = prevChildren[i$1];
+                c$1.data.transition = transitionData;
+                c$1.data.pos = c$1.elm.getBoundingClientRect();
+                if (map[c$1.key]) {
+                    kept.push(c$1);
+                } else {
+                    removed.push(c$1);
+                }
+            }
+            this.kept = h(tag, null, kept);
+            this.removed = removed;
         }
-      }
-      this.kept = h(tag, null, kept);
-      this.removed = removed;
-    }
 
-    return h(tag, null, children)
-  },
+        return h(tag, null, children)
+    },
 
-  updated: function updated () {
-    var children = this.prevChildren;
-    var moveClass = this.moveClass || ((this.name || 'v') + '-move');
-    if (!children.length || !this.hasMove(children[0].elm, moveClass)) {
-      return
-    }
+    updated: function updated () {
+        var children = this.prevChildren;
+        var moveClass = this.moveClass || ((this.name || 'v') + '-move');
+        if (!children.length || !this.hasMove(children[0].elm, moveClass)) {
+            return
+        }
 
-    // we divide the work into three loops to avoid mixing DOM reads and writes
-    // in each iteration - which helps prevent layout thrashing.
-    children.forEach(callPendingCbs);
-    children.forEach(recordPosition);
-    children.forEach(applyTranslation);
+        // we divide the work into three loops to avoid mixing DOM reads and writes
+        // in each iteration - which helps prevent layout thrashing.
+        children.forEach(callPendingCbs);
+        children.forEach(recordPosition);
+        children.forEach(applyTranslation);
 
-    // force reflow to put everything in position
-    // assign to this to avoid being removed in tree-shaking
-    // $flow-disable-line
-    this._reflow = document.body.offsetHeight;
+        // force reflow to put everything in position
+        // assign to this to avoid being removed in tree-shaking
+        // $flow-disable-line
+        this._reflow = document.body.offsetHeight;
 
-    children.forEach(function (c) {
-      if (c.data.moved) {
-        var el = c.elm;
-        var s = el.style;
-        addTransitionClass(el, moveClass);
-        s.transform = s.WebkitTransform = s.transitionDuration = '';
-        el.addEventListener(transitionEndEvent, el._moveCb = function cb (e) {
-          if (!e || /transform$/.test(e.propertyName)) {
-            el.removeEventListener(transitionEndEvent, cb);
-            el._moveCb = null;
-            removeTransitionClass(el, moveClass);
-          }
+        children.forEach(function (c) {
+            if (c.data.moved) {
+                var el = c.elm;
+                var s = el.style;
+                addTransitionClass(el, moveClass);
+                s.transform = s.WebkitTransform = s.transitionDuration = '';
+                el.addEventListener(transitionEndEvent, el._moveCb = function cb (e) {
+                    if (!e || /transform$/.test(e.propertyName)) {
+                        el.removeEventListener(transitionEndEvent, cb);
+                        el._moveCb = null;
+                        removeTransitionClass(el, moveClass);
+                    }
+                });
+            }
         });
-      }
-    });
-  },
+    },
 
-  methods: {
-    hasMove: function hasMove (el, moveClass) {
-      /* istanbul ignore if */
-      if (!hasTransition) {
-        return false
-      }
-      /* istanbul ignore if */
-      if (this._hasMove) {
-        return this._hasMove
-      }
-      // Detect whether an element with the move class applied has
-      // CSS transitions. Since the element may be inside an entering
-      // transition at this very moment, we make a clone of it and remove
-      // all other transition classes applied to ensure only the move class
-      // is applied.
-      var clone = el.cloneNode();
-      if (el._transitionClasses) {
-        el._transitionClasses.forEach(function (cls) { removeClass(clone, cls); });
-      }
-      addClass(clone, moveClass);
-      clone.style.display = 'none';
-      this.$el.appendChild(clone);
-      var info = getTransitionInfo(clone);
-      this.$el.removeChild(clone);
-      return (this._hasMove = info.hasTransform)
+    methods: {
+        hasMove: function hasMove (el, moveClass) {
+            /* istanbul ignore if */
+            if (!hasTransition) {
+                return false
+            }
+            /* istanbul ignore if */
+            if (this._hasMove) {
+                return this._hasMove
+            }
+            // Detect whether an element with the move class applied has
+            // CSS transitions. Since the element may be inside an entering
+            // transition at this very moment, we make a clone of it and remove
+            // all other transition classes applied to ensure only the move class
+            // is applied.
+            var clone = el.cloneNode();
+            if (el._transitionClasses) {
+                el._transitionClasses.forEach(function (cls) { removeClass(clone, cls); });
+            }
+            addClass(clone, moveClass);
+            clone.style.display = 'none';
+            this.$el.appendChild(clone);
+            var info = getTransitionInfo(clone);
+            this.$el.removeChild(clone);
+            return (this._hasMove = info.hasTransform)
+        }
     }
-  }
 }
 
 function callPendingCbs (c) {
-  /* istanbul ignore if */
-  if (c.elm._moveCb) {
-    c.elm._moveCb();
-  }
-  /* istanbul ignore if */
-  if (c.elm._enterCb) {
-    c.elm._enterCb();
-  }
+    /* istanbul ignore if */
+    if (c.elm._moveCb) {
+        c.elm._moveCb();
+    }
+    /* istanbul ignore if */
+    if (c.elm._enterCb) {
+        c.elm._enterCb();
+    }
 }
 
 function recordPosition (c) {
-  c.data.newPos = c.elm.getBoundingClientRect();
+    c.data.newPos = c.elm.getBoundingClientRect();
 }
 
 function applyTranslation (c) {
-  var oldPos = c.data.pos;
-  var newPos = c.data.newPos;
-  var dx = oldPos.left - newPos.left;
-  var dy = oldPos.top - newPos.top;
-  if (dx || dy) {
-    c.data.moved = true;
-    var s = c.elm.style;
-    s.transform = s.WebkitTransform = "translate(" + dx + "px," + dy + "px)";
-    s.transitionDuration = '0s';
-  }
+    var oldPos = c.data.pos;
+    var newPos = c.data.newPos;
+    var dx = oldPos.left - newPos.left;
+    var dy = oldPos.top - newPos.top;
+    if (dx || dy) {
+        c.data.moved = true;
+        var s = c.elm.style;
+        s.transform = s.WebkitTransform = "translate(" + dx + "px," + dy + "px)";
+        s.transitionDuration = '0s';
+    }
 }
 
 var platformComponents = {
