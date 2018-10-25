@@ -50,21 +50,21 @@ function sameVnode (a, b) {
 }
 
 function sameInputType (a, b) {
-  if (a.tag !== 'input') return true
-  let i
-  const typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type
-  const typeB = isDef(i = b.data) && isDef(i = i.attrs) && i.type
-  return typeA === typeB || isTextInputType(typeA) && isTextInputType(typeB)
+    if (a.tag !== 'input') return true
+    let i
+    const typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type
+    const typeB = isDef(i = b.data) && isDef(i = i.attrs) && i.type
+    return typeA === typeB || isTextInputType(typeA) && isTextInputType(typeB)
 }
 
 function createKeyToOldIdx (children, beginIdx, endIdx) {
-  let i, key
-  const map = {}
-  for (i = beginIdx; i <= endIdx; ++i) {
-    key = children[i].key
-    if (isDef(key)) map[key] = i
-  }
-  return map
+    let i, key
+    const map = {}
+    for (i = beginIdx; i <= endIdx; ++i) {
+        key = children[i].key
+        if (isDef(key)) map[key] = i
+    }
+    return map
 }
 
 export function createPatchFunction (backend) {
@@ -105,19 +105,19 @@ export function createPatchFunction (backend) {
     }
 
     function isUnknownElement (vnode, inVPre) {
-      return (
-        !inVPre &&
-        !vnode.ns &&
-        !(
-          config.ignoredElements.length &&
-          config.ignoredElements.some(ignore => {
-            return isRegExp(ignore)
-              ? ignore.test(vnode.tag)
-              : ignore === vnode.tag
-          })
-        ) &&
-        config.isUnknownElement(vnode.tag)
-      )
+        return (
+            !inVPre &&
+            !vnode.ns &&
+            !(
+                config.ignoredElements.length &&
+                config.ignoredElements.some(ignore => {
+                    return isRegExp(ignore)
+                        ? ignore.test(vnode.tag)
+                        : ignore === vnode.tag
+                })
+            ) &&
+            config.isUnknownElement(vnode.tag)
+        )
     }
 
     let creatingElmInVPre = 0
@@ -316,26 +316,26 @@ export function createPatchFunction (backend) {
     // this is implemented as a special case to avoid the overhead
     // of going through the normal attribute patching process.
     function setScope (vnode) {
-      let i
-      if (isDef(i = vnode.fnScopeId)) {
-        nodeOps.setStyleScope(vnode.elm, i)
-      } else {
-        let ancestor = vnode
-        while (ancestor) {
-          if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
+        let i
+        if (isDef(i = vnode.fnScopeId)) {
             nodeOps.setStyleScope(vnode.elm, i)
-          }
-          ancestor = ancestor.parent
+        } else {
+            let ancestor = vnode
+            while (ancestor) {
+                if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
+                    nodeOps.setStyleScope(vnode.elm, i)
+                }
+                ancestor = ancestor.parent
+            }
         }
-      }
-      // for slot content they should also get the scopeId from the host instance.
-      if (isDef(i = activeInstance) &&
-        i !== vnode.context &&
-        i !== vnode.fnContext &&
-        isDef(i = i.$options._scopeId)
-      ) {
-        nodeOps.setStyleScope(vnode.elm, i)
-      }
+        // for slot content they should also get the scopeId from the host instance.
+        if (isDef(i = activeInstance) &&
+            i !== vnode.context &&
+            i !== vnode.fnContext &&
+            isDef(i = i.$options._scopeId)
+        ) {
+            nodeOps.setStyleScope(vnode.elm, i)
+        }
     }
 
     function addVnodes (parentElm, refElm, vnodes, startIdx, endIdx, insertedVnodeQueue) {
@@ -475,21 +475,21 @@ export function createPatchFunction (backend) {
     }
 
     function checkDuplicateKeys (children) {
-      const seenKeys = {}
-      for (let i = 0; i < children.length; i++) {
-        const vnode = children[i]
-        const key = vnode.key
-        if (isDef(key)) {
-          if (seenKeys[key]) {
-            warn(
-              `Duplicate keys detected: '${key}'. This may cause an update error.`,
-              vnode.context
-            )
-          } else {
-            seenKeys[key] = true
-          }
+        const seenKeys = {}
+        for (let i = 0; i < children.length; i++) {
+            const vnode = children[i]
+            const key = vnode.key
+            if (isDef(key)) {
+                if (seenKeys[key]) {
+                    warn(
+                        `Duplicate keys detected: '${key}'. This may cause an update error.`,
+                        vnode.context
+                    )
+                } else {
+                    seenKeys[key] = true
+                }
+            }
         }
-      }
     }
 
     function findIdxInOld (node, oldCh, start, end) {
@@ -674,14 +674,14 @@ export function createPatchFunction (backend) {
     }
 
     function assertNodeMatch (node, vnode, inVPre) {
-      if (isDef(vnode.tag)) {
-        return vnode.tag.indexOf('vue-component') === 0 || (
-          !isUnknownElement(vnode, inVPre) &&
-          vnode.tag.toLowerCase() === (node.tagName && node.tagName.toLowerCase())
-        )
-      } else {
-        return node.nodeType === (vnode.isComment ? 8 : 3)
-      }
+        if (isDef(vnode.tag)) {
+            return vnode.tag.indexOf('vue-component') === 0 || (
+                !isUnknownElement(vnode, inVPre) &&
+                vnode.tag.toLowerCase() === (node.tagName && node.tagName.toLowerCase())
+            )
+        } else {
+            return node.nodeType === (vnode.isComment ? 8 : 3)
+        }
     }
 
     return function patch (oldVnode, vnode, hydrating, removeOnly) {

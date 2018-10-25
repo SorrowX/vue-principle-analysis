@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>工厂函数</title>
+</head>
+<body>
+	<div id="app">
+		<async-comp></async-comp>
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		Vue.component('async-comp', function(resolve, reject) {
+			setTimeout(() => {
+				resolve({
+					template: `
+					    <div> I am async-comp </div>
+					`
+				})
+			}, 1000)
+		})
+
+		const vm = new Vue().$mount('#app')
+	</script>
+</body>
+</html>

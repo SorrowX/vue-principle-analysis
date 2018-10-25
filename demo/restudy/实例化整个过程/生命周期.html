@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>生命周期</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const mx = {
+			data() {
+				return {
+                    a: {
+                    	b: {
+                    		c: 1
+                    	}
+                    },
+                    d: {
+                    	e: {
+                    		f: 2
+                    	}
+                    }
+				}
+			},
+			created() {
+				console.log('mixin created')
+				this.$watch('a', (v) => {
+					console.log('值改变1: ', v)
+				}, {
+					deep: true
+				})
+
+				this.$watch('d', (v) => {
+					console.log('值改变2: ', v)
+				}, {
+					deep: true
+				})
+			},
+			mounted() {
+				console.log('mixin mounted')
+			}
+		}
+
+		const A = {
+			name: 'A',
+			extends: mx,
+			beforeCreate() {
+				console.log('A beforeCreate')
+			},
+			created() {
+				console.log('A created')
+			},
+			beforeMount() {
+				console.log('A beforeMount')
+			},
+			mounted() {
+				console.log('A mounted')
+			},
+			beforeUpdate() {
+				console.log('A beforeUpdate')
+			},
+			updated() {
+				console.log('A updated')
+			},
+			beforeDestroy() {
+				console.log('A beforeDestroy')
+			},
+			destroyed() {
+				console.log('A destroyed')
+			},
+			template: `
+			    <div class="acomp">A-Component</div>
+			`
+		}
+
+		const B = {
+			name: 'B',
+			extends: mx,
+			beforeCreate() {
+				console.log('B beforeCreate')
+			},
+			created() {
+				console.log('B created')
+			},
+			beforeMount() {
+				console.log('B beforeMount')
+			},
+			mounted() {
+				console.log('B mounted')
+			},
+			beforeUpdate() {
+				console.log('B beforeUpdate')
+			},
+			updated() {
+				console.log('B updated')
+			},
+			beforeDestroy() {
+				console.log('B beforeDestroy')
+			},
+			destroyed() {
+				console.log('B destroyed')
+			},
+			template: `
+			    <div class="bcomp">B-Component</div>
+			`
+		}
+
+		const vm = new Vue({
+			el: '#app',
+			components: {A, B},
+			beforeCreate() {
+				console.log('parent beforeCreate')
+			},
+			created() {
+				console.log('parent created')
+			},
+			beforeMount() {
+				console.log('parent beforeMount')
+			},
+			mounted() {
+				console.log('parent mounted')
+			},
+			beforeUpdate() {
+				console.log('parent beforeUpdate')
+			},
+			updated() {
+				console.log('parent updated')
+			},
+			beforeDestroy() {
+				console.log('parent beforeDestroy')
+			},
+			destroyed() {
+				console.log('parent destroyed')
+			},
+			template: `
+			    <div id="app">
+			    	<A></A>
+			    	<B></B>
+			    </div>
+			`
+		})
+
+	</script>
+</body>
+</html>

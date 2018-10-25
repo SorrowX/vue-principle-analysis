@@ -39,7 +39,7 @@ export function isPrimitive (value: any): boolean %checks {
  * is a JSON-compliant type.
  */
 export function isObject (obj: mixed): boolean %checks {
-  return obj !== null && typeof obj === 'object'
+    return obj !== null && typeof obj === 'object'
 }
 
 /**
@@ -123,12 +123,12 @@ export const isReservedAttribute = makeMap('key,ref,slot,slot-scope,is')
  * Remove an item from an array
  */
 export function remove (arr: Array<any>, item: any): Array<any> | void {
-  if (arr.length) {
-    const index = arr.indexOf(item)
-    if (index > -1) {
-      return arr.splice(index, 1)
+    if (arr.length) {
+        const index = arr.indexOf(item)
+        if (index > -1) {
+            return arr.splice(index, 1)
+        }
     }
-  }
 }
 
 /**
@@ -136,7 +136,7 @@ export function remove (arr: Array<any>, item: any): Array<any> | void {
  */
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn (obj: Object | Array<*>, key: string): boolean {
-  return hasOwnProperty.call(obj, key)
+    return hasOwnProperty.call(obj, key)
 }
 
 /**

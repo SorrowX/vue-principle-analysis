@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>侦听 嵌套属性</title>
+</head>
+<body>
+	<div id="app">
+		<button @click="change">change</button>
+		<p>{{ nested }}</p>
+	</div>
+
+	<script src="../../../../dist/vue.js"></script>
+	<script>
+		var vm = new Vue({
+		    data: {
+		    	nested: {
+		    		a: {
+		    			b: 1
+		    		}
+		    	}
+		    },
+		    watch: {
+		    	nested: {
+		    		deep: true,
+		    		sync: true,
+		    		handler(newVal) {
+		    			console.log('nested: ', newVal.a.b)
+		    		}
+		    	}
+		    },
+		    methods: {
+		    	change() {
+		    		this.nested.a.b = 2
+		    	}
+		    }
+		}).$mount('#app')
+
+	</script>
+</body>
+</html>

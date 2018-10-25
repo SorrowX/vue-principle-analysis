@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>computed</title>
+</head>
+<body>
+	<div id="app">
+		<button @click="change">change</button>
+		<p>{{ name }}</p>
+	</div>
+
+	<script src="../../../../dist/vue.js"></script>
+	<script>
+		var vm = new Vue({
+		    data: {
+		    	firstName: 'Foo',
+		    	lastName: 'Bar',
+		    	num: 0
+		    },
+		    computed: {
+		    	fullName: function () {
+		    		if (this.num >= 1) {
+			      		return this.firstName + ' ' + this.lastName
+		    		}
+		    		return '点击试试'
+		    	},
+		    	name: function() {
+		    		return this.fullName + ' ' + this.num
+		    	}
+		    },
+		    methods: {
+		    	change() {
+		    		this.num++
+		    	}
+		    }
+		}).$mount('#app')
+
+		// vm.firstName = '徐志伟'
+		// vm.lastName = '徐志康'
+		// vm.data
+	</script>
+</body>
+</html>

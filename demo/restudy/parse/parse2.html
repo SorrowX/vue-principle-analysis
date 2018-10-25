@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>parse2</title>
+</head>
+<body>
+	<div id="app">
+		<ul 
+		    v-if="isShow"
+		    :class="bindCls" 
+		    class="list" 
+		>
+		    <li
+		        v-for="(val, key) in obj" 
+		        @click="clickItem(key)"
+		    >
+		        {{val}}: {{key}}
+		    </li>
+		</ul>
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const vm = new Vue({
+	        el: '#app',
+			data: {
+				isShow: true,
+	            bindCls: 'my-bindCls',
+	            obj: {
+	            	a: {
+	            		tag: 1
+	            	},
+	            	b: {
+	            		tag: 2
+	            	},
+	            	c: {
+	            		tag: 3
+	            	}
+	            }
+			},
+			methods: {
+				clickItem(index) {
+					console.log(index)
+				}
+			}
+		})
+	</script>
+</body>
+</html>

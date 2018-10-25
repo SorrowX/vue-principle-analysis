@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>props</title>
+</head>
+<body>
+	<div id="app">
+		{{ obj }}
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+
+		const vm = new Vue({
+			el: '#app',
+			props: {
+				obj: {
+					type: Object,
+					default: function() {
+						return {
+							a: 1
+						}
+					}
+				},
+				b: {
+					type: Number,
+					default: 2
+				}
+			}
+		})
+
+		// props 初始化主流程:
+		// 调用 initProps() 方法来初始化: 
+		//    1. 给vm实例添加_props属性,初始值为{}
+		//    2. 给vm.$options添加_propKeys属性,初始值为[]
+		//    3. 遍历 propsOptions(就是我们的props选项对象)
+		//       a. 往vm.$options._propKeys数组中添加propsOptions的key
+		//       b. 调用 validateProp() 方法(拿到key对应的值,把该值转换为响应式数据返回)
+		//       c. 检查key能否做作为props属性(会把key转换成连字符再检查)
+		//       d. 调用 defineReactive() 方法(给我们的vm._props对象添加key这个属性)
+		//       e. 调用 proxy() 方法(给vm实例添加key属性,比如访问vm.obj其实访问的是 vm._props.obj)
+
+		// validateProp(key: props对象中的key, propsOptions: props选项对象, propsData: propsData选项对象, vm: vm实例) 方法
+		//    1. 根据key拿到propOption对象对应的值, 值赋值给prop变量
+		//    2. 判断propsData对象是否存在key属性, 值赋值给absent变量
+		//    3. 拿到key在propsData对象中的值, 值赋值给value变量
+		//    4. 判断prop的type是否是Boolean类型, 变量booleanIndex值为 0 或者 -1
+		//       booleanIndex > -1:
+		//           如果prop的type是布尔类型, 如果prop缺席且没有default属性，则value为false
+		//           如果prop的type是布尔类型, 且值为'',则把value赋值false
+		//    5. 检查默认值,调用 getPropDefaultValue() 方法获取到default定义的值，把他转换成响应式数据
+		//    6. 返回转换后的响应式数据
+		
+		console.log(vm) 
+	</script>
+</body>
+</html>

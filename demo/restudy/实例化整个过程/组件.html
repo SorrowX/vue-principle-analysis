@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const App = {
+			name: 'App',
+			props: {
+				msg: {
+					type: String,
+					default: 'msg'
+				}
+			},
+			created() {
+				this.$root.$emit('a', 123)
+			},
+			template: `
+			    <div class="app-class" @click="$emit('msg-click', msg)">
+			    	{{ msg }}
+			    </div>
+			`
+		}
+
+		Vue.component('App', App)
+
+		const vm = new Vue({
+			el: '#app',
+			data: {
+				parentMsg: 'hi vue'
+			},
+			created() {
+				this.$on('a', function(arg) {
+					console.log('收到事件: ', arg)
+				})
+			},
+			methods: {
+				handlerMsgClick(msg) {
+					console.log(msg)
+				}
+			},
+			template: `
+			    <div id="app">
+			    	<App :msg="parentMsg" @msg-click="handlerMsgClick"></App>
+			    </div>
+			`
+		})
+		console.log(vm) 
+	</script>
+</body>
+</html>

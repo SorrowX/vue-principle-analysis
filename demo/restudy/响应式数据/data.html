@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>data</title>
+</head>
+<body>
+	<div id="app">
+		{{ $data }}
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+
+		const vm = new Vue({
+			el: '#app',
+			data: {
+				obj: {
+					nested: {
+						a: 1
+					}
+				}
+			}
+		})
+
+		// data 初始化主流程:
+		//    执行 initData() 函数
+		//        1. 拿到data选项对象中定义的值赋值给vm._data
+		//        2. 判断data值是否是原生对象,不是的话给出警告, 且 vm._data = {}
+		//        3. 拿到data对象的所有key, 和定义的methods选项对象, 和 定义的 props选项
+		//        4. 遍历data的所有属性
+		//            a. 判断key是否在methods对象中定义过,定义过的话发出警告
+		//            b. 判断key是否在props对象中定义过,定义过的话发出警告
+		//            c. 检查key是否以$或者_开头，不是的话，就调用proxy()方法,目的是给vm添加key属性,值是响应式的
+		//        5. 调用 observe(data, true) 方法，让 vm._data对象变成响应式的数据
+		
+		console.log(vm) 
+	</script>
+</body>
+</html>

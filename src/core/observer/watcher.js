@@ -181,7 +181,7 @@ export default class Watcher {
                 // In activated mode, we want to proactively perform the computation
                 // but only notify our subscribers when the value has indeed changed.
                 this.getAndInvoke(() => {
-                  this.dep.notify()
+                    this.dep.notify()
                 })
             }
         } else if (this.sync) {

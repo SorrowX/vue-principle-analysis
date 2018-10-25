@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件更新</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const HelloWord = {
+			name: 'HelloWord',
+			props: ['flag'],
+			template: `
+			    <div v-if="flag" class="hw-div">
+                    我是div内容
+			    </div>
+			    <p v-else class="hw-p">
+                    我是p内容
+			    </p>
+			`
+		}
+
+		const App = {
+			name: 'App',
+			components: { HelloWord },
+			data() {
+				return {
+					parentFlag: true
+				}
+			},
+			methods: {
+				toggle() {
+					this.parentFlag = !this.parentFlag
+				}
+			},
+			template: `
+			    <div id="app">
+			        <HelloWord :flag="parentFlag"></HelloWord>
+			        <button @click="toggle">toggle</button>
+			    </div>
+			`
+		}
+
+		new Vue({
+			render: h => h(App)
+		}).$mount('#app')
+	</script>
+	
+</body>
+</html>

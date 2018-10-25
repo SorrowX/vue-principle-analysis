@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>event</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		let Child = {
+			data() {
+				return {
+					show: true
+				}
+			},
+			methods: {
+				clickHandler(e) {
+					console.log('Button clicked!', e)
+					this.$emit('select')
+				}
+			},
+			template: `
+			    <button @click="clickHandler($event)">
+			        click me
+			    </button>
+			`
+		}
+
+		let vm = new Vue({
+			components: { Child },
+			methods: {
+				selectHandler() {
+				    console.log('Child select!')
+				},
+				clickHandler() {
+			        console.log('Child clicked!')
+			    }
+			},
+			template: `
+			    <div>
+			        <child 
+			            @select="selectHandler"
+			            @click.native.prevent="clickHandler"
+			        >
+			        </child>
+			    </div>
+			`
+		}).$mount('#app')
+	</script>
+</body>
+</html>

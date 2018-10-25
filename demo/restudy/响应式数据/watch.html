@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>watch</title>
+</head>
+<body>
+	<div id="app">
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+
+		const vm = new Vue({
+			el: '#app',
+			data: {
+				arr: [1, 2, 3],
+				a: 1,
+				b: 2,
+				obj: {
+					aa: {
+						bb: 1
+					}
+				},
+				obj1: {
+					cc: {
+						dd: 1
+					}
+				}
+			}
+		})
+		
+
+		/*vm.$watch('arr', function(newVal, oldVal) {
+			console.log(newVal, oldVal)
+		})*/
+
+		/*vm.$watch(
+			function() {
+				return this.a + this.b
+			}, 
+			function(newVal, oldVal) {
+				console.log(newVal, oldVal)
+			}
+		)*/
+
+		vm.$watch('obj', (v, oldVal) => {
+			console.log(v, oldVal)
+		}, {
+			deep: true
+		})
+
+		// vm.a = 10
+		// vm.arr = 1
+		// vm.obj.aa = 1
+	</script>
+</body>
+</html>
