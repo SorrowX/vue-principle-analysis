@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数据驱动-$createElement</title>
+</head>
+<body>
+	<div id="app">
+		<ul>
+			<li v-for="(item, index) in arr">{{ item }}</li>
+		</ul>
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const vm = new Vue({
+            data() {
+            	return {
+            		arr: ['a', 'b', 'c', 'd', 'e']
+            	}
+            }
+		}).$mount('#app')
+
+
+		/*(function anonymous() {
+		    with (this) {
+		        return _c('div', {
+		            attrs: {
+		                "id": "app"
+		            }
+		        }, [_c('ul', _l((arr), function(item, index) {
+		            return _c('li', [_v(_s(item))])
+		        }))])
+		    }
+		})*/
+	</script>
+</body>
+</html>

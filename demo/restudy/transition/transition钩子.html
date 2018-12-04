@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>transition钩子</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		new Vue({
+			data: {
+				show: true
+			},
+			methods: {
+				beforeEnter: function(el) {
+					el.style.opacity = 0
+					el.style.transformOrigin = 'left'
+					console.log('beforeEnter')
+				},
+		        enter: function(el, done) {
+		        	Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+		        	Velocity(el, { fontSize: '1em' }, { complete: done })
+		        	console.log('enter')
+		        },
+		        afterEnter: function() {
+		        	console.log('afterEnter')
+		        },
+		        enterCancelled: function() {
+		        	console.log('enterCancelled')
+		        },
+
+		        beforeLeave: function(el) {
+		        	console.log('beforeLeave')
+		        },
+		        leave: function(el, done) {
+		        	Velocity(el, {
+		        	    opacity: 0
+		        	}, { complete: done })
+		        	console.log('leave')
+		        },
+		        delayLeave: function(done) {
+		        	done()
+		        	console.log('delayLeave')
+		        },
+		        afterLeave: function(el) {
+		        	console.log('afterLeave')
+		        },
+		        leaveCancelled: function() {
+		        	console.log('leaveCancelled')
+		        },
+
+		        beforeAppear: function(el) {
+		        	console.log('beforeAppear')
+		        },
+		        appear: function(el, done) {
+		        	console.log('appear')
+		        	done()
+		        },
+		        afterAppear: function(el) {
+		        	console.log('afterAppear')
+		        },
+		        appearCancelled: function() {
+		        	console.log('appearCancelled')
+		        }
+			},
+			template: `
+			    <div>
+			        <button @click="show = !show">Toggle</button>
+			        <transition
+			            v-on:before-enter="beforeEnter"
+			            v-on:enter="enter"
+			            v-on:after-enter="afterEnter"
+			            v-on:enter-cancelled="enterCancelled"
+
+			            v-on:before-leave="beforeLeave"
+			            v-on:leave="leave"
+			            v-on:after-leave="afterLeave"
+			            v-on:leave-cancelled="leaveCancelled"
+			            v-on:delay-leave="delayLeave"
+
+			            v-on:before-appear="beforeAppear"
+			            v-on:appear="appear"
+			            v-on:after-appear="afterAppear"
+			            v-on:appear-cancelled="appearCancelled"
+
+			            v-bind:css="false"
+			        >
+			            <p v-if="show">
+			                Demo
+			            </p>
+			        </transition>
+			    </div>
+			`
+		}).$mount('#app')
+
+		/*with(this) {
+			return _c('div', [_c('button', {
+				on: {
+					"click": function($event) {
+						show = !show
+					}
+				}
+			},
+			[_v("Toggle")]), _v(" "), _c('transition', {
+				attrs: {
+					"css": false
+				},
+				on: {
+					"before-enter": beforeEnter,
+					"enter": enter,
+					"leave": leave
+				}
+			},
+			[(show) ? _c('p', [_v("\n\t\t\t                Demo\n\t\t\t            ")]) : _e()])], 1)
+		}*/
+	</script>
+</body>
+</html>

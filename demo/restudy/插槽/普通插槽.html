@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>普通插槽</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		/*with(this) {
+			return _c('div', {
+				staticClass: "app-layout"
+			}, [
+			    _c('header', [_t("header")], 2), 
+			    _v(" "), 
+			    _c('main', [_t("default", [_v("默认内容")])], 2), 
+			    _v(" "), 
+			    _c('footer', [_t("footer")], 2)
+			])
+		}*/
+
+		const AppLayout = {
+			template: `
+			    <div class="app-layout">
+			        <header>
+			            <slot name="header"></slot>
+			        </header>
+			        <main>
+			            <slot>默认内容</slot>
+			        </main>
+			        <footer>
+			            <slot name="footer"></slot>
+			        </footer>
+			    </div>
+			`
+		}
+
+		const vm = new Vue({
+			components: { AppLayout },
+			data: {
+				title: '我是头部',
+				msg: '我是内容',
+				desc: '我是底部'
+			},
+			template: `
+                <div class="parent">
+                    <app-layout>
+                        <h3 slot="header">{{ title }}</h3>
+                        <p>{{ msg }}</p>
+                        <p slot="footer">{{ desc }}</p>
+                    </app-layout>
+                </div>
+			`
+		}).$mount('#app')
+		// vm.msg = '数据改变'
+
+		/*with(this) {
+			return _c('div', {
+				staticClass: "parent"
+			}, [_c('app-layout', [_c('h3', {
+				attrs: {
+					"slot": "header"
+				},
+				slot: "header"
+			}, [_v(_s(title))]), _v(" "), _c('p', [_v(_s(msg))]), _v(" "), _c('p', {
+				attrs: {
+					"slot": "footer"
+				},
+				slot: "footer"
+			}, [_v(_s(desc))])])], 1)
+		}*/
+	</script>
+</body>
+</html>

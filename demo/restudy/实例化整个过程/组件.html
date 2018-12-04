@@ -9,48 +9,72 @@
 
 	<script src="../../../dist/vue.js"></script>
 	<script>
-		const App = {
-			name: 'App',
+		const Child = {
+			name: 'Child',
 			props: {
 				msg: {
 					type: String,
 					default: 'msg'
 				}
 			},
-			created() {
-				this.$root.$emit('a', 123)
-			},
 			template: `
-			    <div class="app-class" @click="$emit('msg-click', msg)">
-			    	{{ msg }}
+			    <div 
+			        class="child-class" 
+			        @click="$emit('msg-click', msg)"
+			    >
+			        {{ msg }}
 			    </div>
 			`
 		}
 
-		Vue.component('App', App)
+		/*with(this) {
+			return _c('div', {
+				staticClass: "child-class",
+				on: {
+					"click": function($event) {
+						$emit('msg-click', msg)
+					}
+				}
+			}, [_v("\n\t\t\t        " + _s(msg) + "\n\t\t\t    ")])
+		}*/
+
+		Vue.component('Child', Child)
 
 		const vm = new Vue({
-			el: '#app',
 			data: {
 				parentMsg: 'hi vue'
 			},
-			created() {
-				this.$on('a', function(arg) {
-					console.log('收到事件: ', arg)
-				})
-			},
 			methods: {
 				handlerMsgClick(msg) {
-					console.log(msg)
+					console.log('收到子组件的通知: ', msg)
 				}
 			},
 			template: `
 			    <div id="app">
-			    	<App :msg="parentMsg" @msg-click="handlerMsgClick"></App>
+			        <span>你好啊</span>
+			    	<child 
+			    	    :msg="parentMsg" 
+			    	    @msg-click="handlerMsgClick"
+			    	>
+			    	</child>
 			    </div>
 			`
-		})
-		console.log(vm) 
+		}).$mount('#app')
+
+		/*with(this) {
+			return _c('div', {
+				attrs: {
+					"id": "app"
+				}
+			}, [_c('span', [_v("你好啊")]), _v(" "), _c('child', {
+				attrs: {
+					"msg": parentMsg
+				},
+				on: {
+					"msg-click": handlerMsgClick
+				}
+			})], 1)
+		}*/
 	</script>
 </body>
 </html>

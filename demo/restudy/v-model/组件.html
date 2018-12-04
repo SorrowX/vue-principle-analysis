@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		let Child = {
+			props: ['value'],
+			methods: {
+				updateValue(e) {
+					this.$emit('input', e.target.value)
+				}
+			},
+			template: `
+			    <div>
+			        <input 
+			            :value="value" 
+			            @input="updateValue"
+			            placeholder="edit me"
+			        />
+			    </div>
+			`
+		}
+
+		const vm = new Vue({
+			components: { Child },
+			data: {
+				message: '123'
+			},
+			template: `
+                <div>
+                    <child v-model="message"></child>
+                    <p>Message is: {{ message }}</p>
+                </div>
+			`
+		}).$mount('#app')
+
+		/*with(this) {
+			return _c('div', [_c('child', {
+				model: {
+					value: (message),
+					callback: function($$v) {
+						message = $$v
+					},
+					expression: "message"
+				}
+			}), _v(" "), _c('p', [_v("Message is: " + _s(message))])], 1)
+		}*/
+
+		/*with(this) {
+			return _c('div', [_c('input', {
+				attrs: {
+					"placeholder": "edit me"
+				},
+				domProps: {
+					"value": value
+				},
+				on: {
+					"input": updateValue
+				}
+			})])
+		}*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>transition</title>
+	<style>
+		.fade-enter-active, 
+		.fade-leave-active {
+		    transition: opacity 1s;
+		}
+		.fade-enter, 
+		.fade-leave-to {
+		    opacity: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		new Vue({
+			data: {
+				show: true
+			},
+			template: `
+			    <div>
+			        <button @click="show = !show">Toggle</button>
+			        <transition
+			            :appear="true" 
+			            name="fade"
+			        >
+			            <p v-if="show">hello</p>
+			        </transition>	
+			    </div>
+			`
+		}).$mount('#app')
+
+		/*with(this) {
+			return _c('div', [_c('button', {
+				on: {
+					"click": function($event) {
+						show = !show
+					}
+				}
+			},
+			[_v("Toggle")]), _v(" "), _c('transition', {
+				attrs: {
+					"appear": true,
+					"name": "fade"
+				}
+			},
+			[(show) ? _c('p', [_v("hello")]) : _e()])], 1)
+		}*/
+	</script>
+</body>
+</html>

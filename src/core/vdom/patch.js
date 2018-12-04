@@ -546,7 +546,7 @@ export function createPatchFunction (backend) {
                 if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
             } else if (isDef(ch)) {
                 if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
-              addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
+                addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
             } else if (isDef(oldCh)) {
                 removeVnodes(elm, oldCh, 0, oldCh.length - 1)
             } else if (isDef(oldVnode.text)) {

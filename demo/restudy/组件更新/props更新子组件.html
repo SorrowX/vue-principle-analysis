@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>props更新子组件</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const Child = {
+			name: 'Child',
+			props: {
+				bool: Boolean
+			},
+			methods: {
+				chaneProp() {
+					this.bool = !this.bool
+				}
+			},
+			template: `
+			    <div class="child">
+			        <p>{{ bool }}</p>
+			        <button @click="chaneProp">chaneProp</button>
+			    </div>
+			`
+		}
+
+		const vm = new Vue({
+			name: 'App',
+			components: { Child },
+			data() {
+				return {
+					parentBool: true
+				}
+			},
+			methods: {
+				toggle() {
+					this.parentBool = !this.parentBool
+				}
+			},
+			template: `
+			    <div id="app">
+			        <child :bool="parentBool"></child>
+			        <button @click="toggle">toggle</button>
+			    </div>
+			`
+		}).$mount('#app')
+
+		// vm.parentBool = false
+
+		/*with(this) {
+			return _c('div', {
+				attrs: {
+					"id": "app"
+				}
+			},
+			[_c('child', {
+				attrs: {
+					"bool": parentBool
+				}
+			}), _v(" "), _c('button', {
+				on: {
+					"click": toggle
+				}
+			},
+			[_v("toggle")])], 1)
+		}*/
+	</script>
+	
+</body>
+</html>

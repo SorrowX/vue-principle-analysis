@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>data</title>
+</head>
+<body>
+	<div id="app">
+		{{ arr }}
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+
+		/*const vm = new Vue({
+			el: '#app',
+			data: {
+				arr: [7, 8, 9]
+			}
+		})
+		// vm.arr[0] = 1
+		console.log(vm) */
+
+
+		var obj = {
+		    arr:[7, 8, 9]
+		}
+		function observe(obj, key, val) {
+			Object.defineProperty(obj, key, {
+			    enumerable: true,
+			    configurable: true,
+			    get: function() {
+			        console.log('getter')
+			        return val
+			    },
+			    set: function(newVal) {
+			        console.log('setter', newVal)
+			    }
+			})
+
+		}
+
+		observe(obj, 'arr', obj['arr'])
+		
+		obj.arr[0] = 'hi'
+	</script>
+</body>
+</html>

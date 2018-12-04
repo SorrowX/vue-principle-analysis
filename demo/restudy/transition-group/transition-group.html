@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>transition-group</title>
+	<style>
+		.item {
+			display: inline-block;
+			margin-right: 10px;
+			transition: all 1s;
+		}
+
+		.fade-enter, 
+		.fade-leave-to {
+		    opacity: 0;
+		    transform: translateY(30px);
+		}
+
+		.fade-leave-active {
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" class="demo">
+	    <button v-on:click="shuffle">Shuffle</button>
+	    <button v-on:click="add">Add</button>
+	    <button v-on:click="remove">Remove</button>
+	    <transition-group name="fade" tag="p">
+	        <span
+		        v-for="item in items"
+		        v-bind:key="item"
+		        class="item"
+	        >
+	        	{{ item }}
+	        </span>
+	    </transition-group>
+	</div>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const vm = new Vue({
+			data: {
+				items: [1,2,3,4,5,6,7,8,9],
+			    nextNum: 10
+			},
+			methods: {
+			    randomIndex: function () {
+			        return Math.floor(Math.random() * this.items.length)
+			    },
+			    add: function () {
+			        this.items.splice(this.randomIndex(), 0, this.nextNum++)
+			    },
+			    remove: function () {
+			        this.items.splice(this.randomIndex(), 1)
+			    },
+			    shuffle: function () {
+			        this.items = _.shuffle(this.items)
+			    }
+			}
+		}).$mount('#app')
+
+		/*with(this) {
+			return _c('div', {
+				staticClass: "demo",
+				attrs: {
+					"id": "app"
+				}
+			},
+			[_c('button', {
+				on: {
+					"click": shuffle
+				}
+			},
+			[_v("Shuffle")]), _v(" "), _c('button', {
+				on: {
+					"click": add
+				}
+			},
+			[_v("Add")]), _v(" "), _c('button', {
+				on: {
+					"click": remove
+				}
+			},
+			[_v("Remove")]), _v(" "), _c('transition-group', {
+				attrs: {
+					"name": "fade",
+					"tag": "p"
+				}
+			},
+			_l((items),
+			function(item) {
+				return _c('span', {
+					key: item,
+					staticClass: "item"
+				},
+				[_v("\n\t        \t" + _s(item) + "\n\t        ")])
+			}))], 1)
+		}*/
+	</script>
+</body>
+</html>

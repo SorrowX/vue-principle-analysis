@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>v-model-本质</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const vm = new Vue({
+			data: {
+				message: '123'
+			},
+			template: `
+			    <div>
+			        <input
+			            :value="message"
+			            @input="message = $event.target.value"
+			            placeholder="edit me" 
+			        />
+			        <p>Message is: {{ message }}</p>
+			    </div>
+			`
+		}).$mount('#app')
+	</script>
+</body>
+</html>
