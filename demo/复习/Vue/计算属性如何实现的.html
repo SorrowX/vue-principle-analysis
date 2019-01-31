@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>计算属性如何实现</title>
+</head>
+<body>
+	<div id="app">
+		<p>{{ fullName }}</p>
+	</div>
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		var vm = new Vue({
+		    data: {
+		    	firstName: 'Foo',
+		    	lastName: 'Bar'
+		    },
+		    computed: {
+		    	fullName: function () {
+		    		return this.firstName + ' ' + this.lastName
+		    	}
+		    }
+		}).$mount('#app')
+		// vm.firstName = '徐志伟' vm.lastName = '徐志康'
+
+		// 计算属性如何实现? 可以从以下几个方面说下：
+
+		// 1. 计算属性的使用:
+		//     1). 选项对象配置computed属性,值为一个对象,该对象中的成员可以是函数或者含有get/set方法的对象
+		//     2). 之后便可以使用 vm.computed对象中的key 来获取key对应函数返回的值,求值是依赖于响应式数据
+
+		// 2. 计算属性的源码实现：
+		//     1). 初始化
+		//         调用栈: vm._init -> initState(vm) -> initComputed(vm, opts.computed)
+		//         主要看下 initComputed做了什么
+		//             1). 给vm添加 _computedWatchers私有属性
+		//             2). 遍历 定义的computed对象, 创建一个计算watcher且把watcher实例添加到_computedWatchers对象中,
+		//                 然后调用 defineComputed(vm, key, userDef)方法,传入computed对象中的key和值,该函数主要通过
+		//                 Object.defineProperty(target, key, sharedPropertyDefinition) 给vm实例添加属性,重写set,get函数。
+		//                 主要关注下get函数,也就是 createComputedGetter函数,其实访问vm.key的时候，就会执行 createComputedGetter函数。
+		//                 这里就解释了我们在computed中定义的对象里面的key对应的函数，为啥能通过vm.key就能访问到函数的结果。
+		//     2). 何时求值
+		//         1). 访问vm.computedKey的时候便会执行createComputedGetter函数
+		//             通过闭包作用域中的key从_computedWatchers对象中找到对应的watcher
+		//             如果找到对应的计算watcher便会执行watcher.depend()，计算watcher的属性dep会收集Dep.target当前的watcher
+		//             然后执行watcher.evaluate()函数,这里面会执行回调函数就是computed对象中key对应的函数,如果里面有响应式数据便会
+		//             触发响应式数据的dep收集当前的计算watcher。
+		//         2). 当修改计算属性依赖的响应式数据时,便会触发响应式数据的set方法调用dep.notify(),然后遍历
+		//             收集好的不同watcher,调用watcher.update方法更新即可.这里需要注意的是如果是计算watcher,重新执行完我们定义的回调函数外,
+		//             还会执行计算watcher的dep.notify()用来更新计算watcher dep收集的watcher
+	</script>
+</body>
+</html>

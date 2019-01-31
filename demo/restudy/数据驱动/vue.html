@@ -6,9 +6,16 @@
 </head>
 <body>
 	<div id="app">
+		<slot>
+			<span>123</span>
+		</slot>
 		<ul>
 			<li v-for="(item, index) in arr">{{ item }}</li>
 		</ul>
+		<template>
+			<div>div</div>
+			<p>p</p>
+		</template>
 	</div>
 
 	<script src="../../../dist/vue.js"></script>
@@ -20,6 +27,7 @@
             	}
             }
 		}).$mount('#app')
+		// console.log(vm)
 
 
 		/*(function anonymous() {

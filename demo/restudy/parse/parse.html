@@ -23,7 +23,6 @@
 	<script src="../../../dist/vue.js"></script>
 	<script>
 		const vm = new Vue({
-	        el: '#app',
 			data: {
 				isShow: true,
 	            bindCls: 'my-bindCls',
@@ -34,7 +33,34 @@
 					console.log(index)
 				}
 			}
-		})
+		}).$mount('#app')
+
+		Vue.compile(`
+			<uni-app :class="{'uni-app--showtabbar':showTabBar}">
+			    <!-- <transition :name="transitionName"> -->
+			    <!-- TODO -->
+			    <keep-alive :include="keepAliveInclude">
+			        <router-view :key="key" />
+			    </keep-alive>
+			    <!-- </transition> -->
+			    <tab-bar
+			        v-if="hasTabBar"
+			        v-show="showTabBar"
+			        v-bind="tabBar" />
+			    <toast
+			        v-bind="showToast"
+			        @close="_onModalClose" />
+			    <action-sheet
+			        v-bind="showActionSheet"
+			        @close="_onActionSheetClose" />
+			    <modal
+			        v-bind="showModal"
+			        @close="_onModalClose" />
+			    <picker
+			        v-bind="showPicker"
+			        @close="_onPickerClose" />
+			</uni-app>
+		`)
 	</script>
 </body>
 </html>

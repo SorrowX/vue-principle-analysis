@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>extend</title>
+</head>
+<body>
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		const vm = new Vue({
+			data: {
+				num: 1,
+				str: 'str',
+				bool: false,
+				arr: [],
+				obj: {}
+			}
+		})
+
+		let SubVue = Vue.extend({
+			data() {
+				return {
+					num: 1,
+					str: 'str',
+					bool: false,
+					arr: [],
+					obj: {}
+				}
+			},
+			created() {
+				console.log(123)
+			}
+		})
+
+		const vm1 = new SubVue()
+		console.log(vm1.num)
+		console.log(vm1.str)
+		const vm2 = new SubVue()
+	</script>
+</body>
+</html>

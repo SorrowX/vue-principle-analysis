@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器如何实现的</title>
+</head>
+<body>
+	<div id="app">
+		<span>{{ message | filterA | filterB }}</span>
+	</div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+
+		/*Vue.filter('capitalize', function (value) {
+		    if (!value) return ''
+		    value = value.toString()
+		    return value.charAt(0).toUpperCase() + value.slice(1)
+		})*/
+
+		const vm = new Vue({
+			filters: {
+			    filterA(value) {
+				    if (!value) return ''
+				    value = value.toString()
+				    return value.charAt(0).toUpperCase() + value.slice(1)
+			    },
+			    filterB(value) {
+				    if (!value) return ''
+				    let v = value = value.toString()
+				    return v.slice(0, v.length - 1) + value.charAt(value.length - 1).toUpperCase() 
+			    }
+			},
+			data() {
+				return {
+					message: 'xzw'
+				}
+			}
+		}).$mount('#app')
+
+		// _s(_f("filterB")(_f("filterA")(message))) 其实渲染的是这个
+	</script>
+</body>
+</html>

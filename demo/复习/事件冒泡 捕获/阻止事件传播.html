@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>阻止事件传播</title>
+    <style type="text/css">
+    #wrapDiv, #innerP, #textSpan{
+        margin: 5px;padding: 5px;box-sizing: border-box;cursor: default;
+    }
+    #wrapDiv{
+        width: 300px;height: 300px;border: indianred 3px solid;
+    }
+    #innerP{
+        width: 200px;height: 200px;border: hotpink 3px solid;
+    }
+    #textSpan{
+        display: block;width: 100px;height: 100px;border: orange 3px solid;
+    }
+    </style>
+</head>
+<body>
+    <div id="wrapDiv">
+     	wrapDiv
+        <p id="innerP">
+        	innerP
+            <span id="textSpan">textSpan</span>
+        </p>
+    </div>
+    <script>
+        var wrapDiv = document.getElementById("wrapDiv");
+        var innerP = document.getElementById("innerP");
+        var textSpan = document.getElementById("textSpan");
+
+        // 测试直接绑定的事件到底发生在哪个阶段
+        wrapDiv.onclick = function(){
+            console.log("wrapDiv onclick 测试直接绑定的事件到底发生在哪个阶段")
+        };
+
+        // 捕获阶段绑定事件
+        window.addEventListener("click", function(e){
+            console.log("window 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        document.addEventListener("click", function(e){
+            console.log("document 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        document.documentElement.addEventListener("click", function(e){
+            console.log("documentElement 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        document.body.addEventListener("click", function(e){
+            console.log("body 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        wrapDiv.addEventListener("click", function(e){
+            console.log("wrapDiv 捕获", e.target.nodeName, e.currentTarget.nodeName);
+            // 在捕获阶段阻止事件的传播
+            e.stopPropagation();
+        }, true);
+
+        innerP.addEventListener("click", function(e){
+            console.log("innerP 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        textSpan.addEventListener("click", function(){
+            console.log("textSpan 冒泡 在捕获之前绑定的")
+        }, false);
+
+        textSpan.onclick = function(){
+            console.log("textSpan onclick")
+        };
+
+        textSpan.addEventListener("click", function(e){
+            console.log("textSpan 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        // 冒泡阶段绑定的事件
+        window.addEventListener("click", function(e){
+            console.log("window 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        document.addEventListener("click", function(e){
+            console.log("document 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        document.documentElement.addEventListener("click", function(e){
+            console.log("documentElement 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        document.body.addEventListener("click", function(e){
+            console.log("body 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        wrapDiv.addEventListener("click", function(e){
+            console.log("wrapDiv 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        innerP.addEventListener("click", function(e){
+            console.log("innerP 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        textSpan.addEventListener("click", function(e){
+            console.log("textSpan 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        // 在支持addEventListener()的浏览器中，可以调用事件对象的stopPropagation()方法以阻止事件的继续传播。如果在同一对象上定义了其他处理程序，剩下的处理程序将依旧被调用，但调用stopPropagation()之后任何其他对象上的事件处理程序将不会被调用。不仅可以阻止事件在冒泡阶段的传播，还能阻止事件在捕获阶段的传播。
+
+    　　//IE9之前的IE不支持stopPropagation()方法，而是设置事件对象cancelBubble属性为true来实现阻止事件进一步传播
+    </script>
+</body>
+</html>

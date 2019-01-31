@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+    #wrapDiv, #innerP, #textSpan{
+        margin: 5px;padding: 5px;box-sizing: border-box;cursor: default;
+    }
+    #wrapDiv{
+        width: 300px;height: 300px;border: indianred 3px solid;
+    }
+    #innerP{
+        width: 200px;height: 200px;border: hotpink 3px solid;
+    }
+    #textSpan{
+        display: block;width: 100px;height: 100px;border: orange 3px solid;
+    }
+    </style>
+</head>
+<body>
+    <div id="wrapDiv">
+     	wrapDiv
+        <p id="innerP">
+        	innerP
+            <span id="textSpan">textSpan</span>
+        </p>
+    </div>
+    <!-- <script>
+    	    var wrapDiv = document.getElementById("wrapDiv");
+    	    var innerP = document.getElementById("innerP");
+    	    var textSpan = document.getElementById("textSpan");
+    
+    	    // 捕获阶段绑定事件
+    	    window.addEventListener("click", function(e){
+    	        console.log("window 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    document.addEventListener("click", function(e){
+    	        console.log("document 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    document.documentElement.addEventListener("click", function(e){
+    	        console.log("documentElement 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    document.body.addEventListener("click", function(e){
+    	        console.log("body 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    wrapDiv.addEventListener("click", function(e){
+    	        console.log("wrapDiv 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    innerP.addEventListener("click", function(e){
+    	        console.log("innerP 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    textSpan.addEventListener("click", function(e){
+    	        console.log("textSpan 捕获", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, true);
+    
+    	    // 冒泡阶段绑定的事件
+    	    window.addEventListener("click", function(e){
+    	        console.log("window 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    document.addEventListener("click", function(e){
+    	        console.log("document 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    document.documentElement.addEventListener("click", function(e){
+    	        console.log("documentElement 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    document.body.addEventListener("click", function(e){
+    	        console.log("body 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    wrapDiv.addEventListener("click", function(e){
+    	        console.log("wrapDiv 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    innerP.addEventListener("click", function(e){
+    	        console.log("innerP 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    textSpan.addEventListener("click", function(e){
+    	        console.log("textSpan 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+    	    }, false);
+    
+    	    //· 捕获阶段：首先window会获捕获到事件，之后document、documentElement、body会捕获到，
+    	    //  再之后就是在body中DOM元素一层一层的捕获到事件，有wrapDiv、innerP。
+    
+    	　　//· 目标阶段：真正点击的元素textSpan的事件发生了两次，因为在上面的JavaScript代码中，
+    	    // textSapn既在捕获阶段绑定了事件，又在冒泡阶段绑定了事件，所以发生了两次。
+    	    // 但是这里有一点是需要注意，在目标阶段并不一定先发生在捕获阶段所绑定的事件，而是先绑定的事件发生，一会会解释一下。
+    
+    	　　//· 冒泡阶段：会和捕获阶段相反的步骤将事件一步一步的冒泡到window
+    
+    	    //target和currentTarget都是event上面的属性，target是真正发生事件的DOM元素，而currentTarget是当前事件发生在哪个DOM元素上。
+    
+    	　　//可以结合控制台打印出来的信息理解下，目标阶段也就是 target == currentTarget的时候
+    </script> -->
+
+    <script>
+        var wrapDiv = document.getElementById("wrapDiv");
+        var innerP = document.getElementById("innerP");
+        var textSpan = document.getElementById("textSpan");
+
+        // 捕获阶段绑定事件
+        window.addEventListener("click", function(e){
+            console.log("window 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        document.addEventListener("click", function(e){
+            console.log("document 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        document.documentElement.addEventListener("click", function(e){
+            console.log("documentElement 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        document.body.addEventListener("click", function(e){
+            console.log("body 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        
+
+        wrapDiv.addEventListener("click", function(e){
+            console.log("wrapDiv 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        innerP.addEventListener("click", function(e){
+            console.log("innerP 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        textSpan.addEventListener("click", function(){
+            console.log("textSpan 冒泡 在捕获之前绑定的")
+        }, false);
+
+        textSpan.onclick = function(){
+            console.log("textSpan onclick")
+        };
+
+        textSpan.addEventListener("click", function(e){
+            console.log("textSpan 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        textSpan.addEventListener("click", function(e){
+            console.log("textSpan 捕获", e.target.nodeName, e.currentTarget.nodeName);
+        }, true);
+
+        // 冒泡阶段绑定的事件
+        window.addEventListener("click", function(e){
+            console.log("window 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        document.addEventListener("click", function(e){
+            console.log("document 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        document.documentElement.addEventListener("click", function(e){
+            console.log("documentElement 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        document.body.addEventListener("click", function(e){
+            console.log("body 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        wrapDiv.addEventListener("click", function(e){
+            console.log("wrapDiv 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        // 测试直接绑定的事件到底发生在哪个阶段
+        wrapDiv.onclick = function(){
+            console.log("wrapDiv onclick 测试直接绑定的事件到底发生在哪个阶段")
+        };
+
+        innerP.addEventListener("click", function(e){
+            console.log("innerP 冒泡", e.target.nodeName, e.currentTarget.nodeName);
+        }, false);
+
+        // · textSpan是被点击的元素，也就是目标元素，所有在textSpan上绑定的事件都会发生在目标阶段，在绑定捕获代码之前写了绑定的冒泡阶段的代码，所以在目标元素上就不会遵守先发生捕获后发生冒泡这一规则，而是先绑定的事件先发生。[在目标元素上就不会遵守先发生捕获后发生冒泡这一规则，而是先绑定的事件先发生。]
+　　    //· 由于wrapDiv不是目标元素，所以它上面绑定的事件会遵守先发生捕获后发生冒泡的规则。所以很明显用onclick直接绑定的事件发生在了冒泡阶段。
+    </script>
+</body>
+</html>

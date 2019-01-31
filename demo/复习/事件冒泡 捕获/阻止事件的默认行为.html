@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>阻止事件的默认行为</title>
+</head>
+<body>
+	<script>
+		function cancelHandler(event){
+		    var event=event||window.event;//兼容IE
+		    
+		    //取消事件相关的默认行为
+		    if(event.preventDefault)    //标准技术
+		        event.preventDefault();
+		    if(event.returnValue)    //兼容IE9之前的IE
+		        event.returnValue=false;
+		    return false;    //用于处理使用对象属性注册的处理程序
+		}
+
+		// e.preventDefault()可以阻止事件的默认行为发生，默认行为是指：点击a标签就转跳到其他页面、拖拽一个图片到浏览器会自动打开、点击表单的提交按钮会提交表单等等，因为有的时候我们并不希望发生这些事情，所以需要阻止默认行为。
+
+    　　//IE9之前的IE中，可以通过设置事件对象的returnValue属性为false达到同样的效果。
+	</script>
+</body>
+</html>

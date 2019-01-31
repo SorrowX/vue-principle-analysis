@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>滚动到顶部</title>
+	<style>
+	    * {
+	    	margin: 0;
+	    	padding: 0;
+	    }
+
+		.app {
+			height: 2000px;
+			background: #ccc;
+		}
+
+		.top {
+			position: fixed;
+			right: 0;
+			bottom: 0;
+		}
+
+		.test {
+			width: 100px;
+			height: 100px;
+			background: #f60;
+		}
+	</style>
+</head>
+<body>
+	<div class="app">
+		<div class="test" id="test"></div>
+		<button id="btn2">变长</button>
+		
+		<button class="top" id="btn">回到顶部</button>
+	</div>
+
+	<script>
+		window.onload = function() {
+
+			btn.addEventListener('click', function(evt) {
+				goTop()
+			}, false)
+
+			var raf = window.requestAnimationFrame
+                ? window.requestAnimationFrame.bind(window)
+                : function(fn) {
+                	setTimeout(fn, 1000 / 60)
+                }
+
+            function nextFrame(fn) {
+            	raf(function() {
+            		fn && fn()
+            	})
+            }
+
+            function goTop() {
+            	var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    		    if (currentScroll > 0) {
+    		        window.scrollTo (0, currentScroll - (currentScroll / 5))
+    		    	nextFrame(goTop)
+    		    }
+            }
+
+            btn2.addEventListener('click',function() {
+            	test.style.width = '100px'
+            	changeWidth()
+
+            	function changeWidth() {
+            		let w = parseInt(window.getComputedStyle(test, null)['width'])
+            		if (w <= 500) {
+						test.style.width = w + 10 + 'px'
+						nextFrame(changeWidth)
+            		}
+            	}
+            }, false)
+		}
+		
+	</script>
+</body>
+</html>

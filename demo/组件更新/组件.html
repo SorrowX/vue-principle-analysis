@@ -42,13 +42,14 @@
 			},
 			template: `
 			    <div id="app">
-			        <HelloWord :flag="flag"></HelloWord>
 			        <button @click="toggle">toggle</button>
+			        <HelloWord :flag="flag" class="test"></HelloWord>
 			    </div>
 			`
 		}
 
 		const vm = new Vue({
+			name: 'Root',
 			render: h => h(App)
 		}).$mount('#app')
 

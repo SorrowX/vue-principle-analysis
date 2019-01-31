@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>transition切换</title>
+	<style>
+	    #app {
+	    	max-width: 750px;
+	    	width: 100%;
+	    	height: 100%;
+	    	position: absolute;
+	    	left: 0;
+	    	right: 0;
+	    	top: 0;
+	    	margin: auto;
+	    	overflow: hidden;
+	    }
+
+	    .home {
+			width: 100%;
+	    	height: 100%;
+	    	background: #FFF0F5;
+	    }
+
+	    .about {
+			width: 100%;
+	    	height: 100%;
+	    	background: #E0EEEE;
+	    }
+
+	    .home,
+	    .about {
+	    	display: flex;
+	    	justify-content: center;
+	    	align-items: center;
+	    	position: absolute;
+	    }
+	    
+	    /* 向左滑入 */
+	    .slide-left-enter {
+			transform: translate(100%, 0);
+	    }
+	    .slide-left-enter-active {
+	    	transition: all 5s linear;
+	    }
+	    .slide-left-enter-to { 
+	        transform: translate(0, 0);
+	    }
+
+	    .slide-left-leave {
+			transform: translate(0, 0);
+	    }
+	    .slide-left-leave-active {
+	    	transition: all 5s linear;
+	    }
+	    .slide-left-leave-to {
+	        transform: translate(-100%, 0);
+	    }
+
+	    /* 向右回来 */
+        .slide-right-enter {
+    		transform: translate(-100%, 0);
+        }
+        .slide-right-enter-active {
+        	transition: all 5s linear;
+        }
+        .slide-right-enter-to { 
+            transform: translate(0, 0);
+        }
+
+        .slide-right-leave {
+    		transform: translate(0, 0);
+        }
+        .slide-right-leave-active {
+        	transition: all 5s linear;
+        }
+        .slide-right-leave-to {
+            transform: translate(100%, 0);
+        }
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+
+		const Home = {
+			name: 'Home',
+			methods: {
+				change(name) {
+					this.$parent.switchComponent(name)
+				}
+			},
+			template: `
+			    <div class="home">
+			        home 页面
+			        <button @click="change('About')">切换到About组件</button>
+			    </div>
+			`
+		}
+
+		const About = {
+			name: 'About',
+			data() {
+				return {
+					nums: 100
+				}
+			},
+			activated() {
+				/*setTimeout(() => {
+					this.nums = 100000
+				}, 200)*/
+			},
+			methods: {
+				change(name) {
+					this.$parent.switchComponent(name)
+				}
+			},
+			template: `
+			    <div class="about">
+				    about 页面
+				    <button @click="change('Home')">切换到Home组件</button>
+				    <div>
+				        <ul>
+				            <li v-for="num in nums">{{ num }}</li>
+				        </ul>
+				    </div>
+			    </div>
+			`
+		}
+
+		new Vue({
+			components: { Home, About },
+			name: 'App',
+			data: {
+				curComponent: 'Home',
+				name: 'slide-left'
+			},
+			methods: {
+				switchComponent(componentName) {
+					if (componentName == 'Home') {
+						this.name = 'slide-right'
+					} else {
+						this.name = 'slide-left'
+					}
+					this.curComponent = componentName
+				}
+			},
+			template: `
+			    <div id="app">
+		            <transition :name="name" mode="in-out">
+		                <keep-alive>
+		                    <component :is="curComponent"></component>
+		                </keep-alive>
+		            </transition>
+			    </div>
+			`
+		}).$mount('#app')
+	</script>
+</body>
+</html>

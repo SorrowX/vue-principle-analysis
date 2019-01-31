@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>使用事件处理</title>
+	<style>
+		*{
+		    box-sizing: border-box;
+		    margin: 0;
+		    padding: 0;
+		}
+
+		img{
+		    max-width: 100%;
+		    display: block;
+		    margin: 1024px auto 128px;
+		    background-repeat: no-repeat;
+		    background-size: contain;
+		    image-rendering: pixelated;
+		}
+
+		.success {
+		    animation: fadeIn 1s ease 0.2s 1 backwards;
+		}
+
+		@-webkit-keyframes fadeIn {
+		    from {
+		        opacity: 0;
+		    }
+		    to {
+		        opacity: 1;
+		    }
+		}
+
+		@keyframes fadeIn {
+		    from {
+		        opacity: 0;
+		    }
+		    to {
+		        opacity: 1;
+		    }
+		}
+	</style>
+</head>
+<body>
+	<img 
+	    class="lazy" 
+	    src="https://res.cloudinary.com/drp9iwjqz/image/upload/e_blur:2000,f_auto,q_auto:eco/v1508291830/jeremywagner.me/using-webp-images/tacos-1x.jpg" 
+	    data-src="https://res.cloudinary.com/drp9iwjqz/image/upload/f_auto,q_auto/v1508210556/jeremywagner.me/using-webp-images/tacos-2x.jpg" 
+	    width="385" 
+	    height="108" 
+	    alt="Some tacos."
+	>
+	<img 
+	    class="lazy" 
+	    src="https://res.cloudinary.com/drp9iwjqz/image/upload/e_blur:2000,f_auto,q_auto:eco/v1508210556/jeremywagner.me/using-webp-images/modem-2x.png" data-src="https://res.cloudinary.com/drp9iwjqz/image/upload/f_auto,q_auto/v1508210556/jeremywagner.me/using-webp-images/modem-2x.png" 
+	    width="320" 
+	    height="176" 
+	    alt="A 56k modem."
+	>
+	<img 
+	    class="lazy" 
+	    src="https://res.cloudinary.com/drp9iwjqz/image/upload/e_blur:2000,f_auto,q_auto:eco/v1509298941/jeremywagner.me/about/st-paul-1x.jpg" 
+	    data-src="https://res.cloudinary.com/drp9iwjqz/image/upload/f_auto,q_auto/v1509298941/jeremywagner.me/about/st-paul-2x.jpg" 
+	    width="400" 
+	    height="267" 
+	    alt="A city skyline."
+	>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+            var lazyImages = [].slice.call(document.querySelectorAll('img.lazy'))
+            var active = false
+
+            var lazyLoad = function() {
+            	if (active === false) {
+            		active = true
+
+            		setTimeout(function() {
+            			lazyImages.forEach(function(lazyImage, index) {
+            				if (index === 0) {
+	            				console.log(index, lazyImage.getBoundingClientRect().top, lazyImage.getBoundingClientRect().bottom)
+            				}
+            				if (
+            					lazyImage.getBoundingClientRect().top <= window.innerHeight &&
+            					lazyImage.getBoundingClientRect().bottom >= 0 &&
+            					getComputedStyle(lazyImage).display !== 'none'
+            				) {
+                                lazyImage.src = lazyImage.dataset.src
+                                lazyImage.classList.remove('lazy')
+                                lazyImage.classList.add('success')
+
+                                lazyImages = lazyImages.filter(function(image) {
+                                	return image !== lazyImage
+                                })
+
+                                if (lazyImages.length === 0) {
+                                    document.removeEventListener('scroll', lazyLoad)
+                                    window.removeEventListener('resize', lazyLoad)
+                                    window.removeEventListener('orientationchange', lazyLoad)
+                                }
+            				}
+            			})
+            			active = false
+            		}, 200)
+            	}
+            }
+
+            document.addEventListener('scroll', lazyLoad)
+            window.addEventListener('resize', lazyLoad)
+            window.addEventListener('orientationchange', lazyLoad)
+		})
+	</script>
+</body>
+</html>
