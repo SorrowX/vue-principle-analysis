@@ -14,7 +14,7 @@
 			props: ['flag'],
 			template: `
 			    <div v-if="flag" class="hw-div">
-                    我是div内容
+				    <p class="pp">我是div内容</p>
 			    </div>
 			    <p v-else class="hw-p">
                     我是p内容
@@ -43,9 +43,37 @@
 			`
 		}
 
-		new Vue({
+		let vm = new Vue({
 			render: h => h(App)
 		}).$mount('#app')
+
+		/*(function() {
+		    with (this) {
+		        return _c('div', {
+		            attrs: {
+		                "id": "app"
+		            }
+		        }, [_c('HelloWord', {
+		            attrs: {
+		                "flag": parentFlag
+		            }
+		        }), _v(" "), _c('button', {
+		            on: {
+		                "click": toggle
+		            }
+		        }, [_v("toggle")])], 1)
+		    }
+		})*/
+
+		/*(function() {
+		    with (this) {
+		        return (flag) ? _c('div', {
+		            staticClass: "hw-div"
+		        }, [_v("\n                    我是div内容\n\t\t\t    ")]) : _c('p', {
+		            staticClass: "hw-p"
+		        }, [_v("\n                    我是p内容\n\t\t\t    ")])
+		    }
+		})*/
 	</script>
 	
 </body>

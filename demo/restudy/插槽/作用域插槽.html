@@ -23,31 +23,35 @@
 			},
 			template: `
 			    <div class="child">
-			        <slot text="Hello " :msg="msg"></slot>
+			        <slot></slot>
+			        <slot text="Hello " :msg="msg" name="aa"></slot>
 			        <button @click="change">作用域插槽更新</button>
 			    </div>
 			`
 		}
 
-		/*with(this) {
-			return _c('div', {
-				staticClass: "child"
-			}, [_t("default", null, {
-				text: "Hello ",
-				msg: msg
-			}), _v(" "), _c('button', {
-				on: {
-					"click": change
-				}
-			}, [_v("作用域插槽更新")])], 2)
-		}*/
+		// (function() {
+		//     with (this) {
+		//         return _c('div', {
+		//             staticClass: "child"
+		//         }, [_t("default"), _v(" "), _t("aa", null, {
+		//             text: "Hello ",
+		//             msg: msg
+		//         }), _v(" "), _c('button', {
+		//             on: {
+		//                 "click": change
+		//             }
+		//         }, [_v("作用域插槽更新")])], 2)
+		//     }
+		// })
 
 		const vm = new Vue({
 			components: { Child },
 			template: `
 			    <div class="parent">
 			        <child>
-			            <template slot-scope="props">
+			            <p>我是默认插槽内容</p>
+			            <template slot-scope="props" slot="aa">
 			                <p> Hello from parent </p>
 			                <p> {{ props.text + props.msg }} </p>
 			            </template>
@@ -56,22 +60,21 @@
 			`
 		}).$mount('#app')
 
-		/*with(this) {
-			return _c('div', {
-				staticClass: "parent"
-			}, [_c('child', {
-				scopedSlots: _u([{
-					key: "default",
-					fn: function(props) {
-						return [
-						    _c('p', [_v(" Hello from parent ")]), 
-						    _v(" "), 
-						    _c('p', [_v(" " + _s(props.text + props.msg) + " ")])
-						]
-					}
-				}])
-			})], 1)
-		}*/
+		// (function() {
+		//     with (this) {
+		//         return _c('div', {
+		//             staticClass: "parent"
+		//         }, [_c('child', {
+		//             scopedSlots: _u([{
+		//                 key: "aa",
+		//                 fn: function(props) {
+		//                     return [_c('p', [_v(" Hello from parent ")]), _v(" "), _c('p', [_v(" " + _s(props.text + props.msg) + " ")])]
+		//                 }
+		//             }])
+		//         }, [_c('p', [_v("我是默认插槽内容")])])], 1)
+		//     }
+		// })
+
 
 	</script>
 </body>

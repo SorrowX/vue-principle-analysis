@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>滚动指令</title>
+	<style>
+	    #app {
+	    	height: 1500px;
+	    	padding-top: 200px;
+	    }
+	    h1 {
+	    	margin-bottom: 100px;
+	    }
+		.box {
+		    transition: 3s all cubic-bezier(0.39, 0.575, 0.565, 1);
+		}
+		.red-color {
+			color: red;
+		}
+		.green-color {
+			color: green;
+		}
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script src="../../../dist/vue.js"></script>
+	<script>
+		Vue.directive('scroll', {
+			inserted: function(el, binding) {
+				let f = function (evt) {
+					if (binding.value(evt, el)) {
+						window.removeEventListener('scroll', f)
+					}
+				}
+				window.addEventListener('scroll', f)
+			}
+		})
+
+
+	    let vm = new Vue({
+	    	data() {
+	    		return {
+	    			msg: '我是滚动的内容',
+	    			kclass: 'red-color'
+	    		}
+	    	},
+            methods: {
+            	handleScroll: function(evt, el) {
+            		if (window.scrollY > 50) {
+            			el.setAttribute(
+            				`style`,
+            				`opacity: 1; transform: translate3d(0, -100px, 0)`
+            			)
+            		}
+            		return window.scrollY > 100
+            	}
+            },
+            template: `
+                <div id="app">
+                    <h1 :class="kclass">Scroll Me</h1>
+                    <div
+                        v-scroll="handleScroll"
+                        class="box"
+                    >
+                        <p>{{ msg }}</p>
+                    </div>
+                </div>
+            `
+	    }).$mount('#app')
+
+	    /*(function() {
+	        with (this) {
+	            return _c('div', {
+	                attrs: {
+	                    "id": "app"
+	                }
+	            }, [_c('h1', {
+	                class: kclass
+	            }, [_v("Scroll Me")]), _v(" "), _c('div', {
+	                directives: [{
+	                    name: "scroll",
+	                    rawName: "v-scroll",
+	                    value: (handleScroll),
+	                    expression: "handleScroll"
+	                }],
+	                staticClass: "box"
+	            }, [_c('p', [_v(_s(msg))])])])
+	        }
+	    })*/
+	</script>
+</body>
+</html>

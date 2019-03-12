@@ -50,38 +50,25 @@
             `
 		}).$mount('#app')
 
-		/*with(this){
-			return _c('div',
-				[
-				    _c('app-layout',
-				    	[
-				    	    _c('h1',
-				    	    	{
-				    	    		attrs:{
-				    	    			"slot":"header"
-				    	    		},
-				    	    		slot:"header"
-				    	    	},
-				    	    	[_v(_s(title))]
-				    	    ),
-				    	    _v(" "),
-				    	    _c('p',[_v(_s(msg))]),
-				    	    _v(" "),
-				    	    _c('p',
-				    	    	{
-				    	    		attrs:{
-				    	    			"slot":"footer"
-				    	    		},
-				    	    		slot:"footer"
-				    	    	},
-				    	    	[_v(_s(desc))]
-				    	    )
-				    	]
-				    )
-				],
-				1
-			)
-		}*/
+		/*(function() {
+		    with (this) {
+		        return _c('div', [_c('app-layout', [_c('h1', {
+		            attrs: {
+		                "slot": "header"
+		            },
+		            slot: "header"
+		        }, [_v(_s(title))]), _v(" "), _c('p', [_v(_s(msg))]), _v(" "), _c('p', {
+		            attrs: {
+		                "slot": "footer"
+		            },
+		            slot: "footer"
+		        }, [_v(_s(desc))])]), _v(" "), _c('button', {
+		            on: {
+		                "click": changeTitle
+		            }
+		        }, [_v("title")])], 1)
+		    }
+		})*/
 
 		/*with(this){
 			return _c('div',

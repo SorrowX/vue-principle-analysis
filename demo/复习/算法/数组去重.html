@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>数组去重</title>
+</head>
+<body>
+    <script>
+    	var arr = [1,2,"2",4,9,"a","a",2,3,5,6,5]
+
+    	// 1. es6语法
+    	console.log(Array.from(new Set(arr)))
+
+    	// 2. 新建一新数组，遍历传入数组，值不在新数组就push进该新数组中
+    	function uni1(arr) {
+    		var temp = [], i = 0, len = arr.length 
+    		for (; i < len; i++) {
+    			if (temp.indexOf(arr[i]) === -1) {
+    				temp.push(arr[i])
+    			}
+    		}
+    		return temp
+    	}
+    	console.log(uni1(arr))
+
+    	// 3. 空间换时间
+    	function uniq2(arr){
+		    
+		}
+		console.log(uniq2(arr))
+    </script>	
+</body>
+</html>
